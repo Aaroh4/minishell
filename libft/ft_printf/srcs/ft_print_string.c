@@ -1,19 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   ft_print_string.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/03/20 14:27:16 by ahamalai         ###   ########.fr       */
+/*   Created: 2023/11/14 16:59:53 by mburakow          #+#    #+#             */
+/*   Updated: 2023/11/15 20:35:36 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#include <unistd.h>
 
-# include "../libft/libft/libft.h"
-# include "../libft/ft_printf/incs/ft_printf.h"
+int	ft_print_string(char *str)
+{
+	int	i;
 
-#endif
+	if (str == NULL)
+		str = "(null)";
+	i = 0;
+	while (str[i])
+	{
+		write(1, &(str[i]), 1);
+		i++;
+	}
+	return (i);
+}
