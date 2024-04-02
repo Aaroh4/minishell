@@ -3,53 +3,46 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+         #
+#    By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2023/10/28 20:09:48 by mburakow          #+#    #+#              #
-#    Updated: 2023/12/18 13:46:00 by mburakow         ###   ########.fr        #
+#    Created: 2023/07/19 12:03:42 by ahamalai          #+#    #+#              #
+#    Updated: 2024/02/14 16:55:09 by ahamalai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME			=	libft.a
+NAME = libft.a
 
-CC				=	cc
-CFLAGS			=	-Wall -Wextra -Werror -I
-SRC_DIR			= 	./ft_printf/srcs
-INCLUDE			= 	./ft_printf/incs
-SRCS			= 	ft_printf.c			ft_print_addr.c		ft_print_char.c	\
-					ft_print_string.c	ft_print_hex.c		ft_print_uint.c	\
-					ft_print_int.c
-OBJ_DIR			=	./ft_printf/objs
-OBJS			=	$(SRCS:%.c=$(OBJ_DIR)/%.o)
-LIBFT_DIR		=	./libft
-LIBFT			=	$(LIBFT_DIR)/libft.a
+SRC = ft_isalpha.c ft_isdigit.c ft_isalnum.c ft_isascii.c \
+	  ft_isprint.c ft_strlen.c ft_memset.c ft_bzero.c \
+	  ft_memcpy.c ft_memmove.c ft_strlcpy.c ft_strlcat.c \
+	  ft_toupper.c ft_tolower.c ft_strchr.c ft_strrchr.c \
+	  ft_strncmp.c ft_memchr.c ft_memcmp.c ft_strnstr.c \
+	  ft_atoi.c ft_calloc.c ft_strdup.c ft_putchar_fd.c \
+	  ft_putendl_fd.c ft_putnbr_fd.c ft_putstr_fd.c \
+	  ft_strjoin.c ft_substr.c ft_strtrim.c ft_itoa.c \
+	  ft_split.c ft_striteri.c ft_strmapi.c get_next_line.c \
+	  get_next_line_utils.c ft_printf.c ft_printhex.c \
 
-$(OBJ_DIR)/%.o:		$(SRC_DIR)/%.c
-					$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
+OBJ = $(SRC:.c=.o)
 
-all:				$(NAME)
+HEADERS = ./includes
 
-bonus:				all
+%.o: %.c
+	cc -Wall -Wextra -Werror -c $< -o $@ -I $(HEADERS)
 
-$(NAME):			$(LIBFT) $(OBJ_DIR) $(OBJS)
-					cp	$(LIBFT) $(NAME)
-					ar -crs $(NAME) $(OBJS)
+$(NAME): $(OBJ)
 
-$(LIBFT):
-					make -C $(LIBFT_DIR) bonus all
-
-$(OBJ_DIR):
-					mkdir -p $(OBJ_DIR)
+all: $(NAME)
 
 clean:
-					make -C $(LIBFT_DIR) clean
-					rm -rf $(OBJ_DIR)
+	rm -f $(OBJ)
 
-fclean:				clean
-					make -C $(LIBFT_DIR) fclean
-					rm -f $(NAME)
-					rm -f $(LIBFT)
+fclean: clean
+	rm -f $(NAME)
 
-re:					fclean all
+re: fclean all
 
-.PHONY:				all bonus clean fclean re libft
+libft.a: $(OBJ)
+	ar -rc libft.a $(OBJ)
+
+.PHONY: all clean fclean re 

@@ -1,18 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   ft_strchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/01 16:10:23 by ahamalai         ###   ########.fr       */
+/*   Created: 2023/10/27 14:29:27 by ahamalai          #+#    #+#             */
+/*   Updated: 2023/11/13 11:10:55 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+char	*ft_strchr(const char *s, int c)
+{
+	int		i;
+	char	p;
+	char	*str;
 
-# include "../libft/libft.h"
-
-#endif
+	i = 0;
+	p = (char)c;
+	str = (char *)s;
+	while (str[i])
+	{
+		if (str[i] == p)
+			return (&str[i]);
+		i++;
+	}
+	if (str[i] == p)
+		return (&str[i]);
+	return (0);
+}

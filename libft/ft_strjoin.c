@@ -1,18 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/01 16:10:23 by ahamalai         ###   ########.fr       */
+/*   Created: 2023/10/30 12:08:05 by ahamalai          #+#    #+#             */
+/*   Updated: 2023/11/13 11:05:40 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+#include "libft.h"
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+char	*ft_strjoin(char const *s1, char const *s2)
+{
+	int		i;
+	int		ei;
+	char	*s;
 
-# include "../libft/libft.h"
-
-#endif
+	i = 0;
+	ei = 0;
+	s = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+	if (s == NULL)
+		return (0);
+	while (s1[i])
+	{
+		s[i] = s1[i];
+		i++;
+	}
+	while (s2[ei])
+	{
+		s[i] = s2[ei];
+		i++;
+		ei++;
+	}
+	s[i] = '\0';
+	return (s);
+}
