@@ -1,3 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/02 11:20:43 by mburakow          #+#    #+#             */
+/*   Updated: 2024/04/02 12:39:00 by mburakow         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+
 #include "./includes/minishell.h"
 
 #include <stdio.h>
@@ -12,41 +25,38 @@
 
 void ft_signal_handle(int signal_num) {
    // printf("Received signal: %d\n", signal_num);
-   int	i = 0;
-   if (i == signal_num)
-	i = 1;
+	int	i;
+
+	i = 0;
+	if (i == signal_num)
+		i = 1;
 }
 
 void enableRawMode() {
 	struct termios orig_termios;
-    tcgetattr(STDIN_FILENO, &orig_termios);
+	tcgetattr(STDIN_FILENO, &orig_termios);
 
-    struct termios raw = orig_termios;
-    raw.c_lflag &= ~(ECHO | ICANON);
-    tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
+	struct termios raw = orig_termios;
+	raw.c_lflag &= ~(ECHO | ICANON);
+	tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
 }
 
 int	main(void)
 {
+	t_cmdn	*cmd_root;
 	char	*input;
-	char	**arr;
-	int		i;
+
 	enableRawMode();
 
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, ft_signal_handle);
 
+	cmd_root = init_cmdn(ROOT, NULL);
 	while (1)
 	{
 		input = readline("minishell > ");
 		if (!ft_strncmp(input, "break", 5) || input == NULL)
 			return (0);
-		arr = ft_split(input, "<>");
-		i = 0;
-		while (arr[i] != '\0')
-		{
-			printf("%s\n", arr[i]);
-			i++;
-		}
+		parse_input(input, cmd_root);
 	}
 }
