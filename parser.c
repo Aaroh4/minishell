@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/03 15:13:02 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/03 16:34:01 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,31 @@ t_cmdn *init_cmdn(t_ntype type, char **cmd)
 	return (new_cmdn);
 }
 
+static t_cmdn	*create_node(t_cmdn *current, char **cmdarr, int i)
+{
+	char	**cmd;
+
+	cmd = ft_split(cmdarr[i], " ");
+	if (!cmd)
+		exit(1);
+	if (cmdarr[i + 1] != '\0')
+	{
+		current->left = init_cmdn(COMMAND, cmd);
+		current->right = init_cmdn(PIPELINE, NULL);
+		current = current->right;
+	}
+	else
+		current->right = init_cmdn(COMMAND, cmd);
+	return (current);
+}
+
 // needs free and print
 void	parse_input(char *input, t_cmdn **root)
 {
 	char	**cmdarr;
-	char	**cmd;
+	// char	**cmd;
 	t_cmdn	*current;
-	t_cmdn	*new;
+	// t_cmdn	*new;
 	int		i;
 
 	i = 0;
@@ -45,7 +63,9 @@ void	parse_input(char *input, t_cmdn **root)
 	cmdarr = ft_split(input, "|");
 	current = *root;
 	while (cmdarr[i] != '\0')
-	{	
+	{
+		current = create_node(current, cmdarr, i);
+		/*
 		cmd = ft_split(cmdarr[i], " ");
 		new = init_cmdn(COMMAND, cmd);
 		if (!new)
@@ -61,6 +81,7 @@ void	parse_input(char *input, t_cmdn **root)
 			current->right = new;
 			break ;
 		}
+		*/
 		i++;
 	}
 }
