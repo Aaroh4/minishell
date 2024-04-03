@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/02 15:30:23 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/03 14:45:32 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,15 @@ typedef enum s_ntype
 
 typedef struct s_cmdn 
 {
-	t_ntype	ntype;
-	char	*symbol;
-	t_cmdn	*left;
-	t_cmdn	*right;
-	char	**args;
+	t_ntype			ntype;
+	struct s_cmdn	*left;
+	struct s_cmdn	*right;
+	char			**cargs;
 }	t_cmdn;	
+
+void	parse_input(char *input, t_cmdn **root);
+t_cmdn	*init_cmdn(t_ntype type, char **cmd);
+void	print_cmdn(t_cmdn *root);
 
 /*
 typedef enum s_ntype {
@@ -59,9 +62,5 @@ typedef struct s_cmdn {
   struct t_cmdn	*children[NUM_CHILDREN];
 } t_cmdn;
 */
-
-void	parse_input(char *input, t_cmdn *croot);
-t_cmdn	*init_cmdn(t_ntype type, char *symbol);
-void	print_cmdn(t_cmdn *croot);
 
 #endif

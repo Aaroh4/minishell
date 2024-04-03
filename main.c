@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:43 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/02 12:39:00 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/03 15:10:05 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,12 +51,13 @@ int	main(void)
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, ft_signal_handle);
 
-	cmd_root = init_cmdn(ROOT, NULL);
+	cmd_root = init_cmdn(PIPELINE, NULL);
 	while (1)
 	{
 		input = readline("minishell > ");
 		if (!ft_strncmp(input, "break", 5) || input == NULL)
 			return (0);
-		parse_input(input, cmd_root);
+		parse_input(input, &cmd_root);
+		print_cmdn(cmd_root);
 	}
 }
