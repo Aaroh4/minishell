@@ -8,45 +8,50 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <termios.h>
-
-
-void ft_signal_handle(int signal_num) {
-   // printf("Received signal: %d\n", signal_num);
-   int	i = 0;
-   if (i == signal_num)
-	i = 1;
-}
+#include <fcntl.h>
 
 void enableRawMode() {
-	struct termios orig_termios;
-    tcgetattr(STDIN_FILENO, &orig_termios);
+	struct termios term;
+    if (tcgetattr(STDIN_FILENO, &term) == -1)
+		perror("tcgetattr");
+    term.c_lflag &= ~(ICANON | ECHOCTL);
+    if (tcsetattr(STDIN_FILENO, TCSANOW, &term) == -1)
+		perror("tcsetattr");
+}
 
-    struct termios raw = orig_termios;
-    raw.c_lflag &= ~(ECHO | ICANON);
-    tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
+void	ft_handler(int signum)
+{
+	signum = 1;
+	write(1, "\nminishell > ", 13);
 }
 
 int	main(void)
 {
 	char	*input;
 	char	**arr;
-	int		i;
 	enableRawMode();
-
+	//int		i;
+	signal(SIGINT, ft_handler);
 	signal(SIGQUIT, SIG_IGN);
-	signal(SIGINT, ft_signal_handle);
 
+	char cwd[1024];
+	if (getcwd(cwd, sizeof(cwd)) == NULL)
+		perror("getcwd error");
 	while (1)
 	{
 		input = readline("minishell > ");
-		if (!ft_strncmp(input, "break", 5) || input == NULL)
-			return (0);
-		arr = ft_split(input, "<>");
-		i = 0;
-		while (arr[i] != '\0')
-		{
-			printf("%s\n", arr[i]);
-			i++;
-		}
+		if (input == NULL || !ft_strncmp(input, "exit", 5))
+			exit_builtin();
+		if (!ft_strncmp(input, "pwd", 5))
+			pwd_builtin();
+		arr = ft_split(input, " ");
+		if (arr[0] != '\0' && !ft_strncmp(arr[0], "cd", 2))
+			cd_builtin(cwd, arr);
+		//i = 0;
+		//while (arr[i] != '\0')
+		//{
+		//	printf("%s\n", arr[i]);
+		//	i++;
+		//}
 	}
 }

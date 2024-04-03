@@ -6,7 +6,7 @@
 #    By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/22 12:36:32 by ahamalai          #+#    #+#              #
-#    Updated: 2024/03/20 14:25:24 by ahamalai         ###   ########.fr        #
+#    Updated: 2024/04/02 11:20:53 by ahamalai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ MAKE = make
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
 HEAD = includes/minishell.h
-SRCS = main.c
+SRCS = main.c builtins.c
 OBJS = $(SRCS:.c=.o)
 
 all : $(NAME)
