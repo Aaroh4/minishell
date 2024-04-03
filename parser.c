@@ -6,13 +6,13 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/03 16:34:01 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/03 16:38:28 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/minishell.h"
 
-t_cmdn *init_cmdn(t_ntype type, char **cmd)
+t_cmdn	*init_cmdn(t_ntype type, char **cmd)
 {
 	t_cmdn	*new_cmdn;
 
@@ -51,9 +51,7 @@ static t_cmdn	*create_node(t_cmdn *current, char **cmdarr, int i)
 void	parse_input(char *input, t_cmdn **root)
 {
 	char	**cmdarr;
-	// char	**cmd;
 	t_cmdn	*current;
-	// t_cmdn	*new;
 	int		i;
 
 	i = 0;
@@ -65,23 +63,6 @@ void	parse_input(char *input, t_cmdn **root)
 	while (cmdarr[i] != '\0')
 	{
 		current = create_node(current, cmdarr, i);
-		/*
-		cmd = ft_split(cmdarr[i], " ");
-		new = init_cmdn(COMMAND, cmd);
-		if (!new)
-			exit(1);
-		if (cmdarr[i + 1] != '\0')
-		{
-			current->left = new;
-			current->right = init_cmdn(PIPELINE, NULL);
-			current = current->right;
-		}
-		else
-		{
-			current->right = new;
-			break ;
-		}
-		*/
 		i++;
 	}
 }
@@ -90,7 +71,6 @@ void	print_cmdn(t_cmdn *node)
 {
 	int	i;
 
-	// printf("Printing...");
 	if (node == NULL)
 		return ;
 	print_cmdn(node->left);

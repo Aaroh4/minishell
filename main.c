@@ -6,25 +6,22 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:43 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/03 15:10:05 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/03 16:38:45 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "./includes/minishell.h"
-
+#include <readline/history.h>
+#include <readline/readline.h>
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
-#include <signal.h>
 #include <string.h>
-#include <readline/readline.h>
-#include <readline/history.h>
 #include <termios.h>
+#include <unistd.h>
 
-
-void ft_signal_handle(int signal_num) {
-   // printf("Received signal: %d\n", signal_num);
+void	ft_signal_handle(int signal_num)
+{
 	int	i;
 
 	i = 0;
@@ -32,11 +29,13 @@ void ft_signal_handle(int signal_num) {
 		i = 1;
 }
 
-void enableRawMode() {
-	struct termios orig_termios;
-	tcgetattr(STDIN_FILENO, &orig_termios);
+void	enable_raw_mode(void)
+{
+	struct termios	orig_termios;
+	struct termios	raw;
 
-	struct termios raw = orig_termios;
+	tcgetattr(STDIN_FILENO, &orig_termios);
+	raw = orig_termios;
 	raw.c_lflag &= ~(ECHO | ICANON);
 	tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
 }
@@ -46,11 +45,9 @@ int	main(void)
 	t_cmdn	*cmd_root;
 	char	*input;
 
-	enableRawMode();
-
+	enable_raw_mode();
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, ft_signal_handle);
-
 	cmd_root = init_cmdn(PIPELINE, NULL);
 	while (1)
 	{

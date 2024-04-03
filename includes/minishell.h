@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/03 14:45:32 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/03 16:39:32 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 
 # define NUM_CHILDREN 30  
 
-typedef enum s_ntype 
+typedef enum s_ntype
 {
 	PIPELINE,
 	COMMAND,
@@ -33,7 +33,7 @@ typedef enum s_ntype
 	REDIRECTIONS
 }	t_ntype;	
 
-typedef struct s_cmdn 
+typedef struct s_cmdn
 {
 	t_ntype			ntype;
 	struct s_cmdn	*left;
