@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/03 16:39:32 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/04 16:56:15 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,16 @@ typedef struct s_cmdn
 	char			**cargs;
 }	t_cmdn;	
 
+// Parser:
 void	parse_input(char *input, t_cmdn **root);
 t_cmdn	*init_cmdn(t_ntype type, char **cmd);
 void	print_cmdn(t_cmdn *root);
+// Executor:
+int		run_cmds(t_cmdn *root);
+// Utilities:
+char	*get_exec_path(char **path, char *cmd);
+void	free_args(char **args);
+
 
 /*
 typedef enum s_ntype {

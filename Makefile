@@ -6,7 +6,7 @@
 #    By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/22 12:36:32 by ahamalai          #+#    #+#              #
-#    Updated: 2024/04/02 11:20:27 by mburakow         ###   ########.fr        #
+#    Updated: 2024/04/04 16:55:35 by mburakow         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ MAKE = make
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
 HEAD = includes/minishell.h
-SRCS = main.c	parser.c
+SRCS = main.c	parser.c	executor.c	utils.c
 OBJS = $(SRCS:.c=.o)
 
 all : $(NAME)

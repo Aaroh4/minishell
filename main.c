@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:43 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/03 16:38:45 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/04 15:20:55 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,5 +56,6 @@ int	main(void)
 			return (0);
 		parse_input(input, &cmd_root);
 		print_cmdn(cmd_root);
+		run_cmds(cmd_root);
 	}
 }
