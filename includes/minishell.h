@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/04 16:56:15 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/04 19:49:29 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 # include <termios.h>
 # include "../libft/libft.h"
 
-# define NUM_CHILDREN 30  
+#define INITIAL_SIZE 10
 
 typedef enum s_ntype
 {
@@ -41,6 +41,13 @@ typedef struct s_cmdn
 	char			**cargs;
 }	t_cmdn;	
 
+typedef struct s_dynint
+{
+    int *array;
+    size_t size;
+    size_t capacity;
+} t_dynint;
+
 // Parser:
 void	parse_input(char *input, t_cmdn **root);
 t_cmdn	*init_cmdn(t_ntype type, char **cmd);
@@ -50,6 +57,7 @@ int		run_cmds(t_cmdn *root);
 // Utilities:
 char	*get_exec_path(char **path, char *cmd);
 void	free_args(char **args);
+int		wait_for(int *children);
 
 
 /*
