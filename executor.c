@@ -33,16 +33,17 @@ static void	exec_cmd(t_cmdn *node, int pfd[2])
 	close(pfd[1]);
 }
 
+/*
 static	add_to_commands(int pid, int **commands)
 {
-	static int	i;
+	static int	i = 0;
 
 	if (commands == NULL)
 	{
 		commands = ft_calloc(5, sizeof(int *));
 		commands[0] = pid;
 	}
-	else 
+	else  
 	{
 
 	}
