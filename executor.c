@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/05 10:57:02 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/05 15:14:25 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,10 @@ static void	exec_cmd(t_cmdn *node, int pfd[2])
 	close(pfd[1]);
 }
 
-static int	exec_node(t_cmdn *node, int *pfd, int **commands)
+static int	exec_node(t_cmdn *node, int *pfd, t_dynint *commands)
 {
 	int	pid;
-	int status;
+	// int status;
 
 	if (node == NULL)
 		return (0);
@@ -46,13 +46,13 @@ static int	exec_node(t_cmdn *node, int *pfd, int **commands)
 		pid = fork();
 		if (pid == -1)
 		{
-			wait_for(*commands);
+			wait_for(commands);
 			exit (1);
 		}
 		else if (pid == 0)
 			exec_cmd(node, pfd);
 		else
-			add_to_commands(pid, commands);
+			add_to_dynamic_int_array(commands, pid);
 	}	
 	exec_node(node->right, pfd, commands);
 	return (0);
@@ -61,14 +61,14 @@ static int	exec_node(t_cmdn *node, int *pfd, int **commands)
 int	run_cmds(t_cmdn *root)
 {
 	int			pfd[2];
-	dynarr_t	*commands;
+	t_dynint	*commands;
 	
 	if (root == NULL)
 		return (0);
 	if (pipe(pfd) == -1)
 		exit (1);
-	commands = NULL;
-	exec_node(root, pfd, &commands);
+	commands = create_dynamic_int_array();
+	exec_node(root, pfd, commands);
 	wait_for(commands);
 	close(pfd[0]);
 	close(pfd[1]);
@@ -93,7 +93,7 @@ void	print_cmdn(t_cmdn *node)
 	}
 	print_cmdn(node->right);
 }
-/*
+
 static	add_to_commands(int pid, int **commands)
 {
 	static int	i = 0;

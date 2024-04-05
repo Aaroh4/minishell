@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 09:24:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/05 10:05:12 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/05 15:07:50 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,9 @@ void	expand_dynamic_int_array(t_dynint *dynarr)
 		exit(1);
 	}
 	i = 0;
-	while (dynarr->array[i] != '\0')
+	while (dynarr->array[i] != 0)
 	{
-		newarr[i] = dynarr[i];
+		newarr[i] = dynarr->array[i];
 		i++;
 	}
 	temp = dynarr->array;

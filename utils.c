@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 16:07:48 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/05 09:24:54 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/05 14:25:20 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,15 +38,15 @@ char	*get_exec_path(char **path, char *cmd)
 	return (NULL);
 }
 
-int	wait_for(t_dynint *children)
+int	wait_for(t_dynint *commands)
 {
 	int	status;
 	int	nc;
 
 	nc = 0;
-	while (children[nc])
+	while (commands->array[nc])
 	{
-		waitpid(children[nc], &status, 0);
+		waitpid(commands->array[nc], &status, 0);
 		nc++;
 	}
 	return (WEXITSTATUS(status));

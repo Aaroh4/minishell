@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/05 09:34:26 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/05 14:25:37 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,15 +49,19 @@ typedef struct s_dynint
 } t_dynint;
 
 // Parser:
-void	parse_input(char *input, t_cmdn **root);
-t_cmdn	*init_cmdn(t_ntype type, char **cmd);
-void	print_cmdn(t_cmdn *root);
+void		parse_input(char *input, t_cmdn **root);
+t_cmdn		*init_cmdn(t_ntype type, char **cmd);
+void		print_cmdn(t_cmdn *root);
 // Executor:
-int		run_cmds(t_cmdn *root);
+int			run_cmds(t_cmdn *root);
+// Dynamic Integer Array:
+t_dynint*	create_dynamic_int_array(void);
+void		expand_dynamic_int_array(t_dynint *dynarr);
+int			add_to_dynamic_int_array(t_dynint *dynarr, int value);
 // Utilities:
-char	*get_exec_path(char **path, char *cmd);
-void	free_args(char **args);
-int		wait_for(int *children);
+char		*get_exec_path(char **path, char *cmd);
+void		free_args(char **args);
+int			wait_for(t_dynint *children);
 
 
 /*

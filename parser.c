@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/05 09:35:57 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/05 15:01:26 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static t_cmdn	*create_node(t_cmdn *current, char **cmdarr, int i)
 	cmd = ft_split(cmdarr[i], " ");
 	if (!cmd)
 		exit(1);
-	if (cmdarr[i + 1] != '\0')
+	if (i == ft_strlen(*cmdarr) - 1)
 	{
 		current->left = init_cmdn(COMMAND, cmd);
 		current->right = init_cmdn(PIPELINE, NULL);
@@ -47,7 +47,6 @@ static t_cmdn	*create_node(t_cmdn *current, char **cmdarr, int i)
 	return (current);
 }
 
-// needs free and print
 void	parse_input(char *input, t_cmdn **root)
 {
 	char	**cmdarr;
@@ -60,8 +59,9 @@ void	parse_input(char *input, t_cmdn **root)
 		exit(1);
 	cmdarr = ft_split(input, "|");
 	current = *root;
-	while (cmdarr[i] != '\0')
+	while (cmdarr[i] != NULL)
 	{
+		// printf("%s\n", cmdarr[i]);
 		current = create_node(current, cmdarr, i);
 		i++;
 	}
@@ -75,7 +75,7 @@ void	print_cmdn(t_cmdn *node)
 		return ;
 	print_cmdn(node->left);
 	i = 0;
-	while (node->cargs && node->cargs[i] != '\0')
+	while (node->cargs && node->cargs[i] != 0)
 	{
 		if (i != 0)
 			printf("\t");
