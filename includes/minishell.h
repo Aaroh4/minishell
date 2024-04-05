@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/04 19:49:29 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/05 09:34:26 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,9 @@ typedef struct s_cmdn
 
 typedef struct s_dynint
 {
-    int *array;
-    size_t size;
-    size_t capacity;
+    int		*array;
+    size_t	size;
+    size_t	capacity;
 } t_dynint;
 
 // Parser:
