@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/05 15:01:26 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/05 16:07:09 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static t_cmdn	*create_node(t_cmdn *current, char **cmdarr, int i)
 	cmd = ft_split(cmdarr[i], " ");
 	if (!cmd)
 		exit(1);
-	if (i == ft_strlen(*cmdarr) - 1)
+	if (i < ft_strlen(*cmdarr) - 1)
 	{
 		current->left = init_cmdn(COMMAND, cmd);
 		current->right = init_cmdn(PIPELINE, NULL);
