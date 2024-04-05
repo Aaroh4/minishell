@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 09:24:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/05 15:07:50 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/05 15:27:12 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ t_dynint*	create_dynamic_int_array(void)
 	}
 	dynarr->size = 0;
 	dynarr->capacity = INITIAL_SIZE;
-	return dynarr;
+	return (dynarr);
 }
 
 void	expand_dynamic_int_array(t_dynint *dynarr) 
@@ -64,5 +64,6 @@ int	add_to_dynamic_int_array(t_dynint *dynarr, int value)
 	else if (dynarr->size > dynarr->capacity)
 		exit(1);
 	dynarr->array[dynarr->size] = value;
+	dynarr->size += 1;
 	return (1);
 }
