@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:43 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/10 14:44:41 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/10 15:19:42 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,11 @@ int	main(void)
 	signal(SIGQUIT, SIG_IGN);
 
 	rl_clear_history();
+	/*
 	char cwd[1024];
 	if (getcwd(cwd, sizeof(cwd)) == NULL)
 		perror("getcwd error");
+	*/
 	while (1)
 	{
 		enableRawMode();

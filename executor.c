@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/10 14:46:38 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/10 15:27:00 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,21 +17,33 @@ static void	exec_cmd(t_cmdn *node, int pfd[2])
 	char	*path;
 	char	**path_array;
 	char	*cmdp;
+	char	cwd[1024];
 
-	if (dup2(pfd[0], STDIN_FILENO) == -1)
-		exit (1);
-	path = getenv("PATH");
-	path_array = ft_split(path, ":");
-	cmdp = get_exec_path(path_array, node->cargs[0]);
-	if (cmdp == NULL)
-		exit (127);
-	printf("#%s#\n", cmdp);
-	if (!node->cargs[0] || !*node->cargs || !cmdp
-		|| execve(cmdp, node->cargs, NULL) == -1)
+	//if (dup2(pfd[0], STDIN_FILENO) == -1)
+	//	exit (1);
+	if (getcwd(cwd, sizeof(cwd)) == NULL)
+		perror("getcwd error");
+	if (!ft_strncmp(node->cargs[0], "pwd", 4))
+		pwd_builtin();
+	else if (node->cargs[0] != '\0' && !ft_strncmp(node->cargs[0], "cd", 3))
+		cd_builtin(cwd, node->cargs);
+	else if (node->cargs[0] != '\0' && !ft_strncmp(node->cargs[0], "echo", 5))
+		echo_builtin(node->cargs);
+	else
 	{
-		printf("Execve error.\n");
-		// free_args(&path);
-		exit (127);
+		path = getenv("PATH");
+		path_array = ft_split(path, ":");
+		cmdp = get_exec_path(path_array, node->cargs[0]);
+		if (cmdp == NULL)
+			exit (127);
+		printf("#%s#\n", cmdp);
+		if (!node->cargs[0] || !*node->cargs || !cmdp
+			|| execve(cmdp, node->cargs, NULL) == -1)
+		{
+			printf("Execve error.\n");
+			// free_args(&path);
+			exit (127);
+		}
 	}
 	close(pfd[0]);
 	close(pfd[1]);
