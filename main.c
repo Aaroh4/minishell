@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/02 11:20:43 by mburakow          #+#    #+#             */
+/*   Updated: 2024/04/10 12:59:52 by mburakow         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "./includes/minishell.h"
 
 #include <stdio.h>
@@ -34,8 +46,9 @@ void	ft_handler(int signum)
 	rl_redisplay();
 }
 
-int	main(void)
+int	main(int argc, char **argv, char **envp)
 {
+	t_cmdn	*cmd_root;
 	char	*input;
 	char	**arr;
 	struct termios oterm;
