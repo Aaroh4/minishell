@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:43 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/10 12:59:52 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/10 14:44:41 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,11 @@ void	ft_handler(int signum)
 	rl_redisplay();
 }
 
-int	main(int argc, char **argv, char **envp)
+int	main(void)
 {
 	t_cmdn	*cmd_root;
 	char	*input;
-	char	**arr;
+	//char	**arr;
 	struct termios oterm;
 
 	if (tcgetattr(STDIN_FILENO, &oterm) == -1)
@@ -70,6 +70,9 @@ int	main(int argc, char **argv, char **envp)
 			exit_builtin();
 		disableRawMode(oterm);
 		add_history(input);
+		parse_input(input, &cmd_root);
+		run_cmds(cmd_root);
+		/*
 		if (!ft_strncmp(input, "pwd", 5))
 			pwd_builtin();
 		arr = ft_split(input, " ");
@@ -77,8 +80,9 @@ int	main(int argc, char **argv, char **envp)
 			cd_builtin(cwd, arr);
 		if (arr[0] != '\0' && !ft_strncmp(arr[0], "echo", 2))
 			echo_builtin(arr);
+		*/
 		free(input);
-		while(*arr != NULL)
-			free(*arr++);
+		//while(*arr != NULL)
+		//	free(*arr++);
 	}
 }

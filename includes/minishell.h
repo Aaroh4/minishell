@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/04 10:41:16 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/04/10 14:44:51 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,8 @@ typedef struct s_dynint
 } t_dynint;
 
 // Parser:
-void		parse_input(char *input, t_cmdn **root, char **envp);
-t_cmdn		*init_cmd_node(t_ntype type, char **cmd, char **envp);
+void		parse_input(char *input, t_cmdn **root);
+t_cmdn		*init_cmd_node(t_ntype type, char **cmd);
 void		print_cmdn(t_cmdn *root);
 // Executor:
 int			run_cmds(t_cmdn *root);
