@@ -14,44 +14,58 @@ void enableRawMode() {
 	struct termios term;
     if (tcgetattr(STDIN_FILENO, &term) == -1)
 		perror("tcgetattr");
-    term.c_lflag &= ~(ICANON | ECHOCTL);
+    term.c_lflag &= ~(ECHOCTL);
     if (tcsetattr(STDIN_FILENO, TCSANOW, &term) == -1)
+		perror("tcsetattr");
+}
+
+void	disableRawMode(struct termios oterm)
+{
+	 if (tcsetattr(STDIN_FILENO, TCSANOW, &oterm) == -1)
 		perror("tcsetattr");
 }
 
 void	ft_handler(int signum)
 {
 	signum = 1;
-	write(1, "\nminishell > ", 13);
+	rl_replace_line("", 0);
+	write(1, "\n", 1);
+	rl_on_new_line();
+	rl_redisplay();
 }
 
 int	main(void)
 {
 	char	*input;
 	char	**arr;
-	enableRawMode();
-	//int		i;
+	struct termios oterm;
+
+	if (tcgetattr(STDIN_FILENO, &oterm) == -1)
+		perror("tcgetattr");
 	signal(SIGINT, ft_handler);
 	signal(SIGQUIT, SIG_IGN);
 
+	rl_clear_history();
 	char cwd[1024];
 	if (getcwd(cwd, sizeof(cwd)) == NULL)
 		perror("getcwd error");
 	while (1)
 	{
+		enableRawMode();
 		input = readline("minishell > ");
 		if (input == NULL || !ft_strncmp(input, "exit", 5))
 			exit_builtin();
+		disableRawMode(oterm);
+		add_history(input);
 		if (!ft_strncmp(input, "pwd", 5))
 			pwd_builtin();
 		arr = ft_split(input, " ");
 		if (arr[0] != '\0' && !ft_strncmp(arr[0], "cd", 2))
 			cd_builtin(cwd, arr);
-		//i = 0;
-		//while (arr[i] != '\0')
-		//{
-		//	printf("%s\n", arr[i]);
-		//	i++;
-		//}
+		if (arr[0] != '\0' && !ft_strncmp(arr[0], "echo", 2))
+			echo_builtin(arr);
+		free(input);
+		while(*arr != NULL)
+			free(*arr++);
 	}
 }

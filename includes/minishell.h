@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/02 14:53:47 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/04/04 10:41:16 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,5 +19,7 @@
 void	pwd_builtin(void);
 void	cd_builtin(char *cwd, char **str);
 void	exit_builtin(void);
+void	echo_builtin(char **arg);
+
 
 #endif

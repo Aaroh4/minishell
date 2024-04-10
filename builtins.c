@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:15:11 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/02 14:54:11 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/04/10 14:14:51 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@
 
 void	cd_builtin(char *cwd, char **str)
 {
-	char cwd2[1024];
-	char *realcwd;
+	char	cwd2[1024];
+	char	*realcwd;
 
 	if (getcwd(cwd2, sizeof(cwd2)) == NULL)
 		perror("getcwd error");
@@ -42,7 +42,8 @@ void	cd_builtin(char *cwd, char **str)
 
 void	pwd_builtin(void)
 {
-	char cwd[1024];
+	char	cwd[1024];
+
 	if (getcwd(cwd, sizeof(cwd)) != NULL)
 		printf("%s\n", cwd);
 	else
@@ -53,4 +54,31 @@ void	exit_builtin(void)
 {
 	write(1, "exit\n", 5);
 	exit (0);
+}
+
+void	echo_builtin(char **arg)
+{
+	int	i;
+
+	i = 1;
+	if (ft_strncmp(arg[i], "-n", 3))
+	{
+		while (arg[i] != NULL)
+		{
+			printf("%s", arg[i++]);
+			if (arg[i] != NULL)
+				printf("%s", " ");
+		}
+		printf("\n");
+	}
+	else
+	{
+		i++;
+		while (arg[i] != NULL)
+		{
+			printf("%s", arg[i++]);
+			if (arg[i] != NULL)
+				printf("%s", " ");
+		}
+	}
 }
