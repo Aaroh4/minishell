@@ -6,13 +6,13 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/05 16:07:09 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/10 13:04:09 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/minishell.h"
 
-t_cmdn	*init_cmdn(t_ntype type, char **cmd)
+t_cmdn	*init_cmd_node(t_ntype type, char **cmd, char **envp)
 {
 	t_cmdn	*new_cmdn;
 
@@ -25,44 +25,53 @@ t_cmdn	*init_cmdn(t_ntype type, char **cmd)
 		new_cmdn->cargs = NULL;
 		if (cmd != NULL)
 			new_cmdn->cargs = cmd;
+		new_cmdn->envp = envp;
 	}
 	return (new_cmdn);
 }
 
-static t_cmdn	*create_node(t_cmdn *current, char **cmdarr, int i)
+static t_cmdn	*create_node(t_cmdn *current, char **cmdarr, char **envp, int i)
 {
 	char	**cmd;
+	int		j;
 
 	cmd = ft_split(cmdarr[i], " ");
 	if (!cmd)
 		exit(1);
+	j = 0;
+	while (cmd[j] != '\0')
+	{
+		cmd[j] = trim_string(cmd[j]);
+		printf("*%s*\n", cmd[j]);
+		j++;
+	}
 	if (i < ft_strlen(*cmdarr) - 1)
 	{
-		current->left = init_cmdn(COMMAND, cmd);
-		current->right = init_cmdn(PIPELINE, NULL);
+		current->left = init_cmd_node(COMMAND, cmd, envp);
+		current->right = init_cmd_node(PIPELINE, NULL, envp);
 		current = current->right;
 	}
 	else
-		current->right = init_cmdn(COMMAND, cmd);
+		current->right = init_cmd_node(COMMAND, cmd, envp);
 	return (current);
 }
 
-void	parse_input(char *input, t_cmdn **root)
+void	parse_input(char *input, t_cmdn **root, char **envp)
 {
 	char	**cmdarr;
 	t_cmdn	*current;
 	int		i;
 
 	i = 0;
-	*root = init_cmdn(PIPELINE, NULL);
+	*root = init_cmd_node(PIPELINE, NULL, envp);
 	if (!(*root))
 		exit(1);
 	cmdarr = ft_split(input, "|");
 	current = *root;
 	while (cmdarr[i] != NULL)
 	{
-		// printf("%s\n", cmdarr[i]);
-		current = create_node(current, cmdarr, i);
+		printf("@%s@\n", cmdarr[i]);
+		current = create_node(current, cmdarr, envp, i);
 		i++;
 	}
 }

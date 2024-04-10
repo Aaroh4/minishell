@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 16:07:48 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/05 14:25:20 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/10 12:12:39 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,4 +67,21 @@ void	free_args(char **args)
 	}
 	free(args);
 	args = NULL;
+}
+
+// At the moment accounts only for space characters, are other characters necessary?
+char	*trim_string(char *str)
+{
+	char	*end;
+
+	while ((unsigned char)*str == 32)
+		str++;
+	if (*str == '\0')
+		return (str);
+	end = str + ft_strlen(str) - 1;
+	while (end > str && (unsigned char)*end == 32)
+		end--;
+	end[1] = '\0';
+
+	return (str);
 }

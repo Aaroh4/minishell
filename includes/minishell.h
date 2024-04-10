@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/05 14:25:37 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/10 12:57:16 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ typedef struct s_cmdn
 	struct s_cmdn	*left;
 	struct s_cmdn	*right;
 	char			**cargs;
+	char			**envp;
 }	t_cmdn;	
 
 typedef struct s_dynint
@@ -49,8 +50,8 @@ typedef struct s_dynint
 } t_dynint;
 
 // Parser:
-void		parse_input(char *input, t_cmdn **root);
-t_cmdn		*init_cmdn(t_ntype type, char **cmd);
+void		parse_input(char *input, t_cmdn **root, char **envp);
+t_cmdn		*init_cmd_node(t_ntype type, char **cmd, char **envp);
 void		print_cmdn(t_cmdn *root);
 // Executor:
 int			run_cmds(t_cmdn *root);
@@ -62,6 +63,7 @@ int			add_to_dynamic_int_array(t_dynint *dynarr, int value);
 char		*get_exec_path(char **path, char *cmd);
 void		free_args(char **args);
 int			wait_for(t_dynint *children);
+char		*trim_string(char *str);
 
 
 /*
