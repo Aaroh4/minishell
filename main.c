@@ -12,46 +12,73 @@
 
 #include "./includes/minishell.h"
 
-void	ft_signal_handle(int signal_num)
-{
-	int	i;
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <signal.h>
+#include <string.h>
+#include <readline/readline.h>
+#include <readline/history.h>
+#include <termios.h>
+#include <fcntl.h>
 
-	i = 0;
-	if (i == signal_num)
-		i = 1;
+void enableRawMode() {
+	struct termios term;
+    if (tcgetattr(STDIN_FILENO, &term) == -1)
+		perror("tcgetattr");
+    term.c_lflag &= ~(ECHOCTL);
+    if (tcsetattr(STDIN_FILENO, TCSANOW, &term) == -1)
+		perror("tcsetattr");
 }
 
-void	enable_raw_mode(void)
+void	disableRawMode(struct termios oterm)
 {
-	struct termios	orig_termios;
-	struct termios	raw;
+	 if (tcsetattr(STDIN_FILENO, TCSANOW, &oterm) == -1)
+		perror("tcsetattr");
+}
 
-	tcgetattr(STDIN_FILENO, &orig_termios);
-	raw = orig_termios;
-	raw.c_lflag &= ~(ECHO | ICANON);
-	tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
+void	ft_handler(int signum)
+{
+	signum = 1;
+	rl_replace_line("", 0);
+	write(1, "\n", 1);
+	rl_on_new_line();
+	rl_redisplay();
 }
 
 int	main(int argc, char **argv, char **envp)
 {
 	t_cmdn	*cmd_root;
 	char	*input;
+	char	**arr;
+	struct termios oterm;
 
-	enable_raw_mode();
-	if (argc > 1)
-		argc++;
-	if (argv[0])
-		argv[0] = "Minishelli";
+	if (tcgetattr(STDIN_FILENO, &oterm) == -1)
+		perror("tcgetattr");
+	signal(SIGINT, ft_handler);
 	signal(SIGQUIT, SIG_IGN);
-	signal(SIGINT, ft_signal_handle);
-	cmd_root = init_cmd_node(PIPELINE, NULL, envp);
+
+	rl_clear_history();
+	char cwd[1024];
+	if (getcwd(cwd, sizeof(cwd)) == NULL)
+		perror("getcwd error");
 	while (1)
 	{
+		enableRawMode();
 		input = readline("minishell > ");
-		if (!ft_strncmp(input, "break", 5) || input == NULL)
-			return (0);
-		parse_input(input, &cmd_root, envp);
-		print_cmdn(cmd_root);
-		run_cmds(cmd_root);
+		if (input == NULL || !ft_strncmp(input, "exit", 5))
+			exit_builtin();
+		disableRawMode(oterm);
+		add_history(input);
+		if (!ft_strncmp(input, "pwd", 5))
+			pwd_builtin();
+		arr = ft_split(input, " ");
+		if (arr[0] != '\0' && !ft_strncmp(arr[0], "cd", 2))
+			cd_builtin(cwd, arr);
+		if (arr[0] != '\0' && !ft_strncmp(arr[0], "echo", 2))
+			echo_builtin(arr);
+		free(input);
+		while(*arr != NULL)
+			free(*arr++);
 	}
 }

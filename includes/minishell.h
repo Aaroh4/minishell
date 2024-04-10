@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/10 12:57:16 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/04 10:41:16 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,5 +83,10 @@ typedef struct s_cmdn {
   struct t_cmdn	*children[NUM_CHILDREN];
 } t_cmdn;
 */
+
+void	pwd_builtin(void);
+void	cd_builtin(char *cwd, char **str);
+void	exit_builtin(void);
+void	echo_builtin(char **arg);
 
 #endif

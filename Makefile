@@ -6,7 +6,7 @@
 #    By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/22 12:36:32 by ahamalai          #+#    #+#              #
-#    Updated: 2024/04/05 14:29:33 by mburakow         ###   ########.fr        #
+#    Updated: 2024/04/03 16:07:23 by ahamalai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,16 +14,16 @@ NAME = minishell
 LIBFTDIR = ./libft
 MAKE = make
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror -I ~/.brew/opt/readline/include
 HEAD = includes/minishell.h
-SRCS = main.c	parser.c	executor.c	utils.c	dynint.c
+SRCS = main.c builtins.c parser.c	executor.c	utils.c	dynint.c
 OBJS = $(SRCS:.c=.o)
 
 all : $(NAME)
 
 $(NAME): $(OBJS)
 		@$(MAKE) -C $(LIBFTDIR)
-		@$(CC) $(CFLAGS) -lreadline $(OBJS) ./libft/libft.a -o $(NAME) 
+		@$(CC) $(CFLAGS) $(OBJS) ./libft/libft.a -o $(NAME) -lreadline -L ~/.brew/opt/readline/lib
 
 clean:
 		@rm -f $(OBJS)
