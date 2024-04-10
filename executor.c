@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/10 13:12:10 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/10 13:31:06 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ static void	exec_cmd(t_cmdn *node, int pfd[2])
 	char	*path;
 	char	**path_array;
 	char	*cmdp;
-	// int i;
 
 	if (dup2(pfd[0], STDIN_FILENO) == -1)
 		exit (1);
@@ -27,17 +26,10 @@ static void	exec_cmd(t_cmdn *node, int pfd[2])
 	if (cmdp == NULL)
 		exit (127);
 	printf("#%s#\n", cmdp);
-	/*
-	i = 0;
-	while (node->envp[i] != '\0')
-	{
-		printf("%s\n", node->envp[i]);
-		i++;
-	}
-	*/
 	if (!node->cargs[0] || !*node->cargs || !cmdp
-		|| execve(cmdp, NULL, node->envp) == -1)
+		|| execve(cmdp, node->cargs, node->envp) == -1)
 	{
+		printf("Execve error.\n");
 		// free_args(&path);
 		exit (127);
 	}
