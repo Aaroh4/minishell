@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split_time_space.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/03 12:03:00 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/11 12:44:53 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/04/11 12:54:21 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	ft_wording(char *dest, int *i, int *j, char const *s)
 	}
 }
 
-void	do_word(char *dest, char const *s, char c, int check)
+static void	do_word(char *dest, char const *s, char c, int check)
 {
 	int	i;
 	int	j;
@@ -52,7 +52,7 @@ void	do_word(char *dest, char const *s, char c, int check)
 	dest[i] = '\0';
 }
 
-int	do_split(char **arr, char const *s, char c, int i)
+static int	do_split(char **arr, char const *s, char c, int i)
 {
 	int	jcheck[2];
 	int	word;

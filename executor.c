@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/10 15:27:00 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/04/11 16:01:58 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ static void	exec_cmd(t_cmdn *node, int pfd[2])
 	}
 	close(pfd[0]);
 	close(pfd[1]);
+	exit (0);
 }
 
 static int	exec_node(t_cmdn *node, int *pfd, t_dynint *commands)

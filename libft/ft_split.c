@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/19 12:04:33 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/01 16:11:01 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/04/11 12:54:04 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	word_count(char *str, char *charset)
 	return (count);
 }
 
-void	do_word(char *dest, char *str, char *charset)
+static void	do_word(char *dest, char *str, char *charset)
 {
 	int	i;
 
@@ -59,7 +59,7 @@ void	do_word(char *dest, char *str, char *charset)
 	dest[i] = '\0';
 }
 
-void	do_split(char **arr, char *str, char *charset)
+static void	do_split(char **arr, char *str, char *charset)
 {
 	int	i;
 	int	j;

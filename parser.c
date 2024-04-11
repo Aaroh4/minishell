@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/10 14:46:52 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/11 13:56:06 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ static t_cmdn	*create_node(t_cmdn *current, char **cmdarr, int i)
 	char	**cmd;
 	int		j;
 
+	// cmd = ft_split_time_space(cmdarr[i], ' ');
 	cmd = ft_split(cmdarr[i], " ");
 	if (!cmd)
 		exit(1);
@@ -41,7 +42,7 @@ static t_cmdn	*create_node(t_cmdn *current, char **cmdarr, int i)
 	while (cmd[j] != '\0')
 	{
 		cmd[j] = trim_string(cmd[j]);
-		printf("*%s*\n", cmd[j]);
+		// printf("*%s*\n", cmd[j]);
 		j++;
 	}
 	if (i < ft_strlen(*cmdarr) - 1)
@@ -69,7 +70,7 @@ void	parse_input(char *input, t_cmdn **root)
 	current = *root;
 	while (cmdarr[i] != NULL)
 	{
-		printf("@%s@\n", cmdarr[i]);
+		// printf("@%s@\n", cmdarr[i]);
 		current = create_node(current, cmdarr, i);
 		i++;
 	}
