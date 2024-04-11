@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 11:22:20 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/01 16:13:56 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/04/11 12:47:57 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,5 +91,14 @@ int		ft_putstr(char *str);
 int		count(int n);
 int		ft_printhex(long n, int base, char c);
 int		ft_printptr(unsigned long n);
+
+// TIME AND SPACE
+
+char	**ft_split_time_space(char const *s, char c);
+int		ft_check(int i, const char *str);
+int		freemem(char **arr, int size);
+int		ft_checker(char const *s, int i, int check);
+int		ft_incrj(int i, char const *s, int check, char c);
+
 
 #endif
