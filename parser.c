@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/10 14:46:52 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/11 12:52:05 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static t_cmdn	*create_node(t_cmdn *current, char **cmdarr, int i)
 	char	**cmd;
 	int		j;
 
-	cmd = ft_split(cmdarr[i], " ");
+	cmd = ft_split_time_space(cmdarr[i], ' ');
 	if (!cmd)
 		exit(1);
 	j = 0;
