@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:43 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/11 18:53:10 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/11 20:49:04 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,20 +62,22 @@ int	main(void)
 		perror("pipe init error.");
 	while (1)
 	{
+		if (pipe(pfd) == -1)
+			perror("pipe init error.");
 		enableRawMode();
 		input = readline("minishell > ");
 		if (input == NULL || !ft_strncmp(input, "exit", 5))
 			exit_builtin();
 		add_history(input);
 		parse_input(input, &cmd_root);
-		ft_putendl_fd("###########", 2);
-		print_cmdn(cmd_root);
-		ft_putendl_fd("###########", 2);
+		//ft_putendl_fd("###########", 2);
+		//print_cmdn(cmd_root);
+		//ft_putendl_fd("###########", 2);
 		run_cmds(cmd_root, pfd);
 		free(input);
 		free_cmdn(cmd_root);
 		disableRawMode(oterm);
+		close(pfd[0]);
+		close(pfd[1]);
 	}
-	close(pfd[0]);
-	close(pfd[1]);
 }

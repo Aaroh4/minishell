@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/11 19:37:09 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/11 19:51:01 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,9 +74,9 @@ void	parse_input(char *input, t_cmdn **root)
 	len = 0;
 	while (cmdarr[len] != 0)
 		len++;
-	ft_putstr_fd("Number of commands: ", 2);
-	ft_putnbr_fd(len, 2);
-	ft_putchar_fd('\n', 2);
+	//ft_putstr_fd("Number of commands: ", 2);
+	//ft_putnbr_fd(len, 2);
+	//ft_putchar_fd('\n', 2);
 	while (cmdarr[i] != 0)
 	{
 		current = create_node(current, cmdarr, i, len);
