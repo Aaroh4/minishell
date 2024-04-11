@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:43 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/11 17:37:02 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/11 18:53:10 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,12 +51,15 @@ int	main(void)
 	t_cmdn			*cmd_root;
 	char			*input;
 	struct termios 	oterm;
+	int				pfd[2];
 
 	if (tcgetattr(STDIN_FILENO, &oterm) == -1)
 		perror("tcgetattr");
 	signal(SIGINT, ft_handler);
 	signal(SIGQUIT, SIG_IGN);
 	rl_clear_history();
+	if (pipe(pfd) == -1)
+		perror("pipe init error.");
 	while (1)
 	{
 		enableRawMode();
@@ -65,9 +68,14 @@ int	main(void)
 			exit_builtin();
 		add_history(input);
 		parse_input(input, &cmd_root);
-		run_cmds(cmd_root);
+		ft_putendl_fd("###########", 2);
+		print_cmdn(cmd_root);
+		ft_putendl_fd("###########", 2);
+		run_cmds(cmd_root, pfd);
 		free(input);
 		free_cmdn(cmd_root);
 		disableRawMode(oterm);
 	}
+	close(pfd[0]);
+	close(pfd[1]);
 }

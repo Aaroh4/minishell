@@ -6,13 +6,13 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/11 18:02:24 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/11 18:48:22 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/minishell.h"
 
-static void	exec_cmd(t_cmdn *node, int pfd[2], t_bool last)
+static void	exec_cmd(t_cmdn *node, int pfd[2])
 {
 	char	**path_array;
 	char	*cmdp;
@@ -20,13 +20,13 @@ static void	exec_cmd(t_cmdn *node, int pfd[2], t_bool last)
 
 	if (dup2(pfd[0], STDIN_FILENO) == -1)
 		perror("dup2 stdin error");
-	close(pfd[0]);
-	if (last == FALSE)
+	//close(pfd[0]);
+	if (node->last == FALSE)
 	{
 		if (dup2(pfd[1], STDOUT_FILENO) == -1)
 			perror("dup2 stdout error");
 	}
-	close(pfd[1]);
+	//close(pfd[1]);
 	cwd = NULL;
 	if (getcwd(cwd, sizeof(cwd)) == NULL)
 		perror("getcwd error");
@@ -50,20 +50,20 @@ static void	exec_cmd(t_cmdn *node, int pfd[2], t_bool last)
 		}
 	}
 	free(cwd);
-	//close(pfd[0]);
-	//close(pfd[1]);
+	close(pfd[0]);
+	close(pfd[1]);
 	exit (0);
 }
 
 // If node->right type command it's last so rockit
 // Might not work with bonuses though
-static int	exec_node(t_cmdn *node, int *pfd, t_dynint *commands, t_bool last)
+static int	exec_node(t_cmdn *node, int *pfd, t_dynint *commands)
 {
 	int	pid;
 
 	if (node == NULL)
 		return (0);
-	exec_node(node->left, pfd, commands, FALSE);
+	exec_node(node->left, pfd, commands);
 	if (node->ntype == COMMAND)
 	{
 		pid = fork();
@@ -73,34 +73,23 @@ static int	exec_node(t_cmdn *node, int *pfd, t_dynint *commands, t_bool last)
 			perror("fork error");
 		}
 		else if (pid == 0)
-			exec_cmd(node, pfd, last);
+			exec_cmd(node, pfd);
 		else
 			add_to_dynamic_int_array(commands, pid);
 	}
-	if (node->right && node->right->ntype == COMMAND)
-		exec_node(node->right, pfd, commands, TRUE);
-	else
-		exec_node(node->right, pfd, commands, FALSE);
+	exec_node(node->right, pfd, commands);
 	return (0);
 }
 
-int	run_cmds(t_cmdn *root)
+int	run_cmds(t_cmdn *root, int *pfd)
 {
-	int			pfd[2];
 	t_dynint	*commands;
 	
 	if (root == NULL)
 		return (0);
-	if (pipe(pfd) == -1)
-	{
-		free_cmdn(root);
-		perror("pipe init error.");
-	}
 	commands = create_dynamic_int_array();
-	exec_node(root, pfd, commands, FALSE);
+	exec_node(root, pfd, commands);
 	wait_for(commands);
-	close(pfd[0]);
-	close(pfd[1]);
 	return (0);
 }
 
