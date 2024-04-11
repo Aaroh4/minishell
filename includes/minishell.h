@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/11 13:50:05 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/11 17:49:31 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,12 @@
 # include "../libft/libft.h"
 
 #define INITIAL_SIZE 10
+
+typedef enum s_bool
+{
+	FALSE,
+	TRUE
+}	t_bool;
 
 typedef enum s_ntype
 {
@@ -65,26 +71,7 @@ void		free_args(char **args);
 void		free_cmdn(t_cmdn *node);
 int			wait_for(t_dynint *children);
 char		*trim_string(char *str);
-
-
-/*
-typedef enum s_ntype {
-	ROOT,
-	CMD,
-	PARAM,
-	INFILE,
-	OUTFILE,
-	SPAREN,
-	DPAREN
-}	t_ntype;
-
-typedef struct s_cmdn {
-  t_ntype		ntype;
-  char			*symbol;
-  struct t_cmdn	*children[NUM_CHILDREN];
-} t_cmdn;
-*/
-
+// Buildins:
 void	pwd_builtin(void);
 void	cd_builtin(char *cwd, char **str);
 void	exit_builtin(void);

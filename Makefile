@@ -6,7 +6,7 @@
 #    By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/22 12:36:32 by ahamalai          #+#    #+#              #
-#    Updated: 2024/04/03 16:07:23 by ahamalai         ###   ########.fr        #
+#    Updated: 2024/04/11 17:35:49 by mburakow         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME = minishell
 LIBFTDIR = ./libft
 MAKE = make
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -I ~/.brew/opt/readline/include
+CFLAGS = -Wall -Wextra -Werror -g -I ~/.brew/opt/readline/include
 HEAD = includes/minishell.h
 SRCS = main.c builtins.c parser.c	executor.c	utils.c	dynint.c
 OBJS = $(SRCS:.c=.o)
