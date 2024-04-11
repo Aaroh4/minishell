@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/11 12:10:31 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/11 13:50:05 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ int			add_to_dynamic_int_array(t_dynint *dynarr, int value);
 // Utilities:
 char		*get_exec_path(char **path, char *cmd);
 void		free_args(char **args);
+void		free_cmdn(t_cmdn *node);
 int			wait_for(t_dynint *children);
 char		*trim_string(char *str);
 
