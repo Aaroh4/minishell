@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:43 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/12 12:30:53 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/12 16:11:31 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ static int	handle_arguments(int argc, char **argv)
 {
 	int i;
 
+	i = 0;
 	while (argv[i] && i < argc)
 		i++;
 	return (i);
@@ -64,6 +65,7 @@ int	main(int argc, char **argv, char **envp)
 	char			*input;
 	struct termios 	oterm;
 	int				pfd[2];
+	char			**ms_envp;
 
 	handle_arguments(argc, argv);
 	if (tcgetattr(STDIN_FILENO, &oterm) == -1)
@@ -73,6 +75,12 @@ int	main(int argc, char **argv, char **envp)
 	rl_clear_history();
 	if (pipe(pfd) == -1)
 		perror("pipe init error.");
+	ms_envp = copy_envp(envp);
+	/* test copy
+	int i = 0;
+	while (ms_envp[i])
+		ft_putendl_fd(ms_envp[i++], 2);
+	*/
 	while (1)
 	{
 		if (pipe(pfd) == -1)
@@ -86,7 +94,7 @@ int	main(int argc, char **argv, char **envp)
 		//ft_putendl_fd("###########", 2);
 		//print_cmdn(cmd_root);
 		//ft_putendl_fd("###########", 2);
-		run_cmds(cmd_root, pfd);
+		run_cmds(cmd_root, pfd, ms_envp);
 		free(input);
 		free_cmdn(cmd_root);
 		disableRawMode(oterm);

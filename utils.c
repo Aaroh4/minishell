@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 16:07:48 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/11 20:51:31 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/12 15:50:33 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,10 @@ void	free_cmdn(t_cmdn *node)
 		return ;
 	free_cmdn(node->left);
 	free_args(node->cargs);
+	node->cargs = NULL;
 	free(node);
 	free_cmdn(node->right);
+	node = NULL;
 }
 
 // At the moment accounts only for space characters, are other characters necessary?

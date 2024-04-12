@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/11 20:49:32 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/12 15:45:27 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,15 +65,16 @@ static void	exec_cmd(t_cmdn *node, int pfd[2])
 
 // If node->right type command it's last so rockit
 // Might not work with bonuses though
-static int	exec_node(t_cmdn *node, int *pfd, t_dynint *commands)
+static int	exec_node(t_cmdn *node, int *pfd, char **ms_envp, t_dynint *commands)
 {
 	int	pid;
 
 	if (node == NULL)
 		return (0);
-	exec_node(node->left, pfd, commands);
+	exec_node(node->left, pfd, ms_envp, commands);
 	if (node->ntype == COMMAND)
 	{
+		// populate_env_vars(node, ms_envp);
 		pid = fork();
 		if (pid == -1)
 		{
@@ -91,82 +92,20 @@ static int	exec_node(t_cmdn *node, int *pfd, t_dynint *commands)
 			add_to_dynamic_int_array(commands, pid);
 		}
 	}
-	exec_node(node->right, pfd, commands);
+	exec_node(node->right, pfd, ms_envp, commands);
 	return (0);
 }
 
-int	run_cmds(t_cmdn *root, int *pfd)
+int	run_cmds(t_cmdn *root, int *pfd, char **ms_envp)
 {
 	t_dynint	*commands;
-	
+
 	if (root == NULL)
 		return (0);
 	commands = create_dynamic_int_array();
-	exec_node(root, pfd, commands);
+	exec_node(root, pfd, ms_envp, commands);
 	close(pfd[0]);
 	close(pfd[1]);
 	wait_for(commands);
 	return (0);
 }
-
-/*
-void	print_cmdn(t_cmdn *node)
-{
-	int	i;
-
-	if (node == NULL)
-		return ;
-	print_cmdn(node->left);
-	i = 0;
-	while (node->cargs && node->cargs[i] != '\0')
-	{
-		if (i != 0)
-			printf("\t");
-		printf("%s\n", node->cargs[i]);
-		i++;
-	}
-	print_cmdn(node->right);
-}
-
-static	add_to_commands(int pid, int **commands)
-{
-	static int	i = 0;
-
-	if (commands == NULL)
-	{
-		commands = ft_calloc(5, sizeof(int *));
-		commands[0] = pid;
-	}
-	else  
-	{
-
-	}
-
-}
-
-static int	exec_node(t_cmdn *node, int *pfd, int **commands)
-{
-	int	pid;
-	int status;
-
-	if (node == NULL)
-		return (0);
-	exec_node(node->left, pfd, commands);
-	if (node->ntype == COMMAND)
-	{
-		pid = fork();
-		if (pid == -1)
-		{
-			wait_for(commands);
-			exit (1);
-		}
-		else if (pid == 0)
-			exec_cmd(node, pfd);
-		else
-			add_to_commands(pid, commands);
-	}	
-	exec_node(node->right, pfd, commands);
-	return (0);
-}
-
-*/

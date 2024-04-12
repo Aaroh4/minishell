@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/12 12:43:31 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/12 15:45:34 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,8 @@ static t_cmdn	*create_node(t_cmdn *current, char **cmdarr, int i, int len)
 	char	**cmd;
 	int		j;
 
-	cmd = ft_split_time_space(cmdarr[i], ' ');
-	// cmd = ft_split(cmdarr[i], " ");
+	//cmd = ft_split_time_space(cmdarr[i], ' ');
+	cmd = ft_split(cmdarr[i], " ");
 	if (!cmd)
 		exit(1);
 	j = 0;
@@ -58,7 +58,7 @@ static t_cmdn	*create_node(t_cmdn *current, char **cmdarr, int i, int len)
 	return (current);
 }
 
-void	parse_input(char *input, t_cmdn **root, char **envp)
+void	parse_input(char *input, t_cmdn **root)
 {
 	char	**cmdarr;
 	t_cmdn	*current;

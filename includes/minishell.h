@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/12 12:33:29 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/12 15:45:31 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,11 +56,11 @@ typedef struct s_dynint
 }	t_dynint;
 
 // Parser:
-void		parse_input(char *input, t_cmdn **root, char **envp);
+void		parse_input(char *input, t_cmdn **root);
 t_cmdn		*init_cmd_node(t_ntype type, char **cmd, t_bool last);
 void		print_cmdn(t_cmdn *root);
 // Executor:
-int			run_cmds(t_cmdn *root, int *pfd);
+int			run_cmds(t_cmdn *root, int *pfd, char **envp);
 // Dynamic Integer Array:
 t_dynint*	create_dynamic_int_array(void);
 void		expand_dynamic_int_array(t_dynint *dynarr);
@@ -72,9 +72,12 @@ void		free_cmdn(t_cmdn *node);
 int			wait_for(t_dynint *children);
 char		*trim_string(char *str);
 // Buildins:
-void	pwd_builtin(void);
-void	cd_builtin(char *cwd, char **str);
-void	exit_builtin(void);
-void	echo_builtin(char **arg);
+void		pwd_builtin(void);
+void		cd_builtin(char *cwd, char **str);
+void		exit_builtin(void);
+void		echo_builtin(char **arg);
+// Environment variables:
+char		**copy_envp(char **envp);
+void		populate_env_vars(t_cmdn *node, char **ms_envp);
 
 #endif
