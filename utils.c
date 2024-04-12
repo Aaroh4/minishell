@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 16:07:48 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/11 13:51:23 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/11 20:51:31 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,9 @@ int	wait_for(t_dynint *commands)
 	nc = 0;
 	while (commands->array[nc])
 	{
+		//ft_putstr_fd("Waited for :", 2);
+		//ft_putnbr_fd(waitpid(commands->array[nc], &status, 0), 2);
+		//ft_putchar_fd('\n', 2);
 		waitpid(commands->array[nc], &status, 0);
 		nc++;
 	}

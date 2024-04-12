@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/11 13:50:05 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/11 18:47:15 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,12 @@
 
 #define INITIAL_SIZE 10
 
+typedef enum s_bool
+{
+	FALSE,
+	TRUE
+}	t_bool;
+
 typedef enum s_ntype
 {
 	PIPELINE,
@@ -40,6 +46,7 @@ typedef struct s_cmdn
 	struct s_cmdn	*right;
 	char			**cargs;
 	char			**envp;
+	t_bool			last;
 }	t_cmdn;	
 
 typedef struct s_dynint
@@ -51,10 +58,10 @@ typedef struct s_dynint
 
 // Parser:
 void		parse_input(char *input, t_cmdn **root);
-t_cmdn		*init_cmd_node(t_ntype type, char **cmd);
+t_cmdn		*init_cmd_node(t_ntype type, char **cmd, t_bool last);
 void		print_cmdn(t_cmdn *root);
 // Executor:
-int			run_cmds(t_cmdn *root);
+int			run_cmds(t_cmdn *root, int *pfd);
 // Dynamic Integer Array:
 t_dynint*	create_dynamic_int_array(void);
 void		expand_dynamic_int_array(t_dynint *dynarr);
@@ -65,26 +72,7 @@ void		free_args(char **args);
 void		free_cmdn(t_cmdn *node);
 int			wait_for(t_dynint *children);
 char		*trim_string(char *str);
-
-
-/*
-typedef enum s_ntype {
-	ROOT,
-	CMD,
-	PARAM,
-	INFILE,
-	OUTFILE,
-	SPAREN,
-	DPAREN
-}	t_ntype;
-
-typedef struct s_cmdn {
-  t_ntype		ntype;
-  char			*symbol;
-  struct t_cmdn	*children[NUM_CHILDREN];
-} t_cmdn;
-*/
-
+// Buildins:
 void	pwd_builtin(void);
 void	cd_builtin(char *cwd, char **str);
 void	exit_builtin(void);
