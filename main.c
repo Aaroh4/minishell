@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:43 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/12 12:30:53 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/11 20:49:04 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,26 +46,13 @@ void	ft_handler(int signum)
 	rl_redisplay();
 }
 
-// BS function to prevent compiler warnings
-// Maybe later actual parameters for minishell will be used
-// Right now it's just to get envp
-static int	handle_arguments(int argc, char **argv)
-{
-	int i;
-
-	while (argv[i] && i < argc)
-		i++;
-	return (i);
-}
-
-int	main(int argc, char **argv, char **envp)
+int	main(void)
 {
 	t_cmdn			*cmd_root;
 	char			*input;
 	struct termios 	oterm;
 	int				pfd[2];
 
-	handle_arguments(argc, argv);
 	if (tcgetattr(STDIN_FILENO, &oterm) == -1)
 		perror("tcgetattr");
 	signal(SIGINT, ft_handler);

@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/12 12:43:31 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/11 19:51:01 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ static t_cmdn	*create_node(t_cmdn *current, char **cmdarr, int i, int len)
 	return (current);
 }
 
-void	parse_input(char *input, t_cmdn **root, char **envp)
+void	parse_input(char *input, t_cmdn **root)
 {
 	char	**cmdarr;
 	t_cmdn	*current;

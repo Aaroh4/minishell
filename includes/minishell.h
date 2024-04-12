@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/12 12:33:29 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/11 18:47:15 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ typedef struct s_cmdn
 	struct s_cmdn	*left;
 	struct s_cmdn	*right;
 	char			**cargs;
+	char			**envp;
 	t_bool			last;
 }	t_cmdn;	
 
@@ -53,10 +54,10 @@ typedef struct s_dynint
     int		*array;
     size_t	size;
     size_t	capacity;
-}	t_dynint;
+} t_dynint;
 
 // Parser:
-void		parse_input(char *input, t_cmdn **root, char **envp);
+void		parse_input(char *input, t_cmdn **root);
 t_cmdn		*init_cmd_node(t_ntype type, char **cmd, t_bool last);
 void		print_cmdn(t_cmdn *root);
 // Executor:
