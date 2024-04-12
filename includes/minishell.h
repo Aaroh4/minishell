@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/11 18:47:15 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/12 17:32:24 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ typedef struct s_cmdn
 	struct s_cmdn	*left;
 	struct s_cmdn	*right;
 	char			**cargs;
-	char			**envp;
+	//char			**envp;
 	t_bool			last;
 }	t_cmdn;	
 
