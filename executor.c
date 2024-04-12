@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/12 15:45:27 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/12 13:55:19 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ static void	exec_cmd(t_cmdn *node, int pfd[2])
 	char	*cmdp;
 	char	*cwd;
 
+	// Here's the doc
 	if (dup2(pfd[0], STDIN_FILENO) == -1)
 	{
 		perror("dup2 stdin error");

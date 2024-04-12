@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/12 15:45:34 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/12 15:58:08 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,21 +30,51 @@ t_cmdn	*init_cmd_node(t_ntype type, char **cmd, t_bool last)
 	return (new_cmdn);
 }
 
+char	**ft_remove_quotes(char **cmd)
+{
+	int		i;
+	int		j;
+
+	i = 1;
+	while (cmd[i] != '\0')
+	{
+		j = 0;
+		while (cmd[i][j] != '\0')
+		{
+			if (cmd[i][j] == '\"')
+			{
+				while(cmd[i][j] != '\0')
+				{
+					cmd[i][j] = cmd[i][j + 1];
+					j++;
+				}
+				j = 0;
+			}
+			j++;
+		}
+		i++;
+	}
+	return (cmd);
+}
+
 static t_cmdn	*create_node(t_cmdn *current, char **cmdarr, int i, int len)
 {
 	char	**cmd;
-	int		j;
+	// int		j;
 
-	//cmd = ft_split_time_space(cmdarr[i], ' ');
-	cmd = ft_split(cmdarr[i], " ");
+	cmd = ft_split_time_space(cmdarr[i], ' ');
+	cmd = ft_remove_quotes(cmd);
 	if (!cmd)
 		exit(1);
+	//trim_string(cmd[0]);
+	/*
 	j = 0;
 	while (cmd[j] != '\0')
 	{
 		cmd[j] = trim_string(cmd[j]);
 		j++;
 	}
+	*/
 	if (i < len - 2)
 	{
 		current->left = init_cmd_node(COMMAND, cmd, FALSE);
@@ -107,49 +137,3 @@ void	print_cmdn(t_cmdn *node)
 	ft_putchar_fd('\n', 2);
 	print_cmdn(node->right);
 }
-
-/*
-char	*check_cmd(char *string)
-{
-	int		i;
-	char 	*cmd_strings = {"echo", "cd", "pwd"};
-
-	i = 0;
-	while (cmd_strings[i] != '\0')
-	{
-		if (!ft_strncmp(string, cmd_strings[i], ft_strlen(&cmd_strings[i])))
-		{
-			return (cmd_strings[i]);
-		}
-		i++;
-	}
-	return (NULL);
-}
-*/
-
-/*
-void	print_cmdn(t_cmdn *croot, int tabs)
-{
-	int	i;
-
-	if (croot == NULL)
-	{
-		printf("<empty>\n");
-		return;
-	}
-	i = 0;
-	while (i++ < tabs)
-		printf("\t");
-	i = 0;
-	printf("type	: %d\n", croot->ntype);
-	while (i++ < tabs)
-		printf("\t");
-	i = 0;
-	printf("symbol	: %d\n", croot->symbol);
-	while (croot->children[i] != 0)
-	{
-		print_cmdn(croot->children[i], ++tabs);
-		i++;
-	}
-}
-*/

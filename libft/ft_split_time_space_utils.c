@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/11 12:41:47 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/12 12:40:42 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/04/12 13:06:24 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ int	ft_incrj(int i, char const *s, int check, char c)
 			j++;
 		while (s[i + j] != '\"')
 			j--;
+		i++;
 	}
 	else
 		while (s[i + j] != c && s[i + j] != '\0')
