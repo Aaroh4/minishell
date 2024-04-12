@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/03 12:03:00 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/12 12:41:24 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/04/12 13:16:36 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,19 @@
 
 void	ft_wording(char *dest, int *i, int *j, char const *s)
 {
+	dest[*i] = s[*i];
 	(*i)++;
 	*j = *i;
 	while (s[*i] != '|' && s[*i] != '\0')
 		(*i)++;
 	while (s[*i] != '\"')
 		(*i)--;
+	dest[*i] = s[*i];
 	dest[*i + 1] = '\0';
 	(*i)--;
 	while (*i >= *j)
 	{
-		dest[*i - 1] = s[*i];
+		dest[*i] = s[*i];
 		(*i)--;
 	}
 }
