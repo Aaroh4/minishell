@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/12 15:27:36 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/04/12 15:58:08 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,17 @@ char	**ft_remove_quotes(char **cmd)
 	while (cmd[i] != '\0')
 	{
 		j = 0;
-		while (cmd[i][j] == '\0')
+		while (cmd[i][j] != '\0')
 		{
+			if (cmd[i][j] == '\"')
+			{
+				while(cmd[i][j] != '\0')
+				{
+					cmd[i][j] = cmd[i][j + 1];
+					j++;
+				}
+				j = 0;
+			}
 			j++;
 		}
 		i++;
@@ -54,7 +63,7 @@ static t_cmdn	*create_node(t_cmdn *current, char **cmdarr, int i, int len)
 	// int		j;
 
 	cmd = ft_split_time_space(cmdarr[i], ' ');
-	//cmd = ft_remove_quotes(cmd);
+	cmd = ft_remove_quotes(cmd);
 	if (!cmd)
 		exit(1);
 	//trim_string(cmd[0]);
