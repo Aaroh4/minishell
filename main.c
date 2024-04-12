@@ -46,12 +46,26 @@ void	ft_handler(int signum)
 	rl_redisplay();
 }
 
-int	main(void)
+// BS function to prevent compiler warnings
+// Maybe later actual parameters for minishell will be used
+// Right now it's just to get envp
+static int	handle_arguments(int argc, char **argv)
+{
+	int i;
+
+	i = 0;
+	while (argv[i] && i < argc)
+		i++;
+	return (i);
+}
+
+int	main(int argc, char **argv, char **envp)
 {
 	t_cmdn			*cmd_root;
 	char			*input;
 	struct termios 	oterm;
 	int				pfd[2];
+	char			**ms_envp;
 
 	if (tcgetattr(STDIN_FILENO, &oterm) == -1)
 		perror("tcgetattr");
@@ -60,6 +74,12 @@ int	main(void)
 	rl_clear_history();
 	if (pipe(pfd) == -1)
 		perror("pipe init error.");
+	ms_envp = copy_envp(envp);
+	/* test copy
+	int i = 0;
+	while (ms_envp[i])
+		ft_putendl_fd(ms_envp[i++], 2);
+	*/
 	while (1)
 	{
 		if (pipe(pfd) == -1)
@@ -70,10 +90,10 @@ int	main(void)
 			exit_builtin();
 		add_history(input);
 		parse_input(input, &cmd_root);
-	//	ft_putendl_fd("###########", 2);
-	//	print_cmdn(cmd_root);
-	//	ft_putendl_fd("###########", 2);
-		run_cmds(cmd_root, pfd);
+		//ft_putendl_fd("###########", 2);
+		//print_cmdn(cmd_root);
+		//ft_putendl_fd("###########", 2);
+		run_cmds(cmd_root, pfd, ms_envp);
 		free(input);
 		free_cmdn(cmd_root);
 		disableRawMode(oterm);
