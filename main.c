@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:43 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/11 20:49:04 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/12 15:18:05 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,13 @@ void enableRawMode() {
     if (tcgetattr(STDIN_FILENO, &term) == -1)
 		perror("tcgetattr");
     term.c_lflag &= ~(ECHOCTL);
-    if (tcsetattr(STDIN_FILENO, TCSANOW, &term) == -1)
+    if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &term) == -1)
 		perror("tcsetattr");
 }
 
 void	disableRawMode(struct termios oterm)
 {
-	 if (tcsetattr(STDIN_FILENO, TCSANOW, &oterm) == -1)
+	 if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &oterm) == -1)
 		perror("tcsetattr");
 }
 
@@ -70,9 +70,9 @@ int	main(void)
 			exit_builtin();
 		add_history(input);
 		parse_input(input, &cmd_root);
-		//ft_putendl_fd("###########", 2);
-		//print_cmdn(cmd_root);
-		//ft_putendl_fd("###########", 2);
+	//	ft_putendl_fd("###########", 2);
+	//	print_cmdn(cmd_root);
+	//	ft_putendl_fd("###########", 2);
 		run_cmds(cmd_root, pfd);
 		free(input);
 		free_cmdn(cmd_root);

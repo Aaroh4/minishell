@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/03 12:03:00 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/12 13:16:36 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/04/12 15:27:22 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ int	wordcount(char const *s, char c)
 			i = ft_check(i, s);
 		}
 		if ((s[i] != c && s[i + 1] == c)
-			|| (s[i + 1] == '\0' && s[i] != c) || (s[i] == '\"'))
+			|| (s[i + 1] == '\0' && s[i] != c))
 			count++;
 		i++;
 	}

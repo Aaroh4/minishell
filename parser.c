@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/11 19:51:01 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/12 15:27:36 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,21 +30,42 @@ t_cmdn	*init_cmd_node(t_ntype type, char **cmd, t_bool last)
 	return (new_cmdn);
 }
 
+char	**ft_remove_quotes(char **cmd)
+{
+	int		i;
+	int		j;
+
+	i = 1;
+	while (cmd[i] != '\0')
+	{
+		j = 0;
+		while (cmd[i][j] == '\0')
+		{
+			j++;
+		}
+		i++;
+	}
+	return (cmd);
+}
+
 static t_cmdn	*create_node(t_cmdn *current, char **cmdarr, int i, int len)
 {
 	char	**cmd;
-	int		j;
+	// int		j;
 
 	cmd = ft_split_time_space(cmdarr[i], ' ');
-	// cmd = ft_split(cmdarr[i], " ");
+	//cmd = ft_remove_quotes(cmd);
 	if (!cmd)
 		exit(1);
+	//trim_string(cmd[0]);
+	/*
 	j = 0;
 	while (cmd[j] != '\0')
 	{
 		cmd[j] = trim_string(cmd[j]);
 		j++;
 	}
+	*/
 	if (i < len - 2)
 	{
 		current->left = init_cmd_node(COMMAND, cmd, FALSE);
