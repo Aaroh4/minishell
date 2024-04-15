@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/12 15:58:08 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/04/15 15:31:24 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/minishell.h"
 
-t_cmdn	*init_cmd_node(t_ntype type, char **cmd, t_bool last)
+t_cmdn	*init_cmd_node(t_ntype type, char **cmd, t_bool last, int *hdocs)
 {
 	t_cmdn	*new_cmdn;
 
@@ -26,6 +26,7 @@ t_cmdn	*init_cmd_node(t_ntype type, char **cmd, t_bool last)
 		if (cmd != NULL)
 			new_cmdn->cargs = cmd;
 		new_cmdn->last = last;
+		new_cmdn->hdocs = hdocs;
 	}
 	return (new_cmdn);
 }
@@ -60,31 +61,31 @@ char	**ft_remove_quotes(char **cmd)
 static t_cmdn	*create_node(t_cmdn *current, char **cmdarr, int i, int len)
 {
 	char	**cmd;
-	// int		j;
+	int		*hdocs;
+	int		j;
 
 	cmd = ft_split_time_space(cmdarr[i], ' ');
 	cmd = ft_remove_quotes(cmd);
 	if (!cmd)
 		exit(1);
-	//trim_string(cmd[0]);
-	/*
+	// trim_string(cmd[0]);
+	hdocs = ft_calloc(len, sizeof(int));
 	j = 0;
 	while (cmd[j] != '\0')
 	{
 		cmd[j] = trim_string(cmd[j]);
 		j++;
 	}
-	*/
 	if (i < len - 2)
 	{
-		current->left = init_cmd_node(COMMAND, cmd, FALSE);
-		current->right = init_cmd_node(PIPELINE, NULL, FALSE);
+		current->left = init_cmd_node(COMMAND, cmd, FALSE, hdocs);
+		current->right = init_cmd_node(PIPELINE, NULL, FALSE, hdocs);
 		current = current->right;
 	}
 	else if (i == len - 2)
-		current->left = init_cmd_node(COMMAND, cmd, FALSE);
+		current->left = init_cmd_node(COMMAND, cmd, FALSE, hdocs);
 	else
-		current->right = init_cmd_node(COMMAND, cmd, TRUE);
+		current->right = init_cmd_node(COMMAND, cmd, TRUE, hdocs);
 	return (current);
 }
 
@@ -96,7 +97,7 @@ void	parse_input(char *input, t_cmdn **root)
 	int 	len;
 
 	i = 0;
-	*root = init_cmd_node(PIPELINE, NULL, FALSE);
+	*root = init_cmd_node(PIPELINE, NULL, FALSE, NULL);
 	if (!(*root))
 		exit(1);
 	cmdarr = ft_split(input, "|");

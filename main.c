@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:43 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/12 15:18:05 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/04/12 17:37:01 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,12 +74,8 @@ int	main(int argc, char **argv, char **envp)
 	rl_clear_history();
 	if (pipe(pfd) == -1)
 		perror("pipe init error.");
+	handle_arguments(argc, argv);
 	ms_envp = copy_envp(envp);
-	/* test copy
-	int i = 0;
-	while (ms_envp[i])
-		ft_putendl_fd(ms_envp[i++], 2);
-	*/
 	while (1)
 	{
 		if (pipe(pfd) == -1)
