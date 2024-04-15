@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 13:16:33 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/15 15:24:38 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/15 17:00:13 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,40 +88,38 @@ char	*check_test_env(char *test_env, char **ms_envp)
 	return (expd_env);
 }
 
+int	add_expd_to_arg(char *expd_arg, char *expd_env, char *arg, int j)
+{
+	char	*tmp;
+
+	tmp = ft_strjoin(expd_arg, NULL);
+}
+
 char	*exp_env(char *arg, char **ms_envp)
 {
-	int		len;
 	int		j;
-	int		i;
 	char	*expd_arg;
 	char	*test_env;
 	char	*expd_env;
 
 	expd_arg = NULL;
 	j = 0;
-	len = 0;
 	while (arg[j] != '\0')
 	{
 		if (arg[j] == 36)
 		{
+			// Find the string after $
 			test_env = find_test_env(arg, j);
+			// Test if corresponding env var is found
 			expd_env = check_test_env(test_env, ms_envp);
-			i = 0;
-			while (ms_envp[i] != NULL)
-			{
-				if (!ft_strncmp(ms_envp[i], test_env, ft_strlen(test_env)))
-					expd_env = ft_substr(ms_envp[i], (ft_strlen(test_env) + 1), 
-						ft_strlen(ms_envp[1]));
-				i++;
-			}
+			free(test_env);
+			// If it is found, add stuff after previous $ and expd_env to expd_arg
 			if (expd_env != NULL)
-			{
-				printf("Expanded env to: %s\n", expd_env);
-			}
+				j = add_expd_to_arg(expd_arg, expd_env, arg, j);
 		}
 		j++;
 	}
-	return (expd_env);
+	return (expd_arg);
 }
 
 
