@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/12 13:55:19 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/04/15 10:49:15 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ static int	exec_node(t_cmdn *node, int *pfd, char **ms_envp, t_dynint *commands)
 	exec_node(node->left, pfd, ms_envp, commands);
 	if (node->ntype == COMMAND)
 	{
-		// populate_env_vars(node, ms_envp);
+		populate_env_vars(node, ms_envp);
 		pid = fork();
 		if (pid == -1)
 		{
