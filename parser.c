@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/15 15:31:24 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/16 15:30:51 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,12 +63,21 @@ static t_cmdn	*create_node(t_cmdn *current, char **cmdarr, int i, int len)
 	char	**cmd;
 	int		*hdocs;
 	int		j;
+	int		k;
 
+	k = 0;
+	while (cmdarr[i][k] != '\0')
+	{
+		if (cmdarr[i][k] == '<' && cmdarr[i][k + 1]
+			== '<' && cmdarr[i][k + 2] != '<')
+			cmdarr[i] = ft_heredoc(cmdarr[i]);
+		k++;
+	}
+	printf("%s\n", cmdarr[i]);
 	cmd = ft_split_time_space(cmdarr[i], ' ');
 	cmd = ft_remove_quotes(cmd);
 	if (!cmd)
 		exit(1);
-	// trim_string(cmd[0]);
 	hdocs = ft_calloc(len, sizeof(int));
 	j = 0;
 	while (cmd[j] != '\0')

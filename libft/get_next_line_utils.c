@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:06:43 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/02/29 14:57:51 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/04/16 13:29:00 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ char	*ft_strrjoin(char const *s1, char const *s2)
 	return (s);
 }
 
-char	*ft_substr(char const *s, unsigned int start, size_t len)
+char	*ft_subbstr(char const *s, unsigned int start, size_t len)
 {
 	char	*ret;
 

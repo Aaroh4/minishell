@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/15 15:20:45 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/16 14:32:10 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,5 +80,7 @@ void		echo_builtin(char **arg);
 // Environment variables:
 char		**copy_envp(char **envp);
 void		populate_env_vars(t_cmdn *node, char **ms_envp);
+
+char	*ft_heredoc(char *breakchar);
 
 #endif
