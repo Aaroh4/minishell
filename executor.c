@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/15 10:49:15 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/17 14:44:28 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ static int	exec_node(t_cmdn *node, int *pfd, char **ms_envp, t_dynint *commands)
 	exec_node(node->left, pfd, ms_envp, commands);
 	if (node->ntype == COMMAND)
 	{
-		populate_env_vars(node, ms_envp);
+		// populate_env_vars(node, ms_envp);
 		pid = fork();
 		if (pid == -1)
 		{

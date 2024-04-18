@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split_time_space.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/03 12:03:00 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/12 15:27:22 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/04/17 14:32:26 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,16 +85,16 @@ int	wordcount(char const *s, char c)
 {
 	int	i;
 	int	count;
-	int	check;
+	//int	check;
 
 	i = 0;
 	count = 0;
-	check = 0;
+	//check = 0;
 	while (s[i] != '\0')
 	{
 		if (s[i] == '\"')
 		{
-			check++;
+			//check++;
 			i = ft_check(i, s);
 		}
 		if ((s[i] != c && s[i + 1] == c)

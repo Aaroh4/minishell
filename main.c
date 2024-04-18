@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:43 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/12 17:37:01 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/17 14:45:18 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	ft_handler(int signum)
 {
 	signum = 1;
 	rl_replace_line("", 0);
-	write(1, "\n", 1);
+	write(1, "\n", signum);
 	rl_on_new_line();
 	rl_redisplay();
 }

@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 13:16:33 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/15 17:00:13 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/17 14:30:25 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,9 +90,10 @@ char	*check_test_env(char *test_env, char **ms_envp)
 
 int	add_expd_to_arg(char *expd_arg, char *expd_env, char *arg, int j)
 {
-	char	*tmp;
+	//char	*tmp;
 
-	tmp = ft_strjoin(expd_arg, NULL);
+	// tmp = ft_strjoin(expd_arg, NULL);
+	return (0);
 }
 
 char	*exp_env(char *arg, char **ms_envp)
