@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 11:22:20 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/16 13:29:10 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/04/18 14:21:11 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ char	*create_list(int fd, char *str);
 char	*get_next_line(int fd);
 int		ft_str_chr(char *str);
 char	*ft_strrjoin(char const *s1, char const *s2);
-char	*ft_strdup(const char *src);
+char	*ft_strrdup(const char *src);
 char	*ft_subbstr(char const *s, unsigned int start, size_t len);
 int		ft_strrlen(const char *str);
 char	*ft_read(int fd, char *str, char *buf);

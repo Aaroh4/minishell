@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:06:43 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/16 13:29:00 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/04/18 14:20:27 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	ft_str_chr(char *str)
 	return (count);
 }
 
-char	*ft_strdup(const char *src)
+char	*ft_strrdup(const char *src)
 {
 	char	*str;
 	int		i;

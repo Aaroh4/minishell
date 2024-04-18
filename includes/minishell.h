@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/16 14:32:10 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/04/18 14:58:27 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,6 @@ void		echo_builtin(char **arg);
 char		**copy_envp(char **envp);
 void		populate_env_vars(t_cmdn *node, char **ms_envp);
 
-char	*ft_heredoc(char *breakchar);
+char		*ft_heredoc(char *breakchar, int hdocs);
 
 #endif
