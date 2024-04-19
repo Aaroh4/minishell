@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 13:16:33 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/17 14:30:25 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/19 10:24:43 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,97 @@ char	**copy_envp(char **envp)
 	return (ms_envp);
 }
 
+char	*get_env_end(char *env, char **ms_envp)
+{
+	int		i;
+	char	*env_val;
+
+	i = 0;
+	env_val = "";
+	while (ms_envp[i] != NULL)
+	{
+		if (!strncmp(ms_envp[i], env, ft_strlen(env)))
+		{
+			env_val = ft_strchr(ms_envp[i], 61) + 1;
+			break;
+		}
+		i++;
+	}
+	return (env_val);
+}
+
+char	*move_ucase(char *start)
+{
+	char	*ptr;
+
+	ptr = start;
+	while ((*ptr >= 65 && *ptr <= 90) || *ptr == 95)
+		ptr++;
+	return (ptr);
+}
+
+char *replace_envp(char* input, char **ms_envp)
+{
+	char	*start;
+	char 	*end;
+	char	*new_arr;
+	char 	*env_val;
+	char 	*temp;
+	int		i;
+	int		total_len;
+
+	start = input;
+	while ((start = ft_strchr(start, 36)) != NULL)
+	{
+		end = move_ucase(start + 1);
+		env_val = "";
+		i = 0;
+		while (ms_envp[i] != NULL) 
+		{
+            if (!ft_strncmp(ms_envp[i], start + 1, ft_strcpos(ms_envp[i], 61))) 
+			{
+                env_val = ft_strchr(ms_envp[i], 61) + 1;
+				end = start + ft_strcpos(ms_envp[i], 61) + 1;
+                break;
+            }
+            i++;
+        }
+		total_len = ft_strlen(input) - ft_strlen(start) + ft_strlen(env_val) + ft_strlen(end);
+		new_arr = (char *)malloc((total_len + 1) * sizeof(char));
+		if (new_arr == NULL)
+		{
+			perror("ms_envp malloc 3 error");
+			exit (1);
+		}
+		i = 0;
+		temp = input;
+		while (temp != start)
+		{
+			new_arr[i] = *temp;
+			temp++;
+			i++;
+		}
+		while (*env_val != '\0')
+		{
+			new_arr[i] = *env_val;
+			i++;
+			env_val++;
+		}
+		start = new_arr + i; 
+		while (*end != '\0')
+		{
+			new_arr[i] = *end;
+			i++;
+			end++;
+		}
+		new_arr[ft_strlen(new_arr)] = '\0';
+		free(input);
+		input = new_arr;
+	}
+	return (input);
+}
+
+/*
 // mallocs needs free
 char	*find_test_env(char *arg, int j)
 {
@@ -156,3 +247,4 @@ void	populate_env_vars(t_cmdn *node, char **ms_envp)
 	}
 	return ;
 }
+*/

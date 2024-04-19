@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:43 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/17 14:45:18 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/19 10:34:03 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ static int	handle_arguments(int argc, char **argv)
 	return (i);
 }
 
+/*
 int	main(int argc, char **argv, char **envp)
 {
 	t_cmdn			*cmd_root;
@@ -91,9 +92,33 @@ int	main(int argc, char **argv, char **envp)
 		//ft_putendl_fd("###########", 2);
 		run_cmds(cmd_root, pfd, ms_envp);
 		free(input);
+		free_args(ms_envp);
 		free_cmdn(cmd_root);
 		disableRawMode(oterm);
 		close(pfd[0]);
 		close(pfd[1]);
 	}
+}
+*/
+
+// Test main:
+int	main(int argc, char **argv, char **envp)
+{
+	char	**ms_envp;
+	char	*input;
+	char 	*str;
+
+
+	if (argc == 2)
+	{
+		handle_arguments(argc, argv);
+		ms_envp = copy_envp(envp);
+		input = "Used: $USER, shell: $SHELL, not working $NOT_WORK end.";
+		str = ft_strdup(input);
+		ft_putendl_fd(str, 2);
+		str = replace_envp(str, ms_envp);
+		ft_putendl_fd(str, 2);
+		free(str);
+	}
+	return (0);
 }

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+         #
+#    By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/19 12:03:42 by ahamalai          #+#    #+#              #
-#    Updated: 2024/04/11 12:48:33 by ahamalai         ###   ########.fr        #
+#    Updated: 2024/04/19 08:57:43 by mburakow         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,6 +23,7 @@ SRC = ft_isalpha.c ft_isdigit.c ft_isalnum.c ft_isascii.c \
 	  ft_split.c ft_striteri.c ft_strmapi.c get_next_line.c \
 	  get_next_line_utils.c ft_printf.c ft_printhex.c \
 	  ft_split_time_space_utils.c ft_split_time_space.c \
+	  ft_strcpos.c
 
 OBJ = $(SRC:.c=.o)
 
@@ -32,6 +33,7 @@ HEADERS = ./includes
 	cc -Wall -Wextra -Werror -c $< -o $@ -I $(HEADERS)
 
 $(NAME): $(OBJ)
+	ar -rcs $@ $(OBJ)
 
 all: $(NAME)
 
@@ -43,7 +45,7 @@ fclean: clean
 
 re: fclean all
 
-libft.a: $(OBJ)
-	ar -rc libft.a $(OBJ)
+# libft.a: $(OBJ)
+#	ar -rc libft.a $(OBJ)
 
 .PHONY: all clean fclean re 

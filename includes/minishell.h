@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/15 15:20:45 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/19 09:38:35 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,8 @@ void		cd_builtin(char *cwd, char **str);
 void		exit_builtin(void);
 void		echo_builtin(char **arg);
 // Environment variables:
+char 		*replace_envp(char* input, char **ms_envp);
 char		**copy_envp(char **envp);
-void		populate_env_vars(t_cmdn *node, char **ms_envp);
+//void		populate_env_vars(t_cmdn *node, char **ms_envp);
 
 #endif
