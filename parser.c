@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/19 14:11:21 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/19 18:14:45 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,39 +62,19 @@ static t_cmdn	*create_node(t_cmdn *current, char **cmdarr, int i, int len)
 {
 	char	**cmd;
 	int		*hdocs;
-	//int		*hdoc_index;
 	int		j;
 	char	*temp;
 
-	// hdocs = ft_calloc(len, sizeof(int));
-	/*
-	while (cmdarr[i][k] != '\0')
-	{
-		if (cmdarr[i][k] == '<' && cmdarr[i][k + 1]
-			== '<' && cmdarr[i][k + 2] != '<')
-		{
-			hdocs[i]++;
-			temp = ft_heredoc(cmdarr[i], hdocs[i]);
-		}
-		k++;
-	}
-	if (hdocs > 0)
-		cmdarr[i] = temp;
-	*/
-	//free(temp);
 	cmd = ft_split_time_space(cmdarr[i], ' ');
-	//free(cmdarr[i]);
-	cmd = ft_remove_quotes(cmd);
 	if (!cmd)
 		exit(1);
-	// trim_string(cmd[0]);
-	// hdocs = ft_calloc(len, sizeof(int));
 	j = 0;
 	while (cmd[j] != NULL)
 	{
 		cmd[j] = ft_strtrim(cmd[j], " ");
 		j++;
 	}
+	cmd = ft_remove_quotes(cmd);
 	hdocs = ft_calloc((j + 1), sizeof(int));
 	if (hdocs == NULL)
 	{
@@ -113,12 +93,10 @@ static t_cmdn	*create_node(t_cmdn *current, char **cmdarr, int i, int len)
 		}
 		j++;
 	}
-	if (hdocs > 0)
+	if (hdocs[j] > 0)
 	{
-		// free (cmd[j]);
 		cmd[j] = temp;
 	}
-	// free(temp);
 	if (i < len - 2)
 	{
 		current->left = init_cmd_node(COMMAND, cmd, FALSE, hdocs);
@@ -129,7 +107,7 @@ static t_cmdn	*create_node(t_cmdn *current, char **cmdarr, int i, int len)
 		current->left = init_cmd_node(COMMAND, cmd, FALSE, hdocs);
 	else
 		current->right = init_cmd_node(COMMAND, cmd, TRUE, hdocs);
-	free(temp);
+	// free(temp);
 	return (current);
 }
 
@@ -147,12 +125,12 @@ void	parse_input(char *input, t_cmdn **root)
 	cmdarr = ft_split(input, "|");
 	current = *root;
 	len = 0;
-	while (cmdarr[len] != 0)
+	while (cmdarr[len] != NULL)
 		len++;
 	//ft_putstr_fd("Number of commands: ", 2);
 	//ft_putnbr_fd(len, 2);
 	//ft_putchar_fd('\n', 2);
-	while (cmdarr[i] != 0)
+	while (cmdarr[i] != NULL)
 	{
 		current = create_node(current, cmdarr, i, len);
 		i++;

@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/18 16:07:17 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/04/19 15:07:06 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/minishell.h"
 
-static void	exec_cmd(t_cmdn *node, int pfd[2])
+static void	exec_cmd(t_cmdn *node, int pfd[2], char **ms_envp)
 {
 	char	**path_array;
 	char	*cmdp;
@@ -39,7 +39,6 @@ static void	exec_cmd(t_cmdn *node, int pfd[2])
 		node->cargs[1] = NULL;
 	}
 	close(pfd[1]);
-	//printf("%s\n", node->cargs[1]);
 	cwd = NULL;
 	if (getcwd(cwd, sizeof(cwd)) == NULL)
 	{
@@ -57,10 +56,8 @@ static void	exec_cmd(t_cmdn *node, int pfd[2])
 		path_array = ft_split(getenv("PATH"), ":");
 		cmdp = get_exec_path(path_array, node->cargs[0]);
 		free(path_array);
-		if (cmdp == NULL)
-			exit (127);
 		if (!node->cargs[0] || !*node->cargs || !cmdp
-			|| execve(cmdp, node->cargs, NULL) == -1)
+			|| execve(cmdp, node->cargs, ms_envp) == -1)
 		{
 			printf("Execve error.\n");
 			exit (127);
@@ -89,7 +86,7 @@ static int	exec_node(t_cmdn *node, int *pfd, char **ms_envp, t_intvec *commands)
 			perror("fork error");
 		}
 		else if (pid == 0)
-			exec_cmd(node, pfd);
+			exec_cmd(node, pfd, ms_envp);
 		else
 		{
 			//ft_putstr_fd("Created process ID: ", 2);

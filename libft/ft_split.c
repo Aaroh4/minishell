@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/19 12:04:33 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/11 12:54:04 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/19 16:22:24 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ char	**ft_split(char *str, char *charset)
 
 	count = word_count(str, charset);
 	arr = (char **)malloc(sizeof(char *) * (count + 1));
-	arr[count] = 0;
+	arr[count] = NULL;
 	do_split(arr, str, charset);
 	return (arr);
 }
