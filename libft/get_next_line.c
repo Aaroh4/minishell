@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:35:56 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/02/29 14:58:02 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/04/18 14:20:53 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ char	*ft_read(int fd, char *str, char *buf)
 			break ;
 		buf[read_size] = 0;
 		if (!str)
-			str = ft_strdup("");
+			str = ft_strrdup("");
 		if (!str)
 			return (NULL);
 		temp = str;

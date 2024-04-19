@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/19 11:41:14 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/19 12:47:10 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ char	**ft_remove_quotes(char **cmd)
 		{
 			if (cmd[i][j] == '\"')
 			{
-				while(cmd[i][j] != '\0')
+				while (cmd[i][j] != '\0')
 				{
 					cmd[i][j] = cmd[i][j + 1];
 					j++;
@@ -64,8 +64,26 @@ static t_cmdn	*create_node(t_cmdn *current, char **cmdarr, int i, int len)
 	int		*hdocs;
 	//int		*hdoc_index;
 	int		j;
+	int		k;
+	char	*temp;
 
+	k = 0;
+	hdocs = ft_calloc(len, sizeof(int));
+	while (cmdarr[i][k] != '\0')
+	{
+		if (cmdarr[i][k] == '<' && cmdarr[i][k + 1]
+			== '<' && cmdarr[i][k + 2] != '<')
+		{
+			hdocs[i]++;
+			temp = ft_heredoc(cmdarr[i], hdocs[i]);
+		}
+		k++;
+	}
+	if (hdocs > 0)
+		cmdarr[i] = temp;
+	//free(temp);
 	cmd = ft_split_time_space(cmdarr[i], ' ');
+	//free(cmdarr[i]);
 	cmd = ft_remove_quotes(cmd);
 	if (!cmd)
 		exit(1);
@@ -94,6 +112,7 @@ static t_cmdn	*create_node(t_cmdn *current, char **cmdarr, int i, int len)
 		current->left = init_cmd_node(COMMAND, cmd, FALSE, hdocs);
 	else
 		current->right = init_cmd_node(COMMAND, cmd, TRUE, hdocs);
+	free(temp);
 	return (current);
 }
 
@@ -102,7 +121,7 @@ void	parse_input(char *input, t_cmdn **root)
 	char	**cmdarr;
 	t_cmdn	*current;
 	int		i;
-	int 	len;
+	int		len;
 
 	i = 0;
 	*root = init_cmd_node(PIPELINE, NULL, FALSE, NULL);
