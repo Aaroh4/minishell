@@ -41,7 +41,7 @@ void	ft_handler(int signum)
 {
 	signum = 1;
 	rl_replace_line("", 0);
-	write(1, "\n", 1);
+	write(1, "\n", signum);
 	rl_on_new_line();
 	rl_redisplay();
 }
@@ -96,4 +96,29 @@ int	main(int argc, char **argv, char **envp)
 		close(pfd[0]);
 		close(pfd[1]);
 	}
+	free_args(ms_envp);
 }
+
+/*
+// ENVP test main:
+int	main(int argc, char **argv, char **envp)
+{
+	char	**ms_envp;
+	char	*input;
+	char 	*str;
+
+
+	if (argc == 2)
+	{
+		handle_arguments(argc, argv);
+		ms_envp = copy_envp(envp);
+		input = "Used: $USER, shell: $SHELL, not working $NOT_WORK end.";
+		str = ft_strdup(input);
+		ft_putendl_fd(str, 2);
+		str = replace_envp(str, ms_envp);
+		ft_putendl_fd(str, 2);
+		free(str);
+	}
+	return (0);
+}
+*/
