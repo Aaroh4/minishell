@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/19 11:49:44 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/19 13:08:12 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ int			run_cmds(t_cmdn *root, int *pfd, char **envp);
 t_intvec*	create_intvec(void);
 void		expand_intvec(t_intvec *dynarr);
 int			add_to_intvec(t_intvec *dynarr, int value);
+void		free_intvec(t_intvec *intvec);
 // Utilities:
 char		*get_exec_path(char **path, char *cmd);
 void		free_args(char **args);

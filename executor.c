@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/19 11:47:29 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/19 13:09:10 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,5 +108,6 @@ int	run_cmds(t_cmdn *root, int *pfd, char **ms_envp)
 	close(pfd[0]);
 	close(pfd[1]);
 	wait_for(commands);
+	free_intvec(commands);
 	return (0);
 }
