@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/17 14:22:37 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/19 11:21:53 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ static t_cmdn	*create_node(t_cmdn *current, char **cmdarr, int i, int len)
 {
 	char	**cmd;
 	int		*hdocs;
+	//int		*hdoc_index;
 	int		j;
 
 	cmd = ft_split_time_space(cmdarr[i], ' ');
@@ -69,13 +70,14 @@ static t_cmdn	*create_node(t_cmdn *current, char **cmdarr, int i, int len)
 	if (!cmd)
 		exit(1);
 	// trim_string(cmd[0]);
-	hdocs = ft_calloc(len, sizeof(int));
+	// hdocs = ft_calloc(len, sizeof(int));
 	j = 0;
 	while (cmd[j] != NULL)
 	{
-		cmd[j] = trim_string(cmd[j]);
+		cmd[j] = ft_strtrim(cmd[j], " ");
 		j++;
 	}
+	hdocs = ft_calloc(j, sizeof(int));
 	if (i < len - 2)
 	{
 		current->left = init_cmd_node(COMMAND, cmd, FALSE, hdocs);

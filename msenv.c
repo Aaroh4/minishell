@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 13:16:33 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/19 10:24:43 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/19 11:26:29 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ char	*move_ucase(char *start)
 	return (ptr);
 }
 
-char *replace_envp(char* input, char **ms_envp)
+char *replace_envp(char* input, char **ms_envp, int hdoc)
 {
 	char	*start;
 	char 	*end;
@@ -88,6 +88,9 @@ char *replace_envp(char* input, char **ms_envp)
 	int		i;
 	int		total_len;
 
+	// hdoc not yet implemented
+	hdoc = 0;
+	i = hdoc;
 	start = input;
 	while ((start = ft_strchr(start, 36)) != NULL)
 	{
@@ -137,6 +140,19 @@ char *replace_envp(char* input, char **ms_envp)
 		input = new_arr;
 	}
 	return (input);
+}
+
+void	populate_env_vars(t_cmdn *node, char **ms_envp)
+{
+	int		i;
+
+	i = 0;
+	while (node->cargs[i] != NULL)
+	{
+		node->cargs[i] = replace_envp(node->cargs[i], ms_envp, node->hdocs[i]);
+		i++;
+	}
+	return ;
 }
 
 /*
