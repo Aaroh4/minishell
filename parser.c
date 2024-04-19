@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/19 13:41:32 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/04/19 14:42:50 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,9 @@ static t_cmdn	*create_node(t_cmdn *current, char **cmdarr, int i, int len)
 		}
 		k++;
 	}
-	if (hdocs > 0)
+	if (hdocs[i] > 0)
 		cmdarr[i] = temp;
+	//printf("%s\n", cmdarr[i]);
 	cmd = ft_split_time_space(cmdarr[i], ' ');
 	cmd = ft_remove_quotes(cmd);
 	if (!cmd)
