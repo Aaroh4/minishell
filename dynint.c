@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 09:24:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/19 11:50:24 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/19 11:52:33 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,62 +14,62 @@
 
 t_intvec*	create_intvec(void) 
 {
-	t_intvec *dynarr;
+	t_intvec *intvec;
 	
-	dynarr = (t_intvec*)malloc(sizeof(t_intvec));
-	if (dynarr == NULL)
+	intvec = (t_intvec*)malloc(sizeof(t_intvec));
+	if (intvec == NULL)
 		exit(1);
-	dynarr->array = (int*)ft_calloc(INITIAL_SIZE, sizeof(int));
-	if (dynarr->array == NULL) 
+	intvec->array = (int*)ft_calloc(INITIAL_SIZE, sizeof(int));
+	if (intvec->array == NULL) 
 	{
-		free(dynarr);
+		free(intvec);
 		exit(1);
 	}
-	dynarr->size = 0;
-	dynarr->capacity = INITIAL_SIZE;
-	return (dynarr);
+	intvec->size = 0;
+	intvec->capacity = INITIAL_SIZE;
+	return (intvec);
 }
 
-void	expand_intvec(t_intvec *dynarr) 
+void	expand_intvec(t_intvec *intvec) 
 {
 	size_t	new_capacity;
 	int		*newarr;
 	int 	*temp;
 	int		i;
 
-	new_capacity = dynarr->capacity * 2;
+	new_capacity = intvec->capacity * 2;
 	newarr = (int*)ft_calloc(new_capacity, sizeof(int));
 	if (newarr == NULL) 
 	{
-		free(dynarr->array);
-		free(dynarr);
+		free(intvec->array);
+		free(intvec);
 		exit(1);
 	}
 	i = 0;
-	while (dynarr->array[i] != 0)
+	while (intvec->array[i] != 0)
 	{
-		newarr[i] = dynarr->array[i];
+		newarr[i] = intvec->array[i];
 		i++;
 	}
-	temp = dynarr->array;
-	dynarr->array = newarr;
+	temp = intvec->array;
+	intvec->array = newarr;
 	free(temp);
-	dynarr->capacity = new_capacity;
+	intvec->capacity = new_capacity;
 }
 
-int	add_to_intvec(t_intvec *dynarr, int value)
+int	add_to_intvec(t_intvec *intvec, int value)
 {
-	if (dynarr->size == dynarr->capacity)
-		expand_intvec(dynarr);
-	else if (dynarr->size > dynarr->capacity)
+	if (intvec->size == intvec->capacity)
+		expand_intvec(intvec);
+	else if (intvec->size > intvec->capacity)
 		exit(1);
-	dynarr->array[dynarr->size] = value;
-	dynarr->size += 1;
+	intvec->array[intvec->size] = value;
+	intvec->size += 1;
 	return (1);
 }
 
-void	free_intvec(t_intvec *array)
+void	free_intvec(t_intvec *intvec)
 {
-	free(array->array);
-	free(array);
+	free(intvec->array);
+	free(intvec);
 }
