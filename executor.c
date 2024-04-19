@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/19 11:25:01 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/19 11:47:29 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ static void	exec_cmd(t_cmdn *node, int pfd[2])
 
 // If node->right type command it's last so rockit
 // Might not work with bonuses though
-static int	exec_node(t_cmdn *node, int *pfd, char **ms_envp, t_dynint *commands)
+static int	exec_node(t_cmdn *node, int *pfd, char **ms_envp, t_intvec *commands)
 {
 	int	pid;
 
@@ -90,7 +90,7 @@ static int	exec_node(t_cmdn *node, int *pfd, char **ms_envp, t_dynint *commands)
 			//ft_putnbr_fd(pid, 2);
 			//ft_putstr_fd(" Command: ", 2);
 			//ft_putendl_fd(node->cargs[0], 2);
-			add_to_dynamic_int_array(commands, pid);
+			add_to_intvec(commands, pid);
 		}
 	}
 	exec_node(node->right, pfd, ms_envp, commands);
@@ -99,11 +99,11 @@ static int	exec_node(t_cmdn *node, int *pfd, char **ms_envp, t_dynint *commands)
 
 int	run_cmds(t_cmdn *root, int *pfd, char **ms_envp)
 {
-	t_dynint	*commands;
+	t_intvec	*commands;
 
 	if (root == NULL)
 		return (0);
-	commands = create_dynamic_int_array();
+	commands = create_intvec();
 	exec_node(root, pfd, ms_envp, commands);
 	close(pfd[0]);
 	close(pfd[1]);

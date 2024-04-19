@@ -6,17 +6,17 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 09:24:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/05 15:27:12 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/19 11:50:24 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/minishell.h"
 
-t_dynint*	create_dynamic_int_array(void) 
+t_intvec*	create_intvec(void) 
 {
-	t_dynint *dynarr;
+	t_intvec *dynarr;
 	
-	dynarr = (t_dynint*)malloc(sizeof(t_dynint));
+	dynarr = (t_intvec*)malloc(sizeof(t_intvec));
 	if (dynarr == NULL)
 		exit(1);
 	dynarr->array = (int*)ft_calloc(INITIAL_SIZE, sizeof(int));
@@ -30,7 +30,7 @@ t_dynint*	create_dynamic_int_array(void)
 	return (dynarr);
 }
 
-void	expand_dynamic_int_array(t_dynint *dynarr) 
+void	expand_intvec(t_intvec *dynarr) 
 {
 	size_t	new_capacity;
 	int		*newarr;
@@ -57,13 +57,19 @@ void	expand_dynamic_int_array(t_dynint *dynarr)
 	dynarr->capacity = new_capacity;
 }
 
-int	add_to_dynamic_int_array(t_dynint *dynarr, int value)
+int	add_to_intvec(t_intvec *dynarr, int value)
 {
 	if (dynarr->size == dynarr->capacity)
-		expand_dynamic_int_array(dynarr);
+		expand_intvec(dynarr);
 	else if (dynarr->size > dynarr->capacity)
 		exit(1);
 	dynarr->array[dynarr->size] = value;
 	dynarr->size += 1;
 	return (1);
+}
+
+void	free_intvec(t_intvec *array)
+{
+	free(array->array);
+	free(array);
 }
