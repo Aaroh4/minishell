@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/19 12:47:10 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/04/19 14:11:21 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,11 +64,10 @@ static t_cmdn	*create_node(t_cmdn *current, char **cmdarr, int i, int len)
 	int		*hdocs;
 	//int		*hdoc_index;
 	int		j;
-	int		k;
 	char	*temp;
 
-	k = 0;
-	hdocs = ft_calloc(len, sizeof(int));
+	// hdocs = ft_calloc(len, sizeof(int));
+	/*
 	while (cmdarr[i][k] != '\0')
 	{
 		if (cmdarr[i][k] == '<' && cmdarr[i][k + 1]
@@ -81,6 +80,7 @@ static t_cmdn	*create_node(t_cmdn *current, char **cmdarr, int i, int len)
 	}
 	if (hdocs > 0)
 		cmdarr[i] = temp;
+	*/
 	//free(temp);
 	cmd = ft_split_time_space(cmdarr[i], ' ');
 	//free(cmdarr[i]);
@@ -102,6 +102,23 @@ static t_cmdn	*create_node(t_cmdn *current, char **cmdarr, int i, int len)
 		exit (1);
 	}
 	hdocs[j] = -1;
+	j = 0;
+	while (cmd[j] != NULL)
+	{
+		if (cmd[j][0] == '<' && cmd[j][1]
+			== '<' && cmd[j][2] != '<')
+		{
+			hdocs[j]++;
+			temp = ft_heredoc(cmd[j], hdocs[j]);
+		}
+		j++;
+	}
+	if (hdocs > 0)
+	{
+		// free (cmd[j]);
+		cmd[j] = temp;
+	}
+	// free(temp);
 	if (i < len - 2)
 	{
 		current->left = init_cmd_node(COMMAND, cmd, FALSE, hdocs);
