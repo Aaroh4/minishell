@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/16 14:32:10 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/04/18 14:58:27 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,12 +49,12 @@ typedef struct s_cmdn
 	t_bool			last;
 }	t_cmdn;	
 
-typedef struct s_dynint
+typedef struct s_intvec
 {
     int		*array;
     size_t	size;
     size_t	capacity;
-} t_dynint;
+} t_intvec;
 
 // Parser:
 void		parse_input(char *input, t_cmdn **root);
@@ -63,14 +63,15 @@ void		print_cmdn(t_cmdn *root);
 // Executor:
 int			run_cmds(t_cmdn *root, int *pfd, char **envp);
 // Dynamic Integer Array:
-t_dynint*	create_dynamic_int_array(void);
-void		expand_dynamic_int_array(t_dynint *dynarr);
-int			add_to_dynamic_int_array(t_dynint *dynarr, int value);
+t_intvec*	create_intvec(void);
+void		expand_intvec(t_intvec *dynarr);
+int			add_to_intvec(t_intvec *dynarr, int value);
+void		free_intvec(t_intvec *intvec);
 // Utilities:
 char		*get_exec_path(char **path, char *cmd);
 void		free_args(char **args);
 void		free_cmdn(t_cmdn *node);
-int			wait_for(t_dynint *children);
+int			wait_for(t_intvec *children);
 char		*trim_string(char *str);
 // Buildins:
 void		pwd_builtin(void);
@@ -78,9 +79,10 @@ void		cd_builtin(char *cwd, char **str);
 void		exit_builtin(void);
 void		echo_builtin(char **arg);
 // Environment variables:
+char 		*replace_envp(char* input, char **ms_envp, int hdoc);
 char		**copy_envp(char **envp);
 void		populate_env_vars(t_cmdn *node, char **ms_envp);
 
-char	*ft_heredoc(char *breakchar);
+char		*ft_heredoc(char *breakchar, int hdocs);
 
 #endif
