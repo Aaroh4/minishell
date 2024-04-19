@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 12:09:30 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/18 14:55:46 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/04/19 12:48:46 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,6 @@ char	*ft_heredoc(char *breakchar, int hdocs)
 	int		k;
 
 	buf = NULL;
-	astr = malloc(1);
-	astr = "\0";
 	i = 0;
 	j = 0;
 	while (breakchar[i] != '\0')
@@ -32,7 +30,7 @@ char	*ft_heredoc(char *breakchar, int hdocs)
 		{
 			j++;
 			if (j == 1)
-				astr = ft_strjoin(astr, ft_substr(breakchar, 0, i));
+				astr = ft_substr(breakchar, 0, i);
 			if (j == hdocs)
 				k = i;
 		}
@@ -54,6 +52,6 @@ char	*ft_heredoc(char *breakchar, int hdocs)
 		free(buf);
 	}
 	free(buf);
-	//free(breakchar);
+	free(breakchar);
 	return (astr);
 }
