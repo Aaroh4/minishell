@@ -6,7 +6,7 @@
 #    By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/22 12:36:32 by ahamalai          #+#    #+#              #
-#    Updated: 2024/04/22 17:04:09 by mburakow         ###   ########.fr        #
+#    Updated: 2024/04/22 17:27:50 by mburakow         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ CC = cc
 CFLAGS = -Wall -Wextra -Werror -g -I ~/.brew/opt/readline/include
 HEAD = includes/minishell.h
 SRCS = main.c builtins.c parser.c executor.c utils.c intvec.c msenv.c \
- msenv_replace.c heredoc.c
+ msenv_replace.c heredoc.c error.c
 OBJS = $(SRCS:.c=.o)
 
 all : $(NAME)

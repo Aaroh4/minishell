@@ -6,13 +6,13 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/19 18:14:45 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/22 18:58:34 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/minishell.h"
 
-t_cmdn	*init_cmd_node(t_ntype type, char **cmd, t_bool last, int *hdocs)
+t_cmdn	*init_cmd_node(t_ntype type, t_shell *sh, t_bool last)
 {
 	t_cmdn	*new_cmdn;
 
@@ -23,11 +23,22 @@ t_cmdn	*init_cmd_node(t_ntype type, char **cmd, t_bool last, int *hdocs)
 		new_cmdn->left = NULL;
 		new_cmdn->right = NULL;
 		new_cmdn->cargs = NULL;
-		if (cmd != NULL)
-			new_cmdn->cargs = cmd;
+		if (type == COMMAND)
+		{
+			new_cmdn->cargs = sh->cmd;
+			new_cmdn->hdocs = sh->hdocs;
+		}
+		else
+		{
+			new_cmdn->cargs = NULL;
+			new_cmdn->hdocs = NULL;
+		}
 		new_cmdn->last = last;
-		new_cmdn->hdocs = hdocs;
+		sh->cmd = NULL;
+		sh->hdocs = NULL;
 	}
+	else
+		errexit("error: ", "cmd node malloc", sh, 1);
 	return (new_cmdn);
 }
 
@@ -58,81 +69,75 @@ char	**ft_remove_quotes(char **cmd)
 	return (cmd);
 }
 
-static t_cmdn	*create_node(t_cmdn *current, char **cmdarr, int i, int len)
+static t_cmdn	*create_node(t_cmdn *current, t_shell *sh, int i, int len)
 {
-	char	**cmd;
-	int		*hdocs;
 	int		j;
 	char	*temp;
 
-	cmd = ft_split_time_space(cmdarr[i], ' ');
-	if (!cmd)
-		exit(1);
+	sh->cmd = ft_split_time_space(sh->cmdarr[i], ' ');
+	if (!(sh->cmd))
+		errexit("error: ", "root malloc", sh, 1);
 	j = 0;
-	while (cmd[j] != NULL)
+	while (sh->cmd[j] != NULL)
 	{
-		cmd[j] = ft_strtrim(cmd[j], " ");
+		sh->cmd[j] = ft_strtrim(sh->cmd[j], " ");
 		j++;
 	}
-	cmd = ft_remove_quotes(cmd);
-	hdocs = ft_calloc((j + 1), sizeof(int));
-	if (hdocs == NULL)
+	sh->cmd = ft_remove_quotes(sh->cmd);
+	sh->hdocs = ft_calloc((j + 1), sizeof(int));
+	if (sh->hdocs == NULL)
 	{
 		perror("hdocs malloc error");
 		exit (1);
 	}
-	hdocs[j] = -1;
+	sh->hdocs[j] = -1;
 	j = 0;
-	while (cmd[j] != NULL)
+	while (sh->cmd[j] != NULL)
 	{
-		if (cmd[j][0] == '<' && cmd[j][1]
-			== '<' && cmd[j][2] != '<')
+		if (sh->cmd[j][0] == '<' && sh->cmd[j][1]
+			== '<' && sh->cmd[j][2] != '<')
 		{
-			hdocs[j]++;
-			temp = ft_heredoc(cmd[j], hdocs[j]);
+			sh->hdocs[j]++;
+			temp = ft_heredoc(sh->cmd[j], sh->hdocs[j]);
 		}
 		j++;
 	}
-	if (hdocs[j] > 0)
+	if (sh->hdocs[j] > 0)
 	{
-		cmd[j] = temp;
+		sh->cmd[j] = temp;
 	}
 	if (i < len - 2)
 	{
-		current->left = init_cmd_node(COMMAND, cmd, FALSE, hdocs);
-		current->right = init_cmd_node(PIPELINE, NULL, FALSE, hdocs);
+		current->left = init_cmd_node(COMMAND, sh, FALSE);
+		current->right = init_cmd_node(PIPELINE, sh, FALSE);
 		current = current->right;
 	}
 	else if (i == len - 2)
-		current->left = init_cmd_node(COMMAND, cmd, FALSE, hdocs);
+		current->left = init_cmd_node(COMMAND, sh, FALSE);
 	else
-		current->right = init_cmd_node(COMMAND, cmd, TRUE, hdocs);
-	// free(temp);
+		current->right = init_cmd_node(COMMAND, sh, TRUE);
 	return (current);
 }
 
-void	parse_input(char *input, t_cmdn **root)
+void	parse_input(t_shell *sh)
 {
-	char	**cmdarr;
 	t_cmdn	*current;
 	int		i;
 	int		len;
 
-	i = 0;
-	*root = init_cmd_node(PIPELINE, NULL, FALSE, NULL);
-	if (!(*root))
-		exit(1);
-	cmdarr = ft_split(input, "|");
-	current = *root;
+
+	sh->root = init_cmd_node(PIPELINE, sh, FALSE);
+	if (!(sh->root))
+		errexit("error: ", "root malloc", sh, 1);
+	sh->cmdarr = ft_split(sh->input, "|");
+	current = sh->root;
 	len = 0;
-	while (cmdarr[len] != NULL)
+	while (sh->cmdarr[len] != NULL) // Slated for removal to create_node
 		len++;
-	//ft_putstr_fd("Number of commands: ", 2);
-	//ft_putnbr_fd(len, 2);
-	//ft_putchar_fd('\n', 2);
-	while (cmdarr[i] != NULL)
+	i = 0;
+	while (sh->cmdarr[i] != NULL)
 	{
-		current = create_node(current, cmdarr, i, len);
+		current = create_node(current, sh, i, len);
 		i++;
 	}
 }

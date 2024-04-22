@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:43 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/16 16:08:06 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/04/22 18:54:12 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,42 +61,38 @@ static int	handle_arguments(int argc, char **argv)
 
 int	main(int argc, char **argv, char **envp)
 {
-	t_cmdn			*cmd_root;
-	char			*input;
+	t_shell			sh;
 	struct termios 	oterm;
-	int				pfd[2];
-	char			**ms_envp;
 
 	if (tcgetattr(STDIN_FILENO, &oterm) == -1)
 		perror("tcgetattr");
 	signal(SIGINT, ft_handler);
 	signal(SIGQUIT, SIG_IGN);
 	rl_clear_history();
-	if (pipe(pfd) == -1)
-		perror("pipe init error.");
 	handle_arguments(argc, argv);
-	ms_envp = copy_envp(envp);
+	sh.ms_envp = copy_envp(envp);
 	while (1)
 	{
-		if (pipe(pfd) == -1)
-			perror("pipe init error.");
+		if (pipe(sh.pfd) == -1)
+			errexit("Error :", "pipe initialization", &sh, 1);
 		enableRawMode();
-		input = readline("minishell > ");
-		if (input == NULL || !ft_strncmp(input, "exit", 5))
+		sh.input = readline("minishell > ");
+		if (sh.input == NULL || !ft_strncmp(sh.input, "exit", 5))
 			exit_builtin();
-		add_history(input);
-		parse_input(input, &cmd_root);
+		add_history(sh.input);
+		parse_input(&sh); // &cmd_root);
 		//ft_putendl_fd("###########", 2);
 		//print_cmdn(cmd_root);
 		//ft_putendl_fd("###########", 2);
-		run_cmds(cmd_root, pfd, ms_envp);
-		free(input);
-		free_cmdn(cmd_root);
+		run_cmds(&sh);
+		// Here a standard free/null function for every prompt
+		free(sh.input);
+		free_cmdn(sh.root);
 		disableRawMode(oterm);
-		close(pfd[0]);
-		close(pfd[1]);
+		close(sh.pfd[0]);
+		close(sh.pfd[1]);
 	}
-	free_args(ms_envp);
+	free_args(sh.ms_envp);
 }
 
 /*

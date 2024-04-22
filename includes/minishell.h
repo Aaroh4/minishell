@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/22 15:58:30 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/22 18:45:11 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ typedef enum s_bool
 
 typedef enum s_ntype
 {
+	ROOT,
 	PIPELINE,
 	COMMAND,
 	ARGUMENTS,
@@ -56,12 +57,24 @@ typedef struct s_intvec
     size_t	capacity;
 } t_intvec;
 
+typedef struct s_shell
+{
+	char	**ms_envp; // Our copy of envp, can be modified by builtins
+	char	*input;	// User input
+	t_cmdn	*root; // Root node of command tree, for freeing
+	char	**cmdarr; // Array of commands, for easy freeing
+	int		pfd[2]; // Pipe file descriptors
+	char	**cmd; // most recent expanded cmdarr member
+	int		*hdocs;	// Heredoc array for above cmd
+	int 	statuscode; // exit code of the most recent pipe, implement!
+}	t_shell;
+
 // Parser:
-void		parse_input(char *input, t_cmdn **root);
-t_cmdn		*init_cmd_node(t_ntype type, char **cmd, t_bool last, int *hdocs);
+void		parse_input(t_shell *sh);
+t_cmdn		*init_cmd_node(t_ntype type, t_shell *sh, t_bool last);
 void		print_cmdn(t_cmdn *root);
 // Executor:
-int			run_cmds(t_cmdn *root, int *pfd, char **envp);
+int			run_cmds(t_shell *sh);
 // Dynamic Integer Array:
 t_intvec*	create_intvec(void);
 void		expand_intvec(t_intvec *dynarr);
@@ -82,7 +95,8 @@ void		echo_builtin(char **arg);
 char 		*replace_envp(char* input, char **ms_envp);
 char		**copy_envp(char **envp);
 void		populate_env_vars(t_cmdn *node, char **ms_envp);
-
+// Heredoc:
 char		*ft_heredoc(char *breakchar, int hdocs);
-
+// Error handling:
+void		errexit(char *msg1, char *msg2, t_shell *sh, int exitcode);
 #endif
