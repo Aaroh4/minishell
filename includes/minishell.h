@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/18 14:58:27 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/04/22 15:58:30 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ void		cd_builtin(char *cwd, char **str);
 void		exit_builtin(void);
 void		echo_builtin(char **arg);
 // Environment variables:
-char 		*replace_envp(char* input, char **ms_envp, int hdoc);
+char 		*replace_envp(char* input, char **ms_envp);
 char		**copy_envp(char **envp);
 void		populate_env_vars(t_cmdn *node, char **ms_envp);
 
