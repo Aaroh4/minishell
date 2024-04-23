@@ -46,16 +46,17 @@ int	wait_for(t_intvec *commands)
 	nc = 0;
 	while (commands->array[nc])
 	{
-		//ft_putstr_fd("Waited for :", 2);
-		//ft_putnbr_fd(waitpid(commands->array[nc], &status, 0), 2);
-		//ft_putchar_fd('\n', 2);
+		// ft_putstr_fd("Waited for :", 2);
+		// ft_putnbr_fd(waitpid(commands->array[nc], &status, 0), 2);
+		// ft_putchar_fd('\n', 2);
 		waitpid(commands->array[nc], &status, 0);
 		nc++;
 	}
 	return (WEXITSTATUS(status));
 }
 
-/* At the moment accounts only for space characters, are other characters necessary?
+/* At the moment accounts only for space characters,
+	are other characters necessary?
 char	*trim_string(char *str)
 {
 	char	*end;
@@ -68,7 +69,6 @@ char	*trim_string(char *str)
 	while (end > str && (unsigned char)*end == 32)
 		end--;
 	end[1] = '\0';
-
 	return (str);
 }
 */

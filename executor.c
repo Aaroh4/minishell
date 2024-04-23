@@ -12,7 +12,7 @@
 
 #include "./includes/minishell.h"
 
-// Path is checked every time from ms_envp since it could have been changed 
+// Path is checked every time from ms_envp since it could have been changed
 // in previous pipe.
 static void	exec_cmd(t_cmdn *node, t_shell *sh)
 {
@@ -55,15 +55,15 @@ static void	exec_cmd(t_cmdn *node, t_shell *sh)
 		path_array = ft_split(getenv("PATH"), ":");
 		cmdp = get_exec_path(path_array, node->cargs[0]);
 		free(path_array);
-		if (!node->cargs[0] || !*node->cargs || !cmdp
-			|| execve(cmdp, node->cargs, sh->ms_envp) == -1)
+		if (!node->cargs[0] || !*node->cargs || !cmdp || execve(cmdp,
+				node->cargs, sh->ms_envp) == -1)
 		{
 			free(cwd);
 			errexit("error:", "execve", sh, 127);
 		}
 	}
 	free(cwd);
-	exit (EXIT_SUCCESS);
+	exit(EXIT_SUCCESS);
 }
 
 // If node->right type command it's last so rockit

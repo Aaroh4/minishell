@@ -25,8 +25,8 @@ char	*ft_heredoc(char *breakchar, int hdocs)
 	j = 0;
 	while (breakchar[i] != '\0')
 	{
-		if (breakchar[i] == '<' && breakchar[i + 1] == '<'
-			&& breakchar[i + 2] != '<')
+		if (breakchar[i] == '<' && breakchar[i + 1] == '<' && breakchar[i
+			+ 2] != '<')
 		{
 			j++;
 			if (j == 1)
@@ -44,7 +44,8 @@ char	*ft_heredoc(char *breakchar, int hdocs)
 	{
 		write(1, "> ", 9);
 		buf = get_next_line(0);
-			// if (!buf) // ERROR CHECK HERE DO NOT MISS THIS ONE BEFORE SENDING BACK THIS PROJECT!!!#!!#:LKJHGC
+		// if (!buf)
+			// ERROR CHECK HERE DO NOT MISS THIS ONE BEFORE SENDING BACK THIS PROJECT!!!#!!#:LKJHGC
 		if (!ft_strncmp(breakchar, buf, ft_strlen(buf) - 1))
 			break ;
 		if (j == hdocs)

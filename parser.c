@@ -44,8 +44,8 @@ t_cmdn	*init_cmd_node(t_ntype type, t_shell *sh, t_bool last)
 
 char	**ft_remove_quotes(char **cmd)
 {
-	int		i;
-	int		j;
+	int	i;
+	int	j;
 
 	i = 1;
 	while (cmd[i] != NULL)
@@ -88,14 +88,14 @@ static t_cmdn	*create_node(t_cmdn *current, t_shell *sh, int i, int len)
 	if (sh->hdocs == NULL)
 	{
 		perror("hdocs malloc error");
-		exit (1);
+		exit(1);
 	}
 	sh->hdocs[j] = -1;
 	j = 0;
 	while (sh->cmd[j] != NULL)
 	{
-		if (sh->cmd[j][0] == '<' && sh->cmd[j][1]
-			== '<' && sh->cmd[j][2] != '<')
+		if (sh->cmd[j][0] == '<' && sh->cmd[j][1] == '<'
+			&& sh->cmd[j][2] != '<')
 		{
 			sh->hdocs[j]++;
 			temp = ft_heredoc(sh->cmd[j], sh->hdocs[j]);
@@ -124,7 +124,6 @@ void	parse_input(t_shell *sh)
 	t_cmdn	*current;
 	int		i;
 	int		len;
-
 
 	sh->root = init_cmd_node(PIPELINE, sh, FALSE);
 	if (!(sh->root))

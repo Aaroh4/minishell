@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "./includes/minishell.h"
-
 #include <stdio.h>
 #include <unistd.h>
 
@@ -30,8 +29,8 @@ void	cd_builtin(char *cwd, char **str)
 		return ;
 	else if (!ft_strncmp(str[1], "..", 3))
 	{
-		chdir(ft_substr(cwd2, 0, ft_strlen(cwd2)
-				- ft_strlen(ft_strrchr(cwd2, '/'))));
+		chdir(ft_substr(cwd2, 0, ft_strlen(cwd2) - ft_strlen(ft_strrchr(cwd2,
+						'/'))));
 	}
 	else
 	{
@@ -55,7 +54,7 @@ void	exit_builtin(t_shell *sh)
 	free_new_prompt(sh);
 	free_args(sh->ms_envp);
 	write(1, "exit\n", 5);
-	exit (0);
+	exit(0);
 }
 
 void	echo_builtin(char **arg)

@@ -12,15 +12,15 @@
 
 #include "./includes/minishell.h"
 
-t_intvec*	create_intvec(void) 
+t_intvec	*create_intvec(void)
 {
-	t_intvec *intvec;
-	
-	intvec = (t_intvec*)malloc(sizeof(t_intvec));
+	t_intvec	*intvec;
+
+	intvec = (t_intvec *)malloc(sizeof(t_intvec));
 	if (intvec == NULL)
 		exit(1);
-	intvec->array = (int*)ft_calloc(INITIAL_SIZE, sizeof(int));
-	if (intvec->array == NULL) 
+	intvec->array = (int *)ft_calloc(INITIAL_SIZE, sizeof(int));
+	if (intvec->array == NULL)
 	{
 		free(intvec);
 		exit(1);
@@ -30,16 +30,16 @@ t_intvec*	create_intvec(void)
 	return (intvec);
 }
 
-void	expand_intvec(t_intvec *intvec) 
+void	expand_intvec(t_intvec *intvec)
 {
 	size_t	new_capacity;
 	int		*newarr;
-	int 	*temp;
+	int		*temp;
 	int		i;
 
 	new_capacity = intvec->capacity * 2;
-	newarr = (int*)ft_calloc(new_capacity, sizeof(int));
-	if (newarr == NULL) 
+	newarr = (int *)ft_calloc(new_capacity, sizeof(int));
+	if (newarr == NULL)
 	{
 		free(intvec->array);
 		free(intvec);

@@ -12,7 +12,7 @@
 
 #include "./includes/minishell.h"
 
-// What should we free here?	
+// What should we free here?
 void	errexit(char *msg1, char *msg2, t_shell *sh, int exitcode)
 {
 	ft_putstr_fd("minishell: ", 2);
