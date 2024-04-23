@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 11:06:04 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/23 14:40:05 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/23 15:51:54 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	init_shell_struct(t_shell *sh)
 	sh->cmd = NULL;
 	sh->hdocs = NULL;
 	// Should this be -1 to check for actual update?
-	sh->statuscode = 0;
+	sh->status = 0;
 }
 
 void	free_args(char **args)

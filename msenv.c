@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 16:54:02 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/22 17:17:37 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/23 16:46:07 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,14 +53,14 @@ char	**copy_envp(char **envp)
 	return (ms_envp);
 }
 
-void	populate_env_vars(t_cmdn *node, char **ms_envp)
+void	populate_env_vars(t_cmdn *node, t_shell *sh)
 {
 	int	i;
 
 	i = 0;
 	while (node->cargs[i] != NULL)
 	{
-		node->cargs[i] = replace_envp(node->cargs[i], ms_envp);
+		node->cargs[i] = replace_envp(node->cargs[i], sh);
 		i++;
 	}
 	return ;

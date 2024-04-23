@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/23 11:50:32 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/23 16:26:12 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,11 +77,11 @@ static int	exec_node(t_cmdn *node, t_shell *sh, t_intvec *commands)
 	exec_node(node->left, sh, commands);
 	if (node->ntype == COMMAND)
 	{
-		populate_env_vars(node, sh->ms_envp);
+		populate_env_vars(node, sh);
 		pid = fork();
 		if (pid == -1)
 		{
-			wait_for(commands);
+			sh->status = wait_for(commands);
 			free_intvec(commands);
 			errexit("Error:", "fork failure", sh, 1);
 		}
@@ -104,7 +104,7 @@ int	run_cmds(t_shell *sh)
 	exec_node(sh->root, sh, commands);
 	close(sh->pfd[0]);
 	close(sh->pfd[1]);
-	wait_for(commands);
+	sh->status = wait_for(commands);
 	free_intvec(commands);
 	return (0);
 }

@@ -6,40 +6,53 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 13:16:33 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/22 17:14:56 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/23 16:58:52 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/minishell.h"
 #include "./includes/msenv.h"
 
+// Still missing check for heredoc and single/double quotes
 char	*move_ucase(char *start)
 {
 	char	*ptr;
 
 	ptr = start;
-	while ((*ptr >= 65 && *ptr <= 90) || *ptr == 95)
+	while ((*ptr >= 65 && *ptr <= 90) || *ptr == 95 || *ptr == 63)
 		ptr++;
 	return (ptr);
 }
 
-char	*alloc_new_arr(char *input, char **ms_envp, t_env_tdata *envd)
+// If question mark, ignore caps after, else check from ms_envp for the value
+static void	determine_env(t_shell *sh, t_env_tdata *envd)
 {
 	int		i;
-	char	*new_arr;
 
 	i = 0;
-	while (ms_envp[i] != NULL)
+	if (*(envd->start + 1) == 63)
 	{
-		if (!ft_strncmp(ms_envp[i], envd->start + 1, ft_strcpos(ms_envp[i],
-					61)))
+		envd->env_val = ft_itoa(sh->status);
+		return ;
+	}
+	while (sh->ms_envp[i] != NULL)
+	{
+		if (!ft_strncmp(sh->ms_envp[i], envd->start + 1, 
+			ft_strcpos(sh->ms_envp[i], 61)))
 		{
-			envd->env_val = ft_strchr(ms_envp[i], 61) + 1;
-			envd->end = envd->start + ft_strcpos(ms_envp[i], 61) + 1;
+			envd->env_val = ft_strchr(sh->ms_envp[i], 61) + 1;
+			envd->end = envd->start + ft_strcpos(sh->ms_envp[i], 61) + 1;
 			break ;
 		}
 		i++;
 	}
+}
+
+char	*alloc_new_arr(char *input, t_shell *sh, t_env_tdata *envd)
+{
+	char	*new_arr;
+
+	determine_env(sh, envd);
 	envd->total_len = ft_strlen(input) - ft_strlen(envd->start)
 		+ ft_strlen(envd->env_val) + ft_strlen(envd->end);
 	new_arr = (char *)malloc((envd->total_len + 1) * sizeof(char));
@@ -82,7 +95,7 @@ void	write_new_arr(char *new_arr, t_env_tdata *envd)
 // Some characters or combinations seem to prevent env substitution,
 // when directly after the env. This has not yet been researched/implemented.
 // Should we include hdoc checks here or before at populate_env_vars?
-char	*replace_envp(char *input, char **ms_envp)
+char	*replace_envp(char *input, t_shell *sh)
 {
 	t_env_tdata	envd;
 	char		*new_arr;
@@ -92,7 +105,7 @@ char	*replace_envp(char *input, char **ms_envp)
 	{
 		envd.end = move_ucase(envd.start + 1);
 		envd.env_val = "";
-		new_arr = alloc_new_arr(input, ms_envp, &envd);
+		new_arr = alloc_new_arr(input, sh, &envd);
 		write_new_arr(new_arr, &envd);
 		free(input);
 		input = new_arr;

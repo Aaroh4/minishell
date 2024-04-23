@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/23 15:00:19 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/23 16:45:54 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ typedef struct s_shell
 	int		pfd[2]; // Pipe file descriptors
 	char	**cmd; // Most recent expanded cmdarr member
 	int		*hdocs;	// Heredoc array for above most recentcmd
-	int 	statuscode; // Exit code of the most recent pipe, implement!
+	int 	status; // Exit code of the most recent pipe, implement!
 }	t_shell;
 
 // Parser:
@@ -90,9 +90,9 @@ void		cd_builtin(char *cwd, char **str);
 void		exit_builtin(t_shell *sh);
 void		echo_builtin(char **arg);
 // Environment variables:
-char 		*replace_envp(char* input, char **ms_envp);
+char 		*replace_envp(char* input, t_shell *sh);
 char		**copy_envp(char **envp);
-void		populate_env_vars(t_cmdn *node, char **ms_envp);
+void		populate_env_vars(t_cmdn *node, t_shell *sh);
 // Heredoc:
 char		*ft_heredoc(char *breakchar, int hdocs);
 // Error handling:
