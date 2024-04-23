@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:43 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/22 18:54:12 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/23 11:04:14 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ int	main(int argc, char **argv, char **envp)
 	t_shell			sh;
 	struct termios 	oterm;
 
+	init_shell_struct(&sh);
 	if (tcgetattr(STDIN_FILENO, &oterm) == -1)
 		perror("tcgetattr");
 	signal(SIGINT, ft_handler);
@@ -78,19 +79,12 @@ int	main(int argc, char **argv, char **envp)
 		enableRawMode();
 		sh.input = readline("minishell > ");
 		if (sh.input == NULL || !ft_strncmp(sh.input, "exit", 5))
-			exit_builtin();
+			exit_builtin(&sh);
 		add_history(sh.input);
-		parse_input(&sh); // &cmd_root);
-		//ft_putendl_fd("###########", 2);
-		//print_cmdn(cmd_root);
-		//ft_putendl_fd("###########", 2);
+		parse_input(&sh);
 		run_cmds(&sh);
-		// Here a standard free/null function for every prompt
-		free(sh.input);
-		free_cmdn(sh.root);
+		free_new_prompt(&sh);
 		disableRawMode(oterm);
-		close(sh.pfd[0]);
-		close(sh.pfd[1]);
 	}
 	free_args(sh.ms_envp);
 }

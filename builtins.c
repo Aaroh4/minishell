@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:15:11 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/17 13:08:31 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/04/23 10:56:44 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,10 @@ void	pwd_builtin(void)
 		perror("getcwd error");
 }
 
-void	exit_builtin(void)
+void	exit_builtin(t_shell *sh)
 {
+	free_new_prompt(sh);
+	free_args(sh->ms_envp);
 	write(1, "exit\n", 5);
 	exit (0);
 }

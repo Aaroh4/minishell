@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/22 18:45:11 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/23 11:22:20 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,13 +60,13 @@ typedef struct s_intvec
 typedef struct s_shell
 {
 	char	**ms_envp; // Our copy of envp, can be modified by builtins
-	char	*input;	// User input
+	char	*input;	// User input line
 	t_cmdn	*root; // Root node of command tree, for freeing
 	char	**cmdarr; // Array of commands, for easy freeing
 	int		pfd[2]; // Pipe file descriptors
-	char	**cmd; // most recent expanded cmdarr member
-	int		*hdocs;	// Heredoc array for above cmd
-	int 	statuscode; // exit code of the most recent pipe, implement!
+	char	**cmd; // Most recent expanded cmdarr member
+	int		*hdocs;	// Heredoc array for above most recentcmd
+	int 	statuscode; // Exit code of the most recent pipe, implement!
 }	t_shell;
 
 // Parser:
@@ -82,14 +82,12 @@ int			add_to_intvec(t_intvec *dynarr, int value);
 void		free_intvec(t_intvec *intvec);
 // Utilities:
 char		*get_exec_path(char **path, char *cmd);
-void		free_args(char **args);
-void		free_cmdn(t_cmdn *node);
 int			wait_for(t_intvec *children);
-char		*trim_string(char *str);
+// char		*trim_string(char *str);
 // Buildins:
 void		pwd_builtin(void);
 void		cd_builtin(char *cwd, char **str);
-void		exit_builtin(void);
+void		exit_builtin(t_shell *sh);
 void		echo_builtin(char **arg);
 // Environment variables:
 char 		*replace_envp(char* input, char **ms_envp);
@@ -99,4 +97,9 @@ void		populate_env_vars(t_cmdn *node, char **ms_envp);
 char		*ft_heredoc(char *breakchar, int hdocs);
 // Error handling:
 void		errexit(char *msg1, char *msg2, t_shell *sh, int exitcode);
+// Initialization and freeing
+void		init_shell_struct(t_shell *sh);
+void		free_args(char **args);
+void		free_cmdn(t_cmdn *node);
+void		free_new_prompt(t_shell *sh);
 #endif

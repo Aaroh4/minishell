@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 16:07:48 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/19 11:46:55 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/23 11:35:49 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,36 +55,7 @@ int	wait_for(t_intvec *commands)
 	return (WEXITSTATUS(status));
 }
 
-void	free_args(char **args)
-{
-	int	i;
-
-	if (!args || !*args)
-		return ;
-	i = 0;
-	while (args[i])
-	{
-		free(args[i]);
-		args[i] = NULL;
-		i++;
-	}
-	free(args);
-	args = NULL;
-}
-
-void	free_cmdn(t_cmdn *node)
-{
-	if (node == NULL)
-		return ;
-	free_cmdn(node->left);
-	free_args(node->cargs);
-	node->cargs = NULL;
-	free(node);
-	free_cmdn(node->right);
-	node = NULL;
-}
-
-// At the moment accounts only for space characters, are other characters necessary?
+/* At the moment accounts only for space characters, are other characters necessary?
 char	*trim_string(char *str)
 {
 	char	*end;
@@ -100,3 +71,4 @@ char	*trim_string(char *str)
 
 	return (str);
 }
+*/
