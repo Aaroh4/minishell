@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/19 14:35:53 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/04/23 12:12:18 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,9 @@ static void	exec_cmd(t_cmdn *node, int pfd[2])
 	char	**path_array;
 	char	*cmdp;
 	char	*cwd;
+	int		i;
 
+	i = 0;
 	if (dup2(pfd[0], STDIN_FILENO) == -1)
 	{
 		perror("dup2 stdin error");
@@ -32,12 +34,16 @@ static void	exec_cmd(t_cmdn *node, int pfd[2])
 			exit(EXIT_FAILURE);
 		}
 	}
-	//printf("%d\n", node->hdocs[0]);
-	if (node->hdocs[0] > 0)
-	{
-		ft_putstr_fd(node->cargs[1], pfd[1]);
-		node->cargs[1] = NULL;
-	}
+	//while (node->hdocs[i] != '\0')
+	//	i++;
+	//while (node->hdocs[i] == 0)
+	//	i--;
+	//printf("%d\n", node->hdocs[i]);
+	//if (node->hdocs[i] > 0)
+	//{
+	//	ft_putstr_fd(node->cargs[i], pfd[1]);
+	//	node->cargs[i] = NULL;
+	//}
 	close(pfd[1]);
 	//printf("%s\n", node->cargs[1]);
 	cwd = NULL;

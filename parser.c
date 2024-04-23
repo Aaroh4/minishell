@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/19 14:42:50 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/04/23 12:26:48 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,49 +58,114 @@ char	**ft_remove_quotes(char **cmd)
 	return (cmd);
 }
 
+char	*ft_give_fixed(char *str, int *i, char *temp)
+{
+	char	*temp2;
+	int		k;
+	int		j;
+
+	k = 0;
+	j = 0;
+	temp2 = malloc(sizeof(char) * ft_strlen(str) + ft_strlen(temp) + 3);
+	while (temp[j] != '\0')
+	{
+		temp2[j] = temp[j];
+		j++;
+	}
+	temp2[j] = '\"';
+	j += 1;
+	while (str[*i] != '\0')
+	{
+		if (str[*i] != '<' && str[*i - 1] == '<' && str[*i - 2] == '<')
+			while (str[*i] == ' ')
+				*i += 1;
+		temp2[j] = str[*i];
+		*i += 1;
+		j += 1;
+	}
+	temp2[j] = '\"';
+	j += 1;
+	temp2[j] = '\0';
+	return (temp2);
+}
+
+char	*ft_make_easy_heredoc(char *str)
+{
+	int		i;
+	int		j;
+	char	*temp;
+
+	i = 0;
+	j = 0;
+	temp = malloc(sizeof(char) * ft_strlen(str));
+	while (str[i] != '\0')
+	{
+		if (str[i - 1] != '<'
+			&& str[i] == '<' && str[i + 1] == '<' && str[i + 2] != '<')
+		{
+			temp = ft_give_fixed(str, &i, temp);
+			return (temp);
+		}
+		else
+		{
+			temp[j] = str[i];
+			i++;
+			j++;
+		}
+	}
+	return (temp);
+}
+
 static t_cmdn	*create_node(t_cmdn *current, char **cmdarr, int i, int len)
 {
 	char	**cmd;
 	int		*hdocs;
-	//int		*hdoc_index;
+					//int		*hdoc_index;
 	int		j;
 	int		k;
 	char	*temp;
 
 	k = 0;
-	hdocs = ft_calloc(len, sizeof(int));
-	while (cmdarr[i][k] != '\0')
-	{
-		if (cmdarr[i][k] == '<' && cmdarr[i][k + 1]
-			== '<' && cmdarr[i][k + 2] != '<')
-		{
-			hdocs[i]++;
-			temp = ft_heredoc(cmdarr[i], hdocs[i]);
-		}
-		k++;
-	}
-	if (hdocs[i] > 0)
-		cmdarr[i] = temp;
-	//printf("%s\n", cmdarr[i]);
+
+	len = 0;
+	cmdarr[i] = ft_make_easy_heredoc(cmdarr[i]);
+	printf("%s\n", cmdarr[i]);
 	cmd = ft_split_time_space(cmdarr[i], ' ');
 	cmd = ft_remove_quotes(cmd);
 	if (!cmd)
 		exit(1);
 	// trim_string(cmd[0]);
-	// hdocs = ft_calloc(len, sizeof(int));
+	//hdocs = ft_calloc(len, sizeof(int));
 	j = 0;
 	while (cmd[j] != NULL)
 	{
 		cmd[j] = ft_strtrim(cmd[j], " ");
 		j++;
 	}
-	//hdocs = ft_calloc((j + 1), sizeof(int));
+	hdocs = ft_calloc((j + 1), sizeof(int));
 	if (hdocs == NULL)
 	{
 		perror("hdocs malloc error");
 		exit (1);
 	}
-	//hdocs[j] = -1;
+	hdocs[j] = -1;
+	j--;
+	while (j >= 0)
+	{
+		while (cmd[j][k] != '\0')
+		{
+			if (cmd[j][k] == '<' && cmd[j][k + 1]
+				== '<' && cmd[j][k + 2] != '<')
+			{
+				hdocs[j]++;
+				temp = ft_heredoc(cmd[j], hdocs[j]);
+			}
+			k++;
+		}
+		if (hdocs[j] > 0)
+			cmd[j] = temp;
+		j--;
+	}
 	if (i < len - 2)
 	{
 		current->left = init_cmd_node(COMMAND, cmd, FALSE, hdocs);
@@ -111,8 +176,8 @@ static t_cmdn	*create_node(t_cmdn *current, char **cmdarr, int i, int len)
 		current->left = init_cmd_node(COMMAND, cmd, FALSE, hdocs);
 	else
 		current->right = init_cmd_node(COMMAND, cmd, TRUE, hdocs);
-	free(temp);
-	return (current);
+//	free(temp); 
+	return (current); 
 }
 
 void	parse_input(char *input, t_cmdn **root)
