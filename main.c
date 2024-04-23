@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:43 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/23 14:28:01 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/23 15:28:48 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ static int	handle_arguments(int argc, char **argv)
 	return (i);
 }
 
+// Removed free_args(sh->ms_envp); from end
 int	main(int argc, char **argv, char **envp)
 {
 	t_shell			sh;
@@ -87,7 +88,6 @@ int	main(int argc, char **argv, char **envp)
 		free_new_prompt(&sh);
 		disable_raw_mode(oterm);
 	}
-	free_args(sh.ms_envp);
 }
 
 /*

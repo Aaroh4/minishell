@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 16:07:48 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/23 11:35:49 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/23 14:58:29 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,57 @@ int	wait_for(t_intvec *commands)
 		nc++;
 	}
 	return (WEXITSTATUS(status));
+}
+
+void	print_cmdn(t_cmdn *node)
+{
+	int	i;
+
+	if (node == NULL)
+		return ;
+	print_cmdn(node->left);
+	i = 0;
+	if (node->ntype == COMMAND)
+		ft_putendl_fd("COMMAND:", 2);
+	if (node->ntype == PIPELINE)
+		ft_putendl_fd("PIPELINE:", 2);
+	while (node->cargs && node->cargs[i] != 0)
+	{
+		if (i != 0)
+			ft_putchar_fd('\t', 2);
+		ft_putendl_fd(node->cargs[i], 2);
+		i++;
+	}
+	ft_putnbr_fd(node->last, 2);
+	ft_putchar_fd('\n', 2);
+	print_cmdn(node->right);
+}
+
+char	**ft_remove_quotes(char **cmd)
+{
+	int	i;
+	int	j;
+
+	i = 1;
+	while (cmd[i] != NULL)
+	{
+		j = 0;
+		while (cmd[i][j] != '\0')
+		{
+			if (cmd[i][j] == '\"')
+			{
+				while (cmd[i][j] != '\0')
+				{
+					cmd[i][j] = cmd[i][j + 1];
+					j++;
+				}
+				j = 0;
+			}
+			j++;
+		}
+		i++;
+	}
+	return (cmd);
 }
 
 /* At the moment accounts only for space characters,

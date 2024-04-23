@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/23 11:22:20 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/23 15:00:19 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,6 @@ typedef struct s_shell
 
 // Parser:
 void		parse_input(t_shell *sh);
-t_cmdn		*init_cmd_node(t_ntype type, t_shell *sh, t_bool last);
-void		print_cmdn(t_cmdn *root);
 // Executor:
 int			run_cmds(t_shell *sh);
 // Dynamic Integer Array:
@@ -81,8 +79,10 @@ void		expand_intvec(t_intvec *dynarr);
 int			add_to_intvec(t_intvec *dynarr, int value);
 void		free_intvec(t_intvec *intvec);
 // Utilities:
+char		**ft_remove_quotes(char **cmd);
 char		*get_exec_path(char **path, char *cmd);
 int			wait_for(t_intvec *children);
+void		print_cmdn(t_cmdn *root);
 // char		*trim_string(char *str);
 // Buildins:
 void		pwd_builtin(void);
