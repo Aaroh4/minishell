@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 16:07:48 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/23 15:51:07 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/24 16:29:44 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,10 +79,10 @@ void	print_cmdn(t_cmdn *node)
 	print_cmdn(node->right);
 }
 
-char	**ft_remove_quotes(char **cmd)
+char	**ft_remove_slash(char **cmd)
 {
-	int	i;
-	int	j;
+	int		i;
+	int		j;
 
 	i = 1;
 	while (cmd[i] != NULL)
@@ -90,7 +90,35 @@ char	**ft_remove_quotes(char **cmd)
 		j = 0;
 		while (cmd[i][j] != '\0')
 		{
-			if (cmd[i][j] == '\"')
+			if (cmd[i][j + 1] == '\"' && cmd[i][j] == '\\')
+			{
+				while (cmd[i][j] != '\0')
+				{
+					cmd[i][j] = cmd[i][j + 1];
+					j++;
+					//printf("%s:%d:%d\n", cmd[i], i, j);
+				}
+				j = 0;
+			}
+			j++;
+		}
+		i++;
+	}
+	return (cmd);
+}
+
+char	**ft_remove_quotes(char **cmd)
+{
+	int		i;
+	int		j;
+
+	i = 0;
+	while (cmd[i] != NULL)
+	{
+		j = 0;
+		while (cmd[i][j] != '\0')
+		{
+			if (cmd[i][j] == '\"' && cmd[i][j - 1] != '\\')
 			{
 				while (cmd[i][j] != '\0')
 				{
@@ -103,6 +131,7 @@ char	**ft_remove_quotes(char **cmd)
 		}
 		i++;
 	}
+	cmd = ft_remove_slash(cmd);
 	return (cmd);
 }
 

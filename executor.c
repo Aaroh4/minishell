@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/23 16:26:12 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/24 16:26:44 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,11 @@ static void	exec_cmd(t_cmdn *node, t_shell *sh)
 	int		i;
 
 	i = 0;
-	if (dup2(pfd[0], STDIN_FILENO) == -1)
-	{
-		perror("dup2 stdin error");
-		exit(EXIT_FAILURE);
-	}
+	//if (dup2(pfd[0], STDIN_FILENO) == -1)
+	//{
+	//	perror("dup2 stdin error");
+	//	exit(EXIT_FAILURE);
+	//}
 	close(sh->pfd[0]);
 	if (node->last == FALSE)
 	{
@@ -46,7 +46,7 @@ static void	exec_cmd(t_cmdn *node, t_shell *sh)
 	//	ft_putstr_fd(node->cargs[i], pfd[1]);
 	//	node->cargs[i] = NULL;
 	//}
-	close(pfd[1]);
+//	close(pfd[1]);
 	//printf("%s\n", node->cargs[1]);
   cwd = NULL;
 	if (getcwd(cwd, sizeof(cwd)) == NULL)

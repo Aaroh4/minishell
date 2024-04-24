@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/23 15:20:57 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/24 16:29:35 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,62 +39,6 @@ static t_cmdn	*init_cmd_node(t_ntype type, t_shell *sh, t_bool last)
 	return (new_cmdn);
 }
 
-char	**ft_remove_slash(char **cmd)
-{
-	int		i;
-	int		j;
-
-	i = 1;
-	while (cmd[i] != NULL)
-	{
-		j = 0;
-		while (cmd[i][j] != '\0')
-		{
-			if (cmd[i][j + 1] == '\"' && cmd[i][j] == '\\')
-			{
-				while (cmd[i][j] != '\0')
-				{
-					cmd[i][j] = cmd[i][j + 1];
-					j++;
-					//printf("%s:%d:%d\n", cmd[i], i, j);
-				}
-				j = 0;
-			}
-			j++;
-		}
-		i++;
-	}
-	return (cmd);
-}
-
-char	**ft_remove_quotes(char **cmd)
-{
-	int		i;
-	int		j;
-
-	i = 0;
-	while (cmd[i] != NULL)
-	{
-		j = 0;
-		while (cmd[i][j] != '\0')
-		{
-			if (cmd[i][j] == '\"' && cmd[i][j - 1] != '\\')
-			{
-				while (cmd[i][j] != '\0')
-				{
-					cmd[i][j] = cmd[i][j + 1];
-					j++;
-				}
-				j = 0;
-			}
-			j++;
-		}
-		i++;
-	}
-	cmd = ft_remove_slash(cmd);
-	return (cmd);
-}
-
 static void	trim_quote_alloc_hdoc(t_shell *sh)
 {
 	int	i;
@@ -113,34 +57,6 @@ static void	trim_quote_alloc_hdoc(t_shell *sh)
 		exit(1);
 	}
 	sh->hdocs[i] = -1;
-}
-
-char	**ft_remove_quotes(char **cmd)
-{
-	int		i;
-	int		j;
-
-	i = 0;
-	while (cmd[i] != NULL)
-	{
-		j = 0;
-		while (cmd[i][j] != '\0')
-		{
-			if (cmd[i][j] == '\"' && cmd[i][j - 1] != '\\')
-			{
-				while (cmd[i][j] != '\0')
-				{
-					cmd[i][j] = cmd[i][j + 1];
-					j++;
-				}
-				j = 0;
-			}
-			j++;
-		}
-		i++;
-	}
-	cmd = ft_remove_slash(cmd);
-	return (cmd);
 }
 
 char	*ft_give_fixed(char *str, int *i, char *temp)
@@ -205,24 +121,28 @@ char	*ft_make_easy_heredoc(char *str)
 static void	get_heredocs(t_shell *sh)
 {
 	int		i;
+	int		j;
 	char	*temp;
 
 	i = 0;
+	j = 0;
 	while (sh->cmd[i] != NULL)
 	{
-		if (sh->cmd[i][0] == '<' && sh->cmd[i][1] == '<'
-			&& sh->cmd[i][2] != '<')
+		j = 0;
+		while (sh->cmd[i][j] != '\0')
 		{
-			sh->hdocs[i]++;
-			temp = ft_heredoc(sh->cmd[i], sh->hdocs[i]);
+			if (sh->cmd[i][j] == '<' && sh->cmd[i][j + 1] == '<'
+				&& sh->cmd[i][j + 2] != '<')
+			{
+				sh->hdocs[i]++;
+				temp = ft_heredoc(sh->cmd[i], sh->hdocs[i]);
+			}
+			j++;
 		}
+		if (sh->hdocs[i] > 0)
+			sh->cmd[i] = temp;
 		i++;
 	}
-	if (sh->hdocs[i] > 0)
-	{
-		sh->cmd[i] = temp;
-	}
-
 }
 
 static t_cmdn	*create_node(t_cmdn *current, t_shell *sh, int index)
@@ -232,6 +152,7 @@ static t_cmdn	*create_node(t_cmdn *current, t_shell *sh, int index)
 	len = 0;
 	while (sh->cmdarr[len] != NULL)
 		len++;
+	sh->cmdarr[index] = ft_make_easy_heredoc(sh->cmdarr[index]);
 	sh->cmd = ft_split_time_space(sh->cmdarr[index], ' ');
 	if (!(sh->cmd))
 		errexit("error: ", "root malloc", sh, 1);
