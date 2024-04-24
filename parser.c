@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/23 12:26:48 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/04/24 12:23:32 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ t_cmdn	*init_cmd_node(t_ntype type, char **cmd, t_bool last, int *hdocs)
 	return (new_cmdn);
 }
 
-char	**ft_remove_quotes(char **cmd)
+char	**ft_remove_slash(char **cmd)
 {
 	int		i;
 	int		j;
@@ -42,7 +42,35 @@ char	**ft_remove_quotes(char **cmd)
 		j = 0;
 		while (cmd[i][j] != '\0')
 		{
-			if (cmd[i][j] == '\"')
+			if (cmd[i][j + 1] == '\"' && cmd[i][j] == '\\')
+			{
+				while (cmd[i][j] != '\0')
+				{
+					cmd[i][j] = cmd[i][j + 1];
+					j++;
+					//printf("%s:%d:%d\n", cmd[i], i, j);
+				}
+				j = 0;
+			}
+			j++;
+		}
+		i++;
+	}
+	return (cmd);
+}
+
+char	**ft_remove_quotes(char **cmd)
+{
+	int		i;
+	int		j;
+
+	i = 0;
+	while (cmd[i] != NULL)
+	{
+		j = 0;
+		while (cmd[i][j] != '\0')
+		{
+			if (cmd[i][j] == '\"' && cmd[i][j - 1] != '\\')
 			{
 				while (cmd[i][j] != '\0')
 				{
@@ -55,6 +83,7 @@ char	**ft_remove_quotes(char **cmd)
 		}
 		i++;
 	}
+	cmd = ft_remove_slash(cmd);
 	return (cmd);
 }
 
@@ -97,7 +126,7 @@ char	*ft_make_easy_heredoc(char *str)
 
 	i = 0;
 	j = 0;
-	temp = malloc(sizeof(char) * ft_strlen(str));
+	temp = malloc(sizeof(char) * ft_strlen(str) + 1);
 	while (str[i] != '\0')
 	{
 		if (str[i - 1] != '<'
@@ -113,6 +142,7 @@ char	*ft_make_easy_heredoc(char *str)
 			j++;
 		}
 	}
+	temp[j] = '\0';
 	return (temp);
 }
 
@@ -129,7 +159,6 @@ static t_cmdn	*create_node(t_cmdn *current, char **cmdarr, int i, int len)
 
 	len = 0;
 	cmdarr[i] = ft_make_easy_heredoc(cmdarr[i]);
-	printf("%s\n", cmdarr[i]);
 	cmd = ft_split_time_space(cmdarr[i], ' ');
 	cmd = ft_remove_quotes(cmd);
 	if (!cmd)
