@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/24 16:45:05 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/04/24 16:56:25 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,13 +156,6 @@ static t_cmdn	*create_node(t_cmdn *current, t_shell *sh, int index)
 	if (!(sh->cmd))
 		errexit("error: ", "root malloc", sh, 1);
 	trim_quote_alloc_hdoc(sh);
-	int	i;
-	i = 0;
-	while (sh->cmd[i] != '\0')
-	{
-		printf("%s\n", sh->cmd[i]);
-		i++;
-	}
 	get_heredocs(sh);
 	if (index < len - 2)
 	{
