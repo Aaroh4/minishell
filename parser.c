@@ -39,6 +39,62 @@ static t_cmdn	*init_cmd_node(t_ntype type, t_shell *sh, t_bool last)
 	return (new_cmdn);
 }
 
+char	**ft_remove_slash(char **cmd)
+{
+	int		i;
+	int		j;
+
+	i = 1;
+	while (cmd[i] != NULL)
+	{
+		j = 0;
+		while (cmd[i][j] != '\0')
+		{
+			if (cmd[i][j + 1] == '\"' && cmd[i][j] == '\\')
+			{
+				while (cmd[i][j] != '\0')
+				{
+					cmd[i][j] = cmd[i][j + 1];
+					j++;
+					//printf("%s:%d:%d\n", cmd[i], i, j);
+				}
+				j = 0;
+			}
+			j++;
+		}
+		i++;
+	}
+	return (cmd);
+}
+
+char	**ft_remove_quotes(char **cmd)
+{
+	int		i;
+	int		j;
+
+	i = 0;
+	while (cmd[i] != NULL)
+	{
+		j = 0;
+		while (cmd[i][j] != '\0')
+		{
+			if (cmd[i][j] == '\"' && cmd[i][j - 1] != '\\')
+			{
+				while (cmd[i][j] != '\0')
+				{
+					cmd[i][j] = cmd[i][j + 1];
+					j++;
+				}
+				j = 0;
+			}
+			j++;
+		}
+		i++;
+	}
+	cmd = ft_remove_slash(cmd);
+	return (cmd);
+}
+
 static void	trim_quote_alloc_hdoc(t_shell *sh)
 {
 	int	i;
@@ -57,6 +113,93 @@ static void	trim_quote_alloc_hdoc(t_shell *sh)
 		exit(1);
 	}
 	sh->hdocs[i] = -1;
+}
+
+char	**ft_remove_quotes(char **cmd)
+{
+	int		i;
+	int		j;
+
+	i = 0;
+	while (cmd[i] != NULL)
+	{
+		j = 0;
+		while (cmd[i][j] != '\0')
+		{
+			if (cmd[i][j] == '\"' && cmd[i][j - 1] != '\\')
+			{
+				while (cmd[i][j] != '\0')
+				{
+					cmd[i][j] = cmd[i][j + 1];
+					j++;
+				}
+				j = 0;
+			}
+			j++;
+		}
+		i++;
+	}
+	cmd = ft_remove_slash(cmd);
+	return (cmd);
+}
+
+char	*ft_give_fixed(char *str, int *i, char *temp)
+{
+	char	*temp2;
+	int		k;
+	int		j;
+
+	k = 0;
+	j = 0;
+	temp2 = malloc(sizeof(char) * ft_strlen(str) + ft_strlen(temp) + 3);
+	while (temp[j] != '\0')
+	{
+		temp2[j] = temp[j];
+		j++;
+	}
+	temp2[j] = '\"';
+	j += 1;
+	while (str[*i] != '\0')
+	{
+		if (str[*i] != '<' && str[*i - 1] == '<' && str[*i - 2] == '<')
+			while (str[*i] == ' ')
+				*i += 1;
+		temp2[j] = str[*i];
+		*i += 1;
+		j += 1;
+	}
+	temp2[j] = '\"';
+	j += 1;
+	temp2[j] = '\0';
+	return (temp2);
+}
+
+char	*ft_make_easy_heredoc(char *str)
+{
+	int		i;
+	int		j;
+	char	*temp;
+
+	i = 0;
+	j = 0;
+	temp = malloc(sizeof(char) * ft_strlen(str) + 1);
+	while (str[i] != '\0')
+	{
+		if (str[i - 1] != '<'
+			&& str[i] == '<' && str[i + 1] == '<' && str[i + 2] != '<')
+		{
+			temp = ft_give_fixed(str, &i, temp);
+			return (temp);
+		}
+		else
+		{
+			temp[j] = str[i];
+			i++;
+			j++;
+		}
+	}
+	temp[j] = '\0';
+	return (temp);
 }
 
 static void	get_heredocs(t_shell *sh)
@@ -79,6 +222,7 @@ static void	get_heredocs(t_shell *sh)
 	{
 		sh->cmd[i] = temp;
 	}
+
 }
 
 static t_cmdn	*create_node(t_cmdn *current, t_shell *sh, int index)

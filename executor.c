@@ -19,8 +19,10 @@ static void	exec_cmd(t_cmdn *node, t_shell *sh)
 	char	**path_array;
 	char	*cmdp;
 	char	*cwd;
+	int		i;
 
-	if (dup2(sh->pfd[0], STDIN_FILENO) == -1)
+	i = 0;
+	if (dup2(pfd[0], STDIN_FILENO) == -1)
 	{
 		perror("dup2 stdin error");
 		exit(EXIT_FAILURE);
@@ -34,14 +36,19 @@ static void	exec_cmd(t_cmdn *node, t_shell *sh)
 			exit(EXIT_FAILURE);
 		}
 	}
-	printf("%d\n", node->hdocs[0]);
-	if (node->hdocs[0] > 0)
-	{
-		ft_putstr_fd(node->cargs[1], sh->pfd[1]);
-		node->cargs[1] = NULL;
-	}
-	close(sh->pfd[1]);
-	cwd = NULL;
+	//while (node->hdocs[i] != '\0')
+	//	i++;
+	//while (node->hdocs[i] == 0)
+	//	i--;
+	//printf("%d\n", node->hdocs[i]);
+	//if (node->hdocs[i] > 0)
+	//{
+	//	ft_putstr_fd(node->cargs[i], pfd[1]);
+	//	node->cargs[i] = NULL;
+	//}
+	close(pfd[1]);
+	//printf("%s\n", node->cargs[1]);
+  cwd = NULL;
 	if (getcwd(cwd, sizeof(cwd)) == NULL)
 		errexit("error:", "getcwd", sh, 1);
 	if (!ft_strncmp(node->cargs[0], "pwd", 4))

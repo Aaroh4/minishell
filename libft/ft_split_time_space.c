@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split_time_space.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/03 12:03:00 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/18 13:55:13 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/24 12:02:06 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ static int	do_split(char **arr, char const *s, char c, int i)
 				i += jcheck[1];
 			else
 			{
-				arr[word] = (char *)malloc(sizeof(char) * (jcheck[1] + 1));
+				arr[word] = (char *)malloc(sizeof(char) * (jcheck[1] + 2));
 				if (!arr[word])
 					return (freemem(arr, word));
 				do_word(arr[word++], s + i, c, jcheck[0]);
@@ -85,16 +85,16 @@ int	wordcount(char const *s, char c)
 {
 	int	i;
 	int	count;
-	//int	check;
+	int	check;
 
 	i = 0;
 	count = 0;
-	//check = 0;
+	check = 0;
 	while (s[i] != '\0')
 	{
-		if (s[i] == '\"')
+		if (s[i] == '\"' && s[i - 1] != '\\')
 		{
-			//check++;
+			check++;
 			i = ft_check(i, s);
 		}
 		if ((s[i] != c && s[i + 1] == c)
