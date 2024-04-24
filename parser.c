@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/24 12:23:32 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/04/23 15:20:57 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/minishell.h"
 
-t_cmdn	*init_cmd_node(t_ntype type, char **cmd, t_bool last, int *hdocs)
+// Should here be more validation for cmd and hdocs?
+static t_cmdn	*init_cmd_node(t_ntype type, t_shell *sh, t_bool last)
 {
 	t_cmdn	*new_cmdn;
 
@@ -23,11 +24,18 @@ t_cmdn	*init_cmd_node(t_ntype type, char **cmd, t_bool last, int *hdocs)
 		new_cmdn->left = NULL;
 		new_cmdn->right = NULL;
 		new_cmdn->cargs = NULL;
-		if (cmd != NULL)
-			new_cmdn->cargs = cmd;
+		new_cmdn->hdocs = NULL;
+		if (type == COMMAND)
+		{
+			new_cmdn->cargs = sh->cmd;
+			new_cmdn->hdocs = sh->hdocs;
+		}
 		new_cmdn->last = last;
-		new_cmdn->hdocs = hdocs;
+		sh->cmd = NULL;
+		sh->hdocs = NULL;
 	}
+	else
+		errexit("error: ", "cmd node malloc", sh, 1);
 	return (new_cmdn);
 }
 
@@ -57,6 +65,54 @@ char	**ft_remove_slash(char **cmd)
 		i++;
 	}
 	return (cmd);
+}
+
+char	**ft_remove_quotes(char **cmd)
+{
+	int		i;
+	int		j;
+
+	i = 0;
+	while (cmd[i] != NULL)
+	{
+		j = 0;
+		while (cmd[i][j] != '\0')
+		{
+			if (cmd[i][j] == '\"' && cmd[i][j - 1] != '\\')
+			{
+				while (cmd[i][j] != '\0')
+				{
+					cmd[i][j] = cmd[i][j + 1];
+					j++;
+				}
+				j = 0;
+			}
+			j++;
+		}
+		i++;
+	}
+	cmd = ft_remove_slash(cmd);
+	return (cmd);
+}
+
+static void	trim_quote_alloc_hdoc(t_shell *sh)
+{
+	int	i;
+
+	i = 0;
+	while (sh->cmd[i] != NULL)
+	{
+		sh->cmd[i] = ft_strtrim(sh->cmd[i], " ");
+		i++;
+	}
+	sh->cmd = ft_remove_quotes(sh->cmd);
+	sh->hdocs = ft_calloc((i + 1), sizeof(int));
+	if (sh->hdocs == NULL)
+	{
+		perror("hdocs malloc error");
+		exit(1);
+	}
+	sh->hdocs[i] = -1;
 }
 
 char	**ft_remove_quotes(char **cmd)
@@ -146,115 +202,68 @@ char	*ft_make_easy_heredoc(char *str)
 	return (temp);
 }
 
-static t_cmdn	*create_node(t_cmdn *current, char **cmdarr, int i, int len)
+static void	get_heredocs(t_shell *sh)
 {
-	char	**cmd;
-	int		*hdocs;
-					//int		*hdoc_index;
-	int		j;
-	int		k;
+	int		i;
 	char	*temp;
 
-	k = 0;
+	i = 0;
+	while (sh->cmd[i] != NULL)
+	{
+		if (sh->cmd[i][0] == '<' && sh->cmd[i][1] == '<'
+			&& sh->cmd[i][2] != '<')
+		{
+			sh->hdocs[i]++;
+			temp = ft_heredoc(sh->cmd[i], sh->hdocs[i]);
+		}
+		i++;
+	}
+	if (sh->hdocs[i] > 0)
+	{
+		sh->cmd[i] = temp;
+	}
+
+}
+
+static t_cmdn	*create_node(t_cmdn *current, t_shell *sh, int index)
+{
+	int	len;
 
 	len = 0;
-	cmdarr[i] = ft_make_easy_heredoc(cmdarr[i]);
-	cmd = ft_split_time_space(cmdarr[i], ' ');
-	cmd = ft_remove_quotes(cmd);
-	if (!cmd)
-		exit(1);
-	// trim_string(cmd[0]);
-	//hdocs = ft_calloc(len, sizeof(int));
-	j = 0;
-	while (cmd[j] != NULL)
+	while (sh->cmdarr[len] != NULL)
+		len++;
+	sh->cmd = ft_split_time_space(sh->cmdarr[index], ' ');
+	if (!(sh->cmd))
+		errexit("error: ", "root malloc", sh, 1);
+	trim_quote_alloc_hdoc(sh);
+	get_heredocs(sh);
+	if (index < len - 2)
 	{
-		cmd[j] = ft_strtrim(cmd[j], " ");
-		j++;
-	}
-	hdocs = ft_calloc((j + 1), sizeof(int));
-	if (hdocs == NULL)
-	{
-		perror("hdocs malloc error");
-		exit (1);
-	}
-	hdocs[j] = -1;
-	j--;
-	while (j >= 0)
-	{
-		while (cmd[j][k] != '\0')
-		{
-			if (cmd[j][k] == '<' && cmd[j][k + 1]
-				== '<' && cmd[j][k + 2] != '<')
-			{
-				hdocs[j]++;
-				temp = ft_heredoc(cmd[j], hdocs[j]);
-			}
-			k++;
-		}
-		if (hdocs[j] > 0)
-			cmd[j] = temp;
-		j--;
-	}
-	if (i < len - 2)
-	{
-		current->left = init_cmd_node(COMMAND, cmd, FALSE, hdocs);
-		current->right = init_cmd_node(PIPELINE, NULL, FALSE, hdocs);
+		current->left = init_cmd_node(COMMAND, sh, FALSE);
+		current->right = init_cmd_node(PIPELINE, sh, FALSE);
 		current = current->right;
 	}
-	else if (i == len - 2)
-		current->left = init_cmd_node(COMMAND, cmd, FALSE, hdocs);
+	else if (index == len - 2)
+		current->left = init_cmd_node(COMMAND, sh, FALSE);
 	else
-		current->right = init_cmd_node(COMMAND, cmd, TRUE, hdocs);
-//	free(temp); 
-	return (current); 
+		current->right = init_cmd_node(COMMAND, sh, TRUE);
+	return (current);
 }
 
-void	parse_input(char *input, t_cmdn **root)
+void	parse_input(t_shell *sh)
 {
-	char	**cmdarr;
 	t_cmdn	*current;
 	int		i;
-	int		len;
 
+	sh->root = init_cmd_node(PIPELINE, sh, FALSE);
+	if (!(sh->root))
+		errexit("error: ", "root malloc", sh, 1);
+	sh->cmdarr = ft_split(sh->input, "|");
+	current = sh->root;
 	i = 0;
-	*root = init_cmd_node(PIPELINE, NULL, FALSE, NULL);
-	if (!(*root))
-		exit(1);
-	cmdarr = ft_split(input, "|");
-	current = *root;
-	len = 0;
-	while (cmdarr[len] != 0)
-		len++;
-	//ft_putstr_fd("Number of commands: ", 2);
-	//ft_putnbr_fd(len, 2);
-	//ft_putchar_fd('\n', 2);
-	while (cmdarr[i] != 0)
+	while (sh->cmdarr[i] != NULL)
 	{
-		current = create_node(current, cmdarr, i, len);
+		current = create_node(current, sh, i);
 		i++;
 	}
-}
-
-void	print_cmdn(t_cmdn *node)
-{
-	int	i;
-
-	if (node == NULL)
-		return ;
-	print_cmdn(node->left);
-	i = 0;
-	if (node->ntype == COMMAND)
-		ft_putendl_fd("COMMAND:", 2);
-	if (node->ntype == PIPELINE)
-		ft_putendl_fd("PIPELINE:", 2);
-	while (node->cargs && node->cargs[i] != 0)
-	{
-		if (i != 0)
-			ft_putchar_fd('\t', 2);
-		ft_putendl_fd(node->cargs[i], 2);
-		i++;
-	}
-	ft_putnbr_fd(node->last, 2);
-	ft_putchar_fd('\n', 2);
-	print_cmdn(node->right);
 }

@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 16:07:48 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/19 11:46:55 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/23 15:51:07 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,45 +46,68 @@ int	wait_for(t_intvec *commands)
 	nc = 0;
 	while (commands->array[nc])
 	{
-		//ft_putstr_fd("Waited for :", 2);
-		//ft_putnbr_fd(waitpid(commands->array[nc], &status, 0), 2);
-		//ft_putchar_fd('\n', 2);
+		// ft_putstr_fd("Waited for :", 2);
+		// ft_putnbr_fd(waitpid(commands->array[nc], &status, 0), 2);
+		// ft_putchar_fd('\n', 2);
 		waitpid(commands->array[nc], &status, 0);
 		nc++;
 	}
 	return (WEXITSTATUS(status));
 }
 
-void	free_args(char **args)
+void	print_cmdn(t_cmdn *node)
 {
 	int	i;
 
-	if (!args || !*args)
-		return ;
-	i = 0;
-	while (args[i])
-	{
-		free(args[i]);
-		args[i] = NULL;
-		i++;
-	}
-	free(args);
-	args = NULL;
-}
-
-void	free_cmdn(t_cmdn *node)
-{
 	if (node == NULL)
 		return ;
-	free_cmdn(node->left);
-	free_args(node->cargs);
-	node->cargs = NULL;
-	free(node);
-	free_cmdn(node->right);
-	node = NULL;
+	print_cmdn(node->left);
+	i = 0;
+	if (node->ntype == COMMAND)
+		ft_putendl_fd("COMMAND:", 2);
+	if (node->ntype == PIPELINE)
+		ft_putendl_fd("PIPELINE:", 2);
+	while (node->cargs && node->cargs[i] != 0)
+	{
+		if (i != 0)
+			ft_putchar_fd('\t', 2);
+		ft_putendl_fd(node->cargs[i], 2);
+		i++;
+	}
+	ft_putnbr_fd(node->last, 2);
+	ft_putchar_fd('\n', 2);
+	print_cmdn(node->right);
 }
 
-// At the moment accounts only for space characters, are other characters necessary?
+char	**ft_remove_quotes(char **cmd)
+{
+	int	i;
+	int	j;
+
+	i = 1;
+	while (cmd[i] != NULL)
+	{
+		j = 0;
+		while (cmd[i][j] != '\0')
+		{
+			if (cmd[i][j] == '\"')
+			{
+				while (cmd[i][j] != '\0')
+				{
+					cmd[i][j] = cmd[i][j + 1];
+					j++;
+				}
+				j = 0;
+			}
+			j++;
+		}
+		i++;
+	}
+	return (cmd);
+}
+
+/* At the moment accounts only for space characters,
+	are other characters necessary?
 char	*trim_string(char *str)
 {
 	char	*end;
@@ -97,6 +120,6 @@ char	*trim_string(char *str)
 	while (end > str && (unsigned char)*end == 32)
 		end--;
 	end[1] = '\0';
-
 	return (str);
 }
+*/

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/18 14:58:27 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/04/23 16:45:54 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ typedef enum s_bool
 
 typedef enum s_ntype
 {
+	ROOT,
 	PIPELINE,
 	COMMAND,
 	ARGUMENTS,
@@ -56,33 +57,49 @@ typedef struct s_intvec
     size_t	capacity;
 } t_intvec;
 
+typedef struct s_shell
+{
+	char	**ms_envp; // Our copy of envp, can be modified by builtins
+	char	*input;	// User input line
+	t_cmdn	*root; // Root node of command tree, for freeing
+	char	**cmdarr; // Array of commands, for easy freeing
+	int		pfd[2]; // Pipe file descriptors
+	char	**cmd; // Most recent expanded cmdarr member
+	int		*hdocs;	// Heredoc array for above most recentcmd
+	int 	status; // Exit code of the most recent pipe, implement!
+}	t_shell;
+
 // Parser:
-void		parse_input(char *input, t_cmdn **root);
-t_cmdn		*init_cmd_node(t_ntype type, char **cmd, t_bool last, int *hdocs);
-void		print_cmdn(t_cmdn *root);
+void		parse_input(t_shell *sh);
 // Executor:
-int			run_cmds(t_cmdn *root, int *pfd, char **envp);
+int			run_cmds(t_shell *sh);
 // Dynamic Integer Array:
 t_intvec*	create_intvec(void);
 void		expand_intvec(t_intvec *dynarr);
 int			add_to_intvec(t_intvec *dynarr, int value);
 void		free_intvec(t_intvec *intvec);
 // Utilities:
+char		**ft_remove_quotes(char **cmd);
 char		*get_exec_path(char **path, char *cmd);
-void		free_args(char **args);
-void		free_cmdn(t_cmdn *node);
 int			wait_for(t_intvec *children);
-char		*trim_string(char *str);
+void		print_cmdn(t_cmdn *root);
+// char		*trim_string(char *str);
 // Buildins:
 void		pwd_builtin(void);
 void		cd_builtin(char *cwd, char **str);
-void		exit_builtin(void);
+void		exit_builtin(t_shell *sh);
 void		echo_builtin(char **arg);
 // Environment variables:
-char 		*replace_envp(char* input, char **ms_envp, int hdoc);
+char 		*replace_envp(char* input, t_shell *sh);
 char		**copy_envp(char **envp);
-void		populate_env_vars(t_cmdn *node, char **ms_envp);
-
+void		populate_env_vars(t_cmdn *node, t_shell *sh);
+// Heredoc:
 char		*ft_heredoc(char *breakchar, int hdocs);
-
+// Error handling:
+void		errexit(char *msg1, char *msg2, t_shell *sh, int exitcode);
+// Initialization and freeing
+void		init_shell_struct(t_shell *sh);
+void		free_args(char **args);
+void		free_cmdn(t_cmdn *node);
+void		free_new_prompt(t_shell *sh);
 #endif

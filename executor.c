@@ -3,16 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/23 12:12:18 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/04/23 16:26:12 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/minishell.h"
 
-static void	exec_cmd(t_cmdn *node, int pfd[2])
+// Path is checked every time from ms_envp since it could have been changed
+// in previous pipe.
+static void	exec_cmd(t_cmdn *node, t_shell *sh)
 {
 	char	**path_array;
 	char	*cmdp;
@@ -25,10 +27,10 @@ static void	exec_cmd(t_cmdn *node, int pfd[2])
 		perror("dup2 stdin error");
 		exit(EXIT_FAILURE);
 	}
-	close(pfd[0]);
+	close(sh->pfd[0]);
 	if (node->last == FALSE)
 	{
-		if (dup2(pfd[1], STDOUT_FILENO) == -1)
+		if (dup2(sh->pfd[1], STDOUT_FILENO) == -1)
 		{
 			perror("dup2 stdout error");
 			exit(EXIT_FAILURE);
@@ -46,12 +48,9 @@ static void	exec_cmd(t_cmdn *node, int pfd[2])
 	//}
 	close(pfd[1]);
 	//printf("%s\n", node->cargs[1]);
-	cwd = NULL;
+  cwd = NULL;
 	if (getcwd(cwd, sizeof(cwd)) == NULL)
-	{
-		perror("getcwd error");
-		exit(EXIT_FAILURE);
-	}
+		errexit("error:", "getcwd", sh, 1);
 	if (!ft_strncmp(node->cargs[0], "pwd", 4))
 		pwd_builtin();
 	else if (node->cargs[0] && !ft_strncmp(node->cargs[0], "cd", 3))
@@ -63,63 +62,56 @@ static void	exec_cmd(t_cmdn *node, int pfd[2])
 		path_array = ft_split(getenv("PATH"), ":");
 		cmdp = get_exec_path(path_array, node->cargs[0]);
 		free(path_array);
-		if (cmdp == NULL)
-			exit (127);
-		if (!node->cargs[0] || !*node->cargs || !cmdp
-			|| execve(cmdp, node->cargs, NULL) == -1)
+		if (!node->cargs[0] || !*node->cargs || !cmdp || execve(cmdp,
+				node->cargs, sh->ms_envp) == -1)
 		{
-			printf("Execve error.\n");
-			exit (127);
+			free(cwd);
+			errexit("error:", "execve", sh, 127);
 		}
 	}
 	free(cwd);
-	exit (EXIT_SUCCESS);
+	exit(EXIT_SUCCESS);
 }
 
 // If node->right type command it's last so rockit
 // Might not work with bonuses though
-static int	exec_node(t_cmdn *node, int *pfd, char **ms_envp, t_intvec *commands)
+static int	exec_node(t_cmdn *node, t_shell *sh, t_intvec *commands)
 {
 	int	pid;
 
 	if (node == NULL)
 		return (0);
-	exec_node(node->left, pfd, ms_envp, commands);
+	exec_node(node->left, sh, commands);
 	if (node->ntype == COMMAND)
 	{
-		populate_env_vars(node, ms_envp);
+		populate_env_vars(node, sh);
 		pid = fork();
 		if (pid == -1)
 		{
-			wait_for(commands);
-			perror("fork error");
+			sh->status = wait_for(commands);
+			free_intvec(commands);
+			errexit("Error:", "fork failure", sh, 1);
 		}
 		else if (pid == 0)
-			exec_cmd(node, pfd);
+			exec_cmd(node, sh);
 		else
-		{
-			//ft_putstr_fd("Created process ID: ", 2);
-			//ft_putnbr_fd(pid, 2);
-			//ft_putstr_fd(" Command: ", 2);
-			//ft_putendl_fd(node->cargs[0], 2);
 			add_to_intvec(commands, pid);
-		}
 	}
-	exec_node(node->right, pfd, ms_envp, commands);
+	exec_node(node->right, sh, commands);
 	return (0);
 }
 
-int	run_cmds(t_cmdn *root, int *pfd, char **ms_envp)
+int	run_cmds(t_shell *sh)
 {
 	t_intvec	*commands;
 
-	if (root == NULL)
+	if (sh->root == NULL)
 		return (0);
 	commands = create_intvec();
-	exec_node(root, pfd, ms_envp, commands);
-	close(pfd[0]);
-	close(pfd[1]);
-	wait_for(commands);
+	exec_node(sh->root, sh, commands);
+	close(sh->pfd[0]);
+	close(sh->pfd[1]);
+	sh->status = wait_for(commands);
 	free_intvec(commands);
 	return (0);
 }

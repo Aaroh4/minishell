@@ -49,8 +49,8 @@ char	*ft_heredoc(char *breakchar, int hdocs)
 	check = ft_check_for_other(breakchar);
 	while (breakchar[i] != '\0')
 	{
-		if (breakchar[i] == '<' && breakchar[i + 1] == '<'
-			&& breakchar[i + 2] != '<')
+		if (breakchar[i] == '<' && breakchar[i + 1] == '<' && breakchar[i
+			+ 2] != '<')
 		{
 			j++;
 			if (j == hdocs)

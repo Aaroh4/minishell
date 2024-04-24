@@ -3,37 +3,38 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:43 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/16 16:08:06 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/04/23 15:28:48 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/minishell.h"
-
+#include <fcntl.h>
+#include <readline/history.h>
+#include <readline/readline.h>
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
-#include <signal.h>
 #include <string.h>
-#include <readline/readline.h>
-#include <readline/history.h>
 #include <termios.h>
-#include <fcntl.h>
+#include <unistd.h>
 
-void enableRawMode() {
-	struct termios term;
-    if (tcgetattr(STDIN_FILENO, &term) == -1)
+void	enable_raw_mode(void)
+{
+	struct termios	term;
+
+	if (tcgetattr(STDIN_FILENO, &term) == -1)
 		perror("tcgetattr");
-    term.c_lflag &= ~(ECHOCTL);
-    if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &term) == -1)
+	term.c_lflag &= ~(ECHOCTL);
+	if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &term) == -1)
 		perror("tcsetattr");
 }
 
-void	disableRawMode(struct termios oterm)
+void	disable_raw_mode(struct termios oterm)
 {
-	 if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &oterm) == -1)
+	if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &oterm) == -1)
 		perror("tcsetattr");
 }
 
@@ -51,7 +52,7 @@ void	ft_handler(int signum)
 // Right now it's just to get envp
 static int	handle_arguments(int argc, char **argv)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (argv[i] && i < argc)
@@ -59,44 +60,34 @@ static int	handle_arguments(int argc, char **argv)
 	return (i);
 }
 
+// Removed free_args(sh->ms_envp); from end
 int	main(int argc, char **argv, char **envp)
 {
-	t_cmdn			*cmd_root;
-	char			*input;
-	struct termios 	oterm;
-	int				pfd[2];
-	char			**ms_envp;
+	t_shell			sh;
+	struct termios	oterm;
 
+	init_shell_struct(&sh);
 	if (tcgetattr(STDIN_FILENO, &oterm) == -1)
 		perror("tcgetattr");
 	signal(SIGINT, ft_handler);
 	signal(SIGQUIT, SIG_IGN);
 	rl_clear_history();
-	if (pipe(pfd) == -1)
-		perror("pipe init error.");
 	handle_arguments(argc, argv);
-	ms_envp = copy_envp(envp);
+	sh.ms_envp = copy_envp(envp);
 	while (1)
 	{
-		if (pipe(pfd) == -1)
-			perror("pipe init error.");
-		enableRawMode();
-		input = readline("minishell > ");
-		if (input == NULL || !ft_strncmp(input, "exit", 5))
-			exit_builtin();
-		add_history(input);
-		parse_input(input, &cmd_root);
-		//ft_putendl_fd("###########", 2);
-		//print_cmdn(cmd_root);
-		//ft_putendl_fd("###########", 2);
-		run_cmds(cmd_root, pfd, ms_envp);
-		free(input);
-		free_cmdn(cmd_root);
-		disableRawMode(oterm);
-		close(pfd[0]);
-		close(pfd[1]);
+		if (pipe(sh.pfd) == -1)
+			errexit("Error :", "pipe initialization", &sh, 1);
+		enable_raw_mode();
+		sh.input = readline("minishell > ");
+		if (sh.input == NULL || !ft_strncmp(sh.input, "exit", 5))
+			exit_builtin(&sh);
+		add_history(sh.input);
+		parse_input(&sh);
+		run_cmds(&sh);
+		free_new_prompt(&sh);
+		disable_raw_mode(oterm);
 	}
-	free_args(ms_envp);
 }
 
 /*
@@ -105,8 +96,7 @@ int	main(int argc, char **argv, char **envp)
 {
 	char	**ms_envp;
 	char	*input;
-	char 	*str;
-
+	char	*str;
 
 	if (argc == 2)
 	{

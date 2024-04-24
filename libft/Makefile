@@ -6,7 +6,7 @@
 #    By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/19 12:03:42 by ahamalai          #+#    #+#              #
-#    Updated: 2024/04/19 08:57:43 by mburakow         ###   ########.fr        #
+#    Updated: 2024/04/19 14:21:00 by mburakow         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,7 +30,7 @@ OBJ = $(SRC:.c=.o)
 HEADERS = ./includes
 
 %.o: %.c
-	cc -Wall -Wextra -Werror -c $< -o $@ -I $(HEADERS)
+	cc -Wall -Wextra -Werror -g -c $< -o $@ -I $(HEADERS)
 
 $(NAME): $(OBJ)
 	ar -rcs $@ $(OBJ)

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+         #
+#    By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/22 12:36:32 by ahamalai          #+#    #+#              #
-#    Updated: 2024/04/19 13:33:23 by ahamalai         ###   ########.fr        #
+#    Updated: 2024/04/23 11:20:11 by mburakow         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,8 @@ MAKE = make
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -g -I ~/.brew/opt/readline/include
 HEAD = includes/minishell.h
-SRCS = main.c builtins.c parser.c executor.c utils.c msenv.c heredoc.c intvec.c
+SRCS = main.c builtins.c parser.c executor.c utils.c intvec.c msenv.c \
+ msenv_replace.c heredoc.c error.c init_free.c
 OBJS = $(SRCS:.c=.o)
 
 all : $(NAME)
