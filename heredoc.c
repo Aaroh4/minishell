@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 12:09:30 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/23 13:25:38 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/04/24 16:48:57 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,8 @@ char	*ft_heredoc(char *breakchar, int hdocs)
 	check = ft_check_for_other(breakchar);
 	while (breakchar[i] != '\0')
 	{
-		if (breakchar[i] == '<' && breakchar[i + 1] == '<' && breakchar[i
-			+ 2] != '<')
+		if (breakchar[i] == '<' && breakchar[i + 1] == '<'
+			&& breakchar[i + 2] != '<')
 		{
 			j++;
 			if (j == hdocs)
@@ -62,7 +62,7 @@ char	*ft_heredoc(char *breakchar, int hdocs)
 		breakchar = ft_substr(breakchar, i + 2, sizeof(breakchar) - i - 3);
 	while (1)
 	{
-		write(1, "> ", 9);
+		write(1, "> ", 2);
 		buf = get_next_line(0);
 			// if (!buf) // ERROR CHECK HERE DO NOT MISS THIS ONE BEFORE SENDING BACK THIS PROJECT!!!#!!#:LKJHGC
 		if (!ft_strncmp(breakchar, buf, ft_strlen(breakchar))
