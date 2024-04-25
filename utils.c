@@ -81,8 +81,8 @@ void	print_cmdn(t_cmdn *node)
 
 char	**ft_remove_slash(char **cmd)
 {
-	int		i;
-	int		j;
+	int	i;
+	int	j;
 
 	i = 1;
 	while (cmd[i] != NULL)
@@ -96,7 +96,7 @@ char	**ft_remove_slash(char **cmd)
 				{
 					cmd[i][j] = cmd[i][j + 1];
 					j++;
-					//printf("%s:%d:%d\n", cmd[i], i, j);
+					// printf("%s:%d:%d\n", cmd[i], i, j);
 				}
 				j = 0;
 			}
@@ -109,8 +109,8 @@ char	**ft_remove_slash(char **cmd)
 
 char	**ft_remove_quotes(char **cmd)
 {
-	int		i;
-	int		j;
+	int	i;
+	int	j;
 
 	i = 0;
 	while (cmd[i] != NULL)

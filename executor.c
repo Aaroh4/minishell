@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/25 10:16:33 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/25 15:21:15 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,42 +14,42 @@
 
 // Path is checked every time from ms_envp since it could have been changed
 // in previous pipe.
+static int	exec_builtin(t_cmdn *node, char *cwd, t_shell *sh)
+{
+	if (getcwd(cwd, sizeof(cwd)) == NULL)
+		errexit("error:", "getcwd", sh, 1);
+	else if (node->cargs[0] && !ft_strncmp(node->cargs[0], "echo", 5))
+		return (echo_builtin(node->cargs));
+	else if (node->cargs[0] && !ft_strncmp(node->cargs[0], "cd", 3))
+		return (cd_builtin(cwd, node->cargs));
+	if (node->cargs[0] && !ft_strncmp(node->cargs[0], "pwd", 4))
+		return (pwd_builtin());
+	else if (node->cargs[0] && !ft_strncmp(node->cargs[0], "export", 7))
+		return (export_builtin(node, sh));
+	else if (node->cargs[0] && !ft_strncmp(node->cargs[0], "unset", 6))
+		return (unset_builtin(node, sh));
+	else if (node->cargs[0] && !ft_strncmp(node->cargs[0], "env", 4))
+		return (env_builtin(sh));
+	else if (node->cargs[0] && !ft_strncmp(node->cargs[0], "exit", 5))
+		exit_builtin(sh);
+	else
+		return (0);
+}
+
 static void	exec_cmd(t_cmdn *node, t_shell *sh)
 {
 	char	**path_array;
 	char	*cmdp;
 	char	*cwd;
-	//int		i;
 
-	//i = 0;
 	if (dup2(sh->pfd[0], STDIN_FILENO) == -1)
 		errexit("error:", "dup2 stdin", sh, 127);
 	close(sh->pfd[0]);
 	if (node->last == FALSE && dup2(sh->pfd[1], STDOUT_FILENO) == -1)
 		errexit("error:", "dup2 stdout", sh, 127);
-	/*
-	while (node->hdocs[i] != '\0')
-		i++;
-	while (node->hdocs[i] == 0)
-		i--;
-	if (node->hdocs[i] > 0)
-	{
-		ft_putstr_fd(node->cargs[i], sh->pfd[1]);
-		node->cargs[i] = NULL;
-	}
-	*/
-	// handle_heredocs(node, sh);
 	close(sh->pfd[1]);
-  	cwd = NULL;
-	if (getcwd(cwd, sizeof(cwd)) == NULL)
-		errexit("error:", "getcwd", sh, 1);
-	if (!ft_strncmp(node->cargs[0], "pwd", 4))
-		pwd_builtin();
-	else if (node->cargs[0] && !ft_strncmp(node->cargs[0], "cd", 3))
-		cd_builtin(cwd, node->cargs);
-	else if (node->cargs[0] && !ft_strncmp(node->cargs[0], "echo", 5))
-		echo_builtin(node->cargs);
-	else
+	cwd = NULL;
+	if (!exec_builtin(node, cwd, sh))
 	{
 		path_array = ft_split(getenv("PATH"), ":");
 		cmdp = get_exec_path(path_array, node->cargs[0]);

@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/25 09:21:40 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/25 14:58:12 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,8 +99,8 @@ char	*ft_make_easy_heredoc(char *str)
 	temp = malloc(sizeof(char) * ft_strlen(str) + 1);
 	while (str[i] != '\0')
 	{
-		if (str[i - 1] != '<'
-			&& str[i] == '<' && str[i + 1] == '<' && str[i + 2] != '<')
+		if (str[i - 1] != '<' && str[i] == '<' && str[i + 1] == '<' && str[i
+				+ 2] != '<')
 		{
 			temp = ft_give_fixed(str, &i, temp);
 			return (temp);
@@ -128,8 +128,8 @@ static void	get_heredocs(t_shell *sh)
 		j = 0;
 		while (sh->cmd[i][j] != '\0')
 		{
-			if (sh->cmd[i][j] == '<' && sh->cmd[i][j + 1] == '<'
-				&& sh->cmd[i][j + 2] != '<')
+			if (sh->cmd[i][j] == '<' && sh->cmd[i][j + 1] == '<' && sh->cmd[i][j
+				+ 2] != '<')
 			{
 				sh->hdocs[i]++;
 				temp = ft_heredoc(sh->cmd[i], sh->hdocs[i]);

@@ -27,7 +27,7 @@ char	*move_ucase(char *start)
 // If question mark, ignore caps after, else check from ms_envp for the value
 static void	determine_env(t_shell *sh, t_env_tdata *envd)
 {
-	int		i;
+	int	i;
 
 	i = 0;
 	if (*(envd->start + 1) == 63)
@@ -37,8 +37,8 @@ static void	determine_env(t_shell *sh, t_env_tdata *envd)
 	}
 	while (sh->ms_envp[i] != NULL)
 	{
-		if (!ft_strncmp(sh->ms_envp[i], envd->start + 1, 
-			ft_strcpos(sh->ms_envp[i], 61)))
+		if (!ft_strncmp(sh->ms_envp[i], envd->start + 1,
+				ft_strcpos(sh->ms_envp[i], 61)))
 		{
 			envd->env_val = ft_strchr(sh->ms_envp[i], 61) + 1;
 			envd->end = envd->start + ft_strcpos(sh->ms_envp[i], 61) + 1;
