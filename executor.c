@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/24 16:26:44 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/04/25 10:16:33 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,36 +19,28 @@ static void	exec_cmd(t_cmdn *node, t_shell *sh)
 	char	**path_array;
 	char	*cmdp;
 	char	*cwd;
-	int		i;
+	//int		i;
 
-	i = 0;
-	//if (dup2(pfd[0], STDIN_FILENO) == -1)
-	//{
-	//	perror("dup2 stdin error");
-	//	exit(EXIT_FAILURE);
-	//}
+	//i = 0;
+	if (dup2(sh->pfd[0], STDIN_FILENO) == -1)
+		errexit("error:", "dup2 stdin", sh, 127);
 	close(sh->pfd[0]);
-	if (node->last == FALSE)
+	if (node->last == FALSE && dup2(sh->pfd[1], STDOUT_FILENO) == -1)
+		errexit("error:", "dup2 stdout", sh, 127);
+	/*
+	while (node->hdocs[i] != '\0')
+		i++;
+	while (node->hdocs[i] == 0)
+		i--;
+	if (node->hdocs[i] > 0)
 	{
-		if (dup2(sh->pfd[1], STDOUT_FILENO) == -1)
-		{
-			perror("dup2 stdout error");
-			exit(EXIT_FAILURE);
-		}
+		ft_putstr_fd(node->cargs[i], sh->pfd[1]);
+		node->cargs[i] = NULL;
 	}
-	//while (node->hdocs[i] != '\0')
-	//	i++;
-	//while (node->hdocs[i] == 0)
-	//	i--;
-	//printf("%d\n", node->hdocs[i]);
-	//if (node->hdocs[i] > 0)
-	//{
-	//	ft_putstr_fd(node->cargs[i], pfd[1]);
-	//	node->cargs[i] = NULL;
-	//}
-//	close(pfd[1]);
-	//printf("%s\n", node->cargs[1]);
-  cwd = NULL;
+	*/
+	// handle_heredocs(node, sh);
+	close(sh->pfd[1]);
+  	cwd = NULL;
 	if (getcwd(cwd, sizeof(cwd)) == NULL)
 		errexit("error:", "getcwd", sh, 1);
 	if (!ft_strncmp(node->cargs[0], "pwd", 4))

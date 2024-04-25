@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/24 16:56:25 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/04/25 09:21:40 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,10 +62,8 @@ static void	trim_quote_alloc_hdoc(t_shell *sh)
 char	*ft_give_fixed(char *str, int *i, char *temp)
 {
 	char	*temp2;
-	int		k;
 	int		j;
 
-	k = 0;
 	j = 0;
 	temp2 = malloc(sizeof(char) * ft_strlen(str) + ft_strlen(temp) + 3);
 	while (temp[j] != '\0')
