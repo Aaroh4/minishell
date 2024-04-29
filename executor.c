@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/26 15:14:11 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/04/29 10:10:11 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,9 +74,8 @@ static void	handle_heredocs(t_cmdn *node, int fd)
 	while (node->hdocs[i] != -1)
 		i++;
 	i--;
-	while (node->hdocs[i] > 0 && i >= 0)
+	while (node->hdocs[i] == 0 && i >= 0)
 		i--;
-	i++;
 	if (node->hdocs[i] > 0)
 		ft_putstr_fd(node->cargs[i], fd);
 	i = 0;
