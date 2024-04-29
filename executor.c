@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/29 17:15:59 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/29 17:19:06 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,7 +171,11 @@ static int	exec_node(t_cmdn *node, t_shell *sh, t_intvec *commands)
 		else if (pid == 0)
 			exec_cmd(node, sh);
 		else
+		{
+			// if read(sh->efd[0] > 0)
+			// write new line to sh->ms_envp
 			add_to_intvec(commands, pid);
+		}
 	}
 	exec_node(node->right, sh, commands);
 	return (0);
