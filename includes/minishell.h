@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/23 16:45:54 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/25 14:26:12 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,10 +85,10 @@ int			wait_for(t_intvec *children);
 void		print_cmdn(t_cmdn *root);
 // char		*trim_string(char *str);
 // Buildins:
-void		pwd_builtin(void);
-void		cd_builtin(char *cwd, char **str);
+int			pwd_builtin(void);
+int			cd_builtin(char *cwd, char **str);
 void		exit_builtin(t_shell *sh);
-void		echo_builtin(char **arg);
+int			echo_builtin(char **arg);
 // Environment variables:
 char 		*replace_envp(char* input, t_shell *sh);
 char		**copy_envp(char **envp);
@@ -102,4 +102,8 @@ void		init_shell_struct(t_shell *sh);
 void		free_args(char **args);
 void		free_cmdn(t_cmdn *node);
 void		free_new_prompt(t_shell *sh);
+// Signals
+void		disable_raw_mode(struct termios oterm);
+void		enable_raw_mode(void);
+
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:15:11 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/23 10:56:44 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/25 15:18:34 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,12 @@
 #include <stdio.h>
 #include <unistd.h>
 
-void	cd_builtin(char *cwd, char **str)
+int	cd_builtin(char *cwd, char **str)
 {
 	char	cwd2[1024];
 	char	*realcwd;
 
+	// NEEDS A WHOLE NEW REWRITE BECAUSE THIS IS DOGSHIT!!
 	if (getcwd(cwd2, sizeof(cwd2)) == NULL)
 		perror("getcwd error");
 	if (str[1] == NULL)
@@ -26,7 +27,7 @@ void	cd_builtin(char *cwd, char **str)
 		chdir(cwd);
 	}
 	else if (!ft_strncmp(str[1], ".", 2))
-		return ;
+		return (1);
 	else if (!ft_strncmp(str[1], "..", 3))
 	{
 		chdir(ft_substr(cwd2, 0, ft_strlen(cwd2) - ft_strlen(ft_strrchr(cwd2,
@@ -37,9 +38,11 @@ void	cd_builtin(char *cwd, char **str)
 		realcwd = ft_strjoin(cwd2, "/");
 		chdir(ft_strjoin(realcwd, str[1]));
 	}
+	return (1);
+	// NEEDS A WHOLE NEW REWRITE BECAUSE THIS IS DOGSHIT!!
 }
 
-void	pwd_builtin(void)
+int	pwd_builtin(void)
 {
 	char	cwd[1024];
 
@@ -47,6 +50,7 @@ void	pwd_builtin(void)
 		printf("%s\n", cwd);
 	else
 		perror("getcwd error");
+	return (1);
 }
 
 void	exit_builtin(t_shell *sh)
@@ -57,7 +61,7 @@ void	exit_builtin(t_shell *sh)
 	exit(0);
 }
 
-void	echo_builtin(char **arg)
+int	echo_builtin(char **arg)
 {
 	int	i;
 
@@ -82,4 +86,5 @@ void	echo_builtin(char **arg)
 				printf("%s", " ");
 		}
 	}
+	return (1);
 }

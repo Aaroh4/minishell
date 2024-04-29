@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/24 16:56:25 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/04/25 14:58:12 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,19 +62,15 @@ static void	trim_quote_alloc_hdoc(t_shell *sh)
 char	*ft_give_fixed(char *str, int *i, char *temp)
 {
 	char	*temp2;
-	int		k;
 	int		j;
 
-	k = 0;
 	j = 0;
-	temp2 = malloc(sizeof(char) * ft_strlen(str) + ft_strlen(temp) + 3);
+	temp2 = malloc(sizeof(char) * ft_strlen(str) + ft_strlen(temp) + 1);
 	while (temp[j] != '\0')
 	{
 		temp2[j] = temp[j];
 		j++;
 	}
-	temp2[j] = '\"';
-	j += 1;
 	while (str[*i] != '\0')
 	{
 		if (str[*i] != '<' && str[*i - 1] == '<' && str[*i - 2] == '<')
@@ -84,10 +80,38 @@ char	*ft_give_fixed(char *str, int *i, char *temp)
 		*i += 1;
 		j += 1;
 	}
-	temp2[j] = '\"';
-	j += 1;
 	temp2[j] = '\0';
 	return (temp2);
+}
+
+char	*ft_fix_for_space(char *str)
+{
+	int		i;
+	int		j;
+	int		hdocs;
+	char	*temp;
+
+	i = 0;
+	hdocs = 0;
+	while (str[i++] != '\0')
+		if (str[i - 1] != '<'
+			&& str[i] == '<' && str[i + 1] == '<' && str[i + 2] != '<')
+			hdocs++;
+	i = 0;
+	j = 0;
+	temp = malloc(sizeof(char) * ft_strlen(str) + hdocs + 1);
+	while (str[i] != '\0')
+	{
+		if (str[i - 1] != '<' && str[i] == '<' && str[i + 1] == '<' && str[i
+				+ 2] != '<')
+		{
+			temp[j] = ' ';
+			j++;
+		}
+		temp[j++] = str[i++];
+	}
+	temp[j] = '\0';
+	return (temp);
 }
 
 char	*ft_make_easy_heredoc(char *str)
@@ -98,15 +122,13 @@ char	*ft_make_easy_heredoc(char *str)
 
 	i = 0;
 	j = 0;
-	temp = malloc(sizeof(char) * ft_strlen(str) + 1);
+	str = ft_fix_for_space(str);
+	temp = malloc(sizeof(char) * ft_strlen(str) + 2);
 	while (str[i] != '\0')
 	{
 		if (str[i - 1] != '<'
 			&& str[i] == '<' && str[i + 1] == '<' && str[i + 2] != '<')
-		{
-			temp = ft_give_fixed(str, &i, temp);
-			return (temp);
-		}
+			return (ft_give_fixed(str, &i, temp));
 		else
 		{
 			temp[j] = str[i];
@@ -131,7 +153,7 @@ static void	get_heredocs(t_shell *sh)
 		while (sh->cmd[i][j] != '\0')
 		{
 			if (sh->cmd[i][j] == '<' && sh->cmd[i][j + 1] == '<'
-				&& sh->cmd[i][j + 2] != '<')
+				&& sh->cmd[i][j + 2] != '<' && sh->cmd[i][j + 2] != '\0')
 			{
 				sh->hdocs[i]++;
 				temp = ft_heredoc(sh->cmd[i], sh->hdocs[i]);
