@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/25 15:21:15 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/29 12:31:45 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ char	**ft_remove_array(char **str, int i, t_cmdn *node)
 	return (temp);
 }
 
-static void	handle_heredocs(t_cmdn *node, int fd)
+static void	handle_heredocs(t_cmdn *node, t_shell *sh)
 {
 	int	i;
 
@@ -76,7 +76,10 @@ static void	handle_heredocs(t_cmdn *node, int fd)
 	while (node->hdocs[i] == 0 && i >= 0)
 		i--;
 	if (node->hdocs[i] > 0)
-		ft_putstr_fd(node->cargs[i], fd);
+	{
+		node->cargs[i] = replace_envp(node->cargs[i], sh);
+		ft_putstr_fd(node->cargs[i], sh->pfd[1]);
+	}
 	i = 0;
 	while (node->cargs[i] != '\0')
 	{
@@ -88,7 +91,6 @@ static void	handle_heredocs(t_cmdn *node, int fd)
 		else
 			i++;
 	}
-	fd = 0;
 }
 
 static int	exec_builtin(t_cmdn *node, char *cwd, t_shell *sh)
@@ -101,16 +103,17 @@ static int	exec_builtin(t_cmdn *node, char *cwd, t_shell *sh)
 		return (cd_builtin(cwd, node->cargs));
 	if (node->cargs[0] && !ft_strncmp(node->cargs[0], "pwd", 4))
 		return (pwd_builtin());
+	/*
 	else if (node->cargs[0] && !ft_strncmp(node->cargs[0], "export", 7))
 		return (export_builtin(node, sh));
 	else if (node->cargs[0] && !ft_strncmp(node->cargs[0], "unset", 6))
 		return (unset_builtin(node, sh));
 	else if (node->cargs[0] && !ft_strncmp(node->cargs[0], "env", 4))
 		return (env_builtin(sh));
+	*/
 	else if (node->cargs[0] && !ft_strncmp(node->cargs[0], "exit", 5))
 		exit_builtin(sh);
-	else
-		return (0);
+	return (0);
 }
 
 static void	exec_cmd(t_cmdn *node, t_shell *sh)
@@ -123,7 +126,7 @@ static void	exec_cmd(t_cmdn *node, t_shell *sh)
 	close(sh->pfd[0]);
 	if (node->last == FALSE && dup2(sh->pfd[1], STDOUT_FILENO) == -1)
 		errexit("error:", "dup2 stdout", sh, 127);
-  handle_heredocs(node, sh->pfd[1]);
+  	handle_heredocs(node, sh);
 	close(sh->pfd[1]);
 	cwd = NULL;
 	if (!exec_builtin(node, cwd, sh))

@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 13:16:33 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/23 16:58:52 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/29 12:33:12 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,7 @@ void	write_new_arr(char *new_arr, t_env_tdata *envd)
 // Some characters or combinations seem to prevent env substitution,
 // when directly after the env. This has not yet been researched/implemented.
 // Should we include hdoc checks here or before at populate_env_vars?
+// INIT ENVDATA STRUCT MORON!!!
 char	*replace_envp(char *input, t_shell *sh)
 {
 	t_env_tdata	envd;
