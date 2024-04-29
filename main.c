@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:43 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/26 14:14:42 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/04/29 14:51:07 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,16 +47,32 @@ void	ft_handler(int signum)
 	rl_redisplay();
 }
 
-// BS function to prevent compiler warnings
-// Maybe later actual parameters for minishell will be used
-// Right now it's just to get envp
-static int	handle_arguments(int argc, char **argv)
+// Implementing the bash -c flag to run one command without
+// entering the prompt loop.
+static int	handle_arguments(int argc, char **argv, t_shell *sh, struct termios	oterm)
 {
 	int	i;
 
-	i = 0;
+	i = 1;
 	while (argv[i] && i < argc)
+	{
+		if (!ft_strncmp(argv[i], "-c", ft_strlen(argv[i])))
+		{
+			if (pipe(sh->pfd) == -1)
+				errexit("Error :", "pipe initialization", sh, 1);
+			enable_raw_mode();
+			sh->input = ft_strdup(argv[i + 1]);
+			if (sh->input == NULL || !ft_strncmp(sh->input, "exit", 5))
+				exit_builtin(sh);
+			parse_input(sh);
+			run_cmds(sh);
+			disable_raw_mode(oterm);
+			free_new_prompt(sh);
+			free_args(sh->ms_envp);
+			exit(0);
+		}
 		i++;
+	}
 	return (i);
 }
 
@@ -72,8 +88,8 @@ int	main(int argc, char **argv, char **envp)
 	signal(SIGINT, ft_handler);
 	signal(SIGQUIT, SIG_IGN);
 	rl_clear_history();
-	handle_arguments(argc, argv);
 	sh.ms_envp = copy_envp(envp);
+	handle_arguments(argc, argv, &sh, oterm);
 	while (1)
 	{
 		if (pipe(sh.pfd) == -1)
