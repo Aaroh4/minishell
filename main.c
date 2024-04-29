@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:43 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/29 14:51:07 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/29 17:11:31 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	ft_handler(int signum)
 
 // Implementing the bash -c flag to run one command without
 // entering the prompt loop.
-static int	handle_arguments(int argc, char **argv, t_shell *sh, struct termios	oterm)
+static int	check_inline_param(int argc, char **argv, t_shell *sh, struct termios	oterm)
 {
 	int	i;
 
@@ -89,10 +89,10 @@ int	main(int argc, char **argv, char **envp)
 	signal(SIGQUIT, SIG_IGN);
 	rl_clear_history();
 	sh.ms_envp = copy_envp(envp);
-	handle_arguments(argc, argv, &sh, oterm);
+	check_inline_param(argc, argv, &sh, oterm);
 	while (1)
 	{
-		if (pipe(sh.pfd) == -1)
+		if (pipe(sh.pfd) == -1 || pipe(sh.efd) == -1)
 			errexit("Error :", "pipe initialization", &sh, 1);
 		enable_raw_mode();
 		sh.input = readline("minishell > ");

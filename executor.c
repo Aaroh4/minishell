@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/29 12:31:45 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/29 17:15:59 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ static void	handle_heredocs(t_cmdn *node, t_shell *sh)
 	while (node->hdocs[i] != -1)
 		i++;
 	i--;
-	while (node->hdocs[i] == 0 && i >= 0)
+	while (node->hdocs[i] == 0 && i > 0)
 		i--;
 	if (node->hdocs[i] > 0)
 	{
@@ -121,9 +121,11 @@ static void	exec_cmd(t_cmdn *node, t_shell *sh)
 	char	**path_array;
 	char	*cmdp;
 	char	*cwd;
+	
 	if (dup2(sh->pfd[0], STDIN_FILENO) == -1)
 		errexit("error:", "dup2 stdin", sh, 127);
 	close(sh->pfd[0]);
+	close(sh->efd[0]);
 	if (node->last == FALSE && dup2(sh->pfd[1], STDOUT_FILENO) == -1)
 		errexit("error:", "dup2 stdout", sh, 127);
   	handle_heredocs(node, sh);
@@ -141,6 +143,8 @@ static void	exec_cmd(t_cmdn *node, t_shell *sh)
 			errexit("error:", "execve", sh, 127);
 		}
 	}
+	// Function to check if export, if not, just:
+	close(sh->efd[1]);
 	free(cwd);
 	exit(EXIT_SUCCESS);
 }
