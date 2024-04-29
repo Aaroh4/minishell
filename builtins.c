@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:15:11 by ahamalai          #+#    #+#             */
 /*   Updated: 2024/04/25 15:18:34 by mburakow         ###   ########.fr       */
@@ -19,6 +19,7 @@ int	cd_builtin(char *cwd, char **str)
 	char	cwd2[1024];
 	char	*realcwd;
 
+	// NEEDS A WHOLE NEW REWRITE BECAUSE THIS IS DOGSHIT!!
 	if (getcwd(cwd2, sizeof(cwd2)) == NULL)
 		perror("getcwd error");
 	if (str[1] == NULL)
@@ -38,6 +39,7 @@ int	cd_builtin(char *cwd, char **str)
 		chdir(ft_strjoin(realcwd, str[1]));
 	}
 	return (1);
+	// NEEDS A WHOLE NEW REWRITE BECAUSE THIS IS DOGSHIT!!
 }
 
 int	pwd_builtin(void)
