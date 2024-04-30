@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:15:11 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/25 15:18:34 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/30 12:51:02 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,32 @@ int	echo_builtin(char **arg)
 			if (arg[i] != NULL)
 				printf("%s", " ");
 		}
+	}
+	return (1);
+}
+
+int	export_builtin(t_cmdn *node, t_shell *sh)
+{
+	int	i;
+
+	i = 0;
+	while ((node->cargs[1][i] >= 'a' && node->cargs[1][i] <= 'z')
+		|| (node->cargs[1][i] >= 'A' && node->cargs[1][i] <= 'Z'))
+		i++;
+	if (node->cargs[1][i] == '=')
+		ft_putstr_fd(node->cargs[1], sh->efd[1]);
+	return (1);
+}
+
+int	env_builtin(t_shell *sh)
+{
+	int	i;
+
+	i = 0;
+	while (sh->ms_envp[i])
+	{
+		printf("%s\n", sh->ms_envp[i]);
+		i++;
 	}
 	return (1);
 }

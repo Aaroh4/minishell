@@ -6,22 +6,20 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 13:16:33 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/29 12:33:12 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/29 12:56:19 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/minishell.h"
 #include "./includes/msenv.h"
 
-// Still missing check for heredoc and single/double quotes
-char	*move_ucase(char *start)
+static void	init_env_struct(t_env_tdata *envd)
 {
-	char	*ptr;
-
-	ptr = start;
-	while ((*ptr >= 65 && *ptr <= 90) || *ptr == 95 || *ptr == 63)
-		ptr++;
-	return (ptr);
+	envd->start = NULL;
+	envd->end = NULL;
+	envd->env_val = NULL;
+	envd->temp = NULL;
+	envd->total_len = 0;	
 }
 
 // If question mark, ignore caps after, else check from ms_envp for the value
@@ -95,12 +93,14 @@ void	write_new_arr(char *new_arr, t_env_tdata *envd)
 // Some characters or combinations seem to prevent env substitution,
 // when directly after the env. This has not yet been researched/implemented.
 // Should we include hdoc checks here or before at populate_env_vars?
-// INIT ENVDATA STRUCT MORON!!!
+// These mix things up after $ENV: #$%^+, possibly others.
+// Small/big chars in bash after found, f.ex. $USERkayttaja remove the cmd.
 char	*replace_envp(char *input, t_shell *sh)
 {
 	t_env_tdata	envd;
 	char		*new_arr;
 
+	init_env_struct(&envd);
 	envd.start = ft_strchr(input, 36);
 	while (envd.start != NULL)
 	{

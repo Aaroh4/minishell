@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/25 14:26:12 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/30 12:16:19 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ typedef struct s_shell
 	t_cmdn	*root; // Root node of command tree, for freeing
 	char	**cmdarr; // Array of commands, for easy freeing
 	int		pfd[2]; // Pipe file descriptors
+	int		efd[2]; // Pipe for env export returns
 	char	**cmd; // Most recent expanded cmdarr member
 	int		*hdocs;	// Heredoc array for above most recentcmd
 	int 	status; // Exit code of the most recent pipe, implement!
@@ -89,9 +90,13 @@ int			pwd_builtin(void);
 int			cd_builtin(char *cwd, char **str);
 void		exit_builtin(t_shell *sh);
 int			echo_builtin(char **arg);
+int			export_builtin(t_cmdn *node, t_shell *sh);
+int			env_builtin(t_shell *sh);
+int			export_builtin(t_cmdn *node, t_shell *sh);
 // Environment variables:
 char 		*replace_envp(char* input, t_shell *sh);
 char		**copy_envp(char **envp);
+char		*move_ucase(char *start);
 void		populate_env_vars(t_cmdn *node, t_shell *sh);
 // Heredoc:
 char		*ft_heredoc(char *breakchar, int hdocs);

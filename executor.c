@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/29 12:31:45 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/30 15:10:56 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ static void	handle_heredocs(t_cmdn *node, t_shell *sh)
 	while (node->hdocs[i] != -1)
 		i++;
 	i--;
-	while (node->hdocs[i] == 0 && i >= 0)
+	while (node->hdocs[i] == 0 && i > 0)
 		i--;
 	if (node->hdocs[i] > 0)
 	{
@@ -103,14 +103,13 @@ static int	exec_builtin(t_cmdn *node, char *cwd, t_shell *sh)
 		return (cd_builtin(cwd, node->cargs));
 	if (node->cargs[0] && !ft_strncmp(node->cargs[0], "pwd", 4))
 		return (pwd_builtin());
-	/*
 	else if (node->cargs[0] && !ft_strncmp(node->cargs[0], "export", 7))
 		return (export_builtin(node, sh));
-	else if (node->cargs[0] && !ft_strncmp(node->cargs[0], "unset", 6))
+	/*else if (node->cargs[0] && !ft_strncmp(node->cargs[0], "unset", 6))
 		return (unset_builtin(node, sh));
+		*/
 	else if (node->cargs[0] && !ft_strncmp(node->cargs[0], "env", 4))
 		return (env_builtin(sh));
-	*/
 	else if (node->cargs[0] && !ft_strncmp(node->cargs[0], "exit", 5))
 		exit_builtin(sh);
 	return (0);
@@ -121,9 +120,11 @@ static void	exec_cmd(t_cmdn *node, t_shell *sh)
 	char	**path_array;
 	char	*cmdp;
 	char	*cwd;
+	
 	if (dup2(sh->pfd[0], STDIN_FILENO) == -1)
 		errexit("error:", "dup2 stdin", sh, 127);
 	close(sh->pfd[0]);
+	close(sh->efd[0]);
 	if (node->last == FALSE && dup2(sh->pfd[1], STDOUT_FILENO) == -1)
 		errexit("error:", "dup2 stdout", sh, 127);
   	handle_heredocs(node, sh);
@@ -141,8 +142,62 @@ static void	exec_cmd(t_cmdn *node, t_shell *sh)
 			errexit("error:", "execve", sh, 127);
 		}
 	}
+	close(sh->efd[1]);
 	free(cwd);
 	exit(EXIT_SUCCESS);
+}
+
+char	**make_temp(t_shell *sh, char *str)
+{
+	int		i;
+	char	**temp;
+
+	i = 0;
+	while (sh->ms_envp[i] != '\0')
+		i++;
+	temp = malloc(sizeof(char *) * i + 1);
+	i = 0;
+	while (sh->ms_envp[i] != '\0')
+	{
+		temp[i] = sh->ms_envp[i];
+		i++;
+	}
+	temp[i] = str;
+	temp[i + 1] = "\0";
+	return (temp);
+}
+
+void	modify_env(t_shell *sh)
+{
+	int		i;
+	int		j;
+	char	*str;
+
+	i = 0;
+	close(sh->efd[1]);
+	str = get_next_line(sh->efd[0]);
+	printf("%s\n", str);
+	while (sh->ms_envp[i] != '\0')
+	{
+		j = 0;
+		while ((sh->ms_envp[i][j] >= 'a' && sh->ms_envp[i][j] <= 'z')
+		|| (sh->ms_envp[i][j] >= 'A' && sh->ms_envp[i][j] <= 'Z'))
+			j++;
+		if (sh->ms_envp[i][j] == '=')
+			break ;
+		i++;
+	}
+	if (j != 0)
+		sh->ms_envp = make_temp(sh, str);
+	else
+		sh->ms_envp[i] = str;
+	close(sh->efd[0]);
+//	i = 0;
+//	while (sh->ms_envp[i] != '\0')
+//	{
+//		dprintf(2, "%s\n", sh->ms_envp[i]);
+//		i++;
+//	}
 }
 
 // If node->right type command it's last so rockit
@@ -167,7 +222,12 @@ static int	exec_node(t_cmdn *node, t_shell *sh, t_intvec *commands)
 		else if (pid == 0)
 			exec_cmd(node, sh);
 		else
+		{
+			// if read(sh->efd[0] > 0)
+			// write new line to sh->ms_envp
+			modify_env(sh);
 			add_to_intvec(commands, pid);
+		}
 	}
 	exec_node(node->right, sh, commands);
 	return (0);
