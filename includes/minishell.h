@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/29 17:09:06 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/30 12:08:14 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,9 @@ typedef struct s_cmdn
 	t_ntype			ntype;
 	struct s_cmdn	*left;
 	struct s_cmdn	*right;
-	char			**cargs; // cargs[i] == "<< END" = "Heredoc text"
+	char			**cargs;
 	int				*hdocs;
+	int				*redirs;
 	t_bool			last;
 }	t_cmdn;	
 
