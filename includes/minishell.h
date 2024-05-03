@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/30 12:08:14 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/03 15:40:21 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,8 @@ typedef struct s_shell
 	int		pfd[2]; // Pipe file descriptors
 	int		efd[2]; // Pipe for env export returns
 	char	**cmd; // Most recent expanded cmdarr member
-	int		*hdocs;	// Heredoc array for above most recentcmd
+	int		*hdocs;	// Heredoc array for above most recent cmd
+	int		*rdirs; // Redirect array for all redirects
 	int 	status; // Exit code of the most recent pipe, implement!
 }	t_shell;
 

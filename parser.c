@@ -6,13 +6,15 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/29 15:42:11 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/03 15:57:55 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/minishell.h"
 
 // Should here be more validation for cmd and hdocs?
+// Here they are just passed to the command from sh, then the same pointers
+// are used again for the next cmd.
 static t_cmdn	*init_cmd_node(t_ntype type, t_shell *sh, t_bool last)
 {
 	t_cmdn	*new_cmdn;
