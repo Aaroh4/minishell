@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 11:06:04 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/03 15:56:07 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/03 17:23:02 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	init_shell_struct(t_shell *sh)
 	sh->cmdarr = NULL;
 	sh->cmd = NULL;
 	sh->hdocs = NULL;
-	sh->rdirs = NULL;
+	sh->redirs = NULL;
 	// Should this be -1 to check for actual update?
 	sh->status = 0;
 }
