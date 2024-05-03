@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 16:20:12 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/03 20:15:46 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/03 23:23:21 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,8 @@ void	get_redirects(t_shell *sh)
 	// char	*c;
 	int		i;
 	int		j;
-
+	int		in_fd;
+	int		out_fd;
 
 	i = 0; 
 	while (sh->cmd[i] != NULL)
@@ -89,14 +90,16 @@ void	get_redirects(t_shell *sh)
 				sh->cmd[i][j + 1] != '<')
 			{
 				sh->redirs[i] = 1;
-				// Try to open the file and redirect input
+				// Try to open the file and redirect STDIN
+				// from the rightmost file
  			}
 			else if (sh->cmd[i][j - 1] != '>' && 
 				sh->cmd[i][j] == '>' && 
 				sh->cmd[i][j + 1] != '>')
 			{
 				sh->redirs[i] = 2;
-				// Try to create/open the file in replace mode and redirect input
+				// Try to create/open the file in replace mode and redirect STDOUT
+				// to the rightmost file
 			}
 			else if (sh->cmd[i][j + 1] != '>' && 
 				sh->cmd[i][j] == '>' && 
@@ -104,128 +107,74 @@ void	get_redirects(t_shell *sh)
 				sh->cmd[i][j + 1] != '>')
 			{
 				sh->redirs[i] = 3;
-				// Try to create/open the file in append mode and redirect input
+				// Try to create/open the file in append mode and redirect STDOUT
+				// to the rightmost file
 			}
 			j++;
 		}
 		i++;
 	}
 	i = 0;
-	printf("Redirs:");
+	/*printf("Redirs:");
 	while (sh->redirs[i] != -1)
 	{
 		printf(" %d", sh->redirs[i]);
 		i++;
 	}
 	printf("\n");
-}
-
-/*
-static void	get_heredocs(t_shell *sh)
-{
-	int		i;
-	int		j;
-	char	*temp;
-
-	i = 0;
-	while (sh->cmd[i] != NULL)
+	*/
+	// Errors do not correspond to bash errors yet
+	while (sh->redirs[i] != -1)
 	{
-		j = 0;
-		while (sh->cmd[i][j] != '\0')
+		if (sh->redirs[i] == 1)
 		{
-			if (sh->cmd[i][j] == '<' && sh->cmd[i][j + 1] == '<'
-				&& sh->cmd[i][j + 2] != '<' && sh->cmd[i][j + 2] != '\0')
+			in_fd = open(sh->cmd[i][1], O_RDONLY);
+			if (in_fd == -1)
 			{
-				sh->hdocs[i]++;
-				temp = ft_heredoc(sh->cmd[i], sh->hdocs[i]);
+				printf("minishell: %s: No such file or directory\n", sh->cmd[i + 1]);
+				sh->status = 1;
+				return ;
 			}
-			j++;
+			else if (dup2(in_fd, STDIN_FILENO) == -1)
+			{
+				perror("dup2 fail infile");
+				sh->status = 1;
+			}
+			close(in_fd);
 		}
-		if (sh->hdocs[i] > 0)
-			sh->cmd[i] = temp;
+		else if (sh->redirs[i] == 2)
+		{
+			out_fd = open(sh->cmd[i][1], O_WRONLY);
+			if (in_fd == -1)
+			{
+				printf("minishell: %s: No such file or directory\n", sh->cmd[i + 1]);
+				sh->status = 1;
+				return ;
+			}
+			else if (dup2(out_fd, STDOUT_FILENO) == -1)
+			{
+				perror("dup2 fail outfile");
+				sh->status = 1;
+			}
+			close(out_fd);
+		}
+		else if (sh->redirs[i] == 3)
+		{
+			out_fd = open(sh->cmd[i][2], O_APPEND);
+			if (in_fd == -1)
+			{
+				printf("minishell: %s: No such file or directory\n", sh->cmd[i + 1]);
+				sh->status = 1;
+				return ;
+			}
+			else if (dup2(out_fd, STDOUT_FILENO) == -1)
+			{
+				perror("dup2 fail outfile append");
+				sh->status = 1;
+			}
+			close(out_fd);
+		}
 		i++;
 	}
+	printf("\n");
 }
-
-char	*ft_give_fixed(char *str, int *i, char *temp)
-{
-	char	*temp2;
-	int		j;
-
-	j = 0;
-	temp2 = malloc(sizeof(char) * ft_strlen(str) + ft_strlen(temp) + 1);
-	while (temp[j] != '\0')
-	{
-		temp2[j] = temp[j];
-		j++;
-	}
-	while (str[*i] != '\0')
-	{
-		if (str[*i] != '<' && str[*i - 1] == '<' && str[*i - 2] == '<')
-			while (str[*i] == ' ')
-				*i += 1;
-		temp2[j] = str[*i];
-		*i += 1;
-		j += 1;
-	}
-	temp2[j] = '\0';
-	return (temp2);
-}
-
-char	*ft_fix_for_space(char *str)
-{
-	int		i;
-	int		j;
-	int		hdocs;
-	char	*temp;
-
-	i = 0;
-	hdocs = 0;
-	while (str[i++] != '\0')
-		if (str[i - 1] != '<'
-			&& str[i] == '<' && str[i + 1] == '<' && str[i + 2] != '<')
-			hdocs++;
-	i = 0;
-	j = 0;
-	temp = malloc(sizeof(char) * ft_strlen(str) + hdocs + 1);
-	while (str[i] != '\0')
-	{
-		if (str[i - 1] != '<' && str[i] == '<' && str[i + 1] == '<' && str[i
-				+ 2] != '<')
-		{
-			temp[j] = ' ';
-			j++;
-		}
-		temp[j++] = str[i++];
-	}
-	temp[j] = '\0';
-	return (temp);
-}
-
-char	*ft_make_easy_heredoc(char *str)
-{
-	int		i;
-	int		j;
-	char	*temp;
-
-	i = 0;
-	j = 0;
-	str = ft_fix_for_space(str);
-	temp = malloc(sizeof(char) * ft_strlen(str) + 2);
-	while (str[i] != '\0')
-	{
-		if (str[i - 1] != '<'
-			&& str[i] == '<' && str[i + 1] == '<' && str[i + 2] != '<')
-			return (ft_give_fixed(str, &i, temp));
-		else
-		{
-			temp[j] = str[i];
-			i++;
-			j++;
-		}
-	}
-	temp[j] = '\0';
-	return (temp);
-}
-
-*/
