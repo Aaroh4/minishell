@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 16:20:12 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/06 14:22:52 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/06 14:41:58 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,6 @@ void	get_redirects(t_shell *sh)
 		}
 		i++;
 	}
-	/*
 	i = 0;
 	printf("Redirs:");
 	while (sh->redirs[i] != -1)
@@ -122,7 +121,6 @@ void	get_redirects(t_shell *sh)
 		i++;
 	}
 	printf("\n");
-	*/
 }
 
 // Errors do not correspond to bash errors yet
@@ -199,10 +197,14 @@ int	open_redirects(t_cmdn *node, t_shell *sh)
 		if (dup2(sh->pfd[0], STDIN_FILENO) == -1)
 			errexit("error:", "dup2 stdin", sh, 127);
 	}
+	close(sh->pfd[0]);
+	close(sh->efd[0]);
 	if (outrdrs == 0 && node->last == FALSE)
 	{
 		if (dup2(sh->pfd[1], STDOUT_FILENO) == -1)
 			errexit("error:", "dup2 stdout", sh, 127);
 	}
+	// Reconstruct cmd omitting redirs
+	if  ()
 	return (0);
 }

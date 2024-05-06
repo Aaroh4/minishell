@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/06 14:06:34 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/06 14:39:54 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,28 +121,20 @@ static void	exec_cmd(t_cmdn *node, t_shell *sh)
 	char	**path_array;
 	char	*cmdp;
 	char	*cwd;
-	int		i;
+	//int		i;
 	
-	i = 0;
+	// We should keep track of status
 	sh->status = open_redirects(node, sh);
-	/*
-	if (dup2(sh->pfd[0], STDIN_FILENO) == -1)
-		errexit("error:", "dup2 stdin", sh, 127);
-	*/
-	close(sh->pfd[0]);
-	close(sh->efd[0]);
-	/*
-	if (node->last == FALSE && dup2(sh->pfd[1], STDOUT_FILENO) == -1)
-		errexit("error:", "dup2 stdout", sh, 127);
-  	*/
 	handle_heredocs(node, sh);
 	close(sh->pfd[1]);
 	cwd = NULL;
 	if (!exec_builtin(node, cwd, sh))
 	{
-		path_array = ft_split(getenv("PATH"), ":");
+		path_array = ft_split(getenv("PATH"), ":"); 
 		cmdp = get_exec_path(path_array, node->cargs[0]);
 		free(path_array);
+		// Node->cargs for execve should start from command, and not include
+		// the filenames
 		if (!node->cargs[0] || !*node->cargs || !cmdp || execve(cmdp,
 				node->cargs, sh->ms_envp) == -1)
 		{
