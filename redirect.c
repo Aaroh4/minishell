@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 16:20:12 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/06 14:41:58 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/06 18:48:00 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,40 @@ void	get_redirects(t_shell *sh)
 	printf("\n");
 }
 
+static void	omit_redirs_from_param(t_cmdn *node)
+{
+	int		i;
+	int		j;
+	t_bool	flag;
+
+	// Reconstruct cargs omitting redirs
+	i = 0;
+	j = 0;
+	flag = FALSE;
+	while (node->redirs[i] != -1)
+	{
+		if (node->redirs[i] > 0 && flag == FALSE)
+		{
+			node->cargs[j] = node->cargs[i];
+			flag = TRUE;
+			j++;
+		}
+		if (node->redirs[i] > 0 && flag == TRUE)
+		{
+			node->cargs[i] = 0;
+			break ;
+		}
+		i++;
+	}
+	node->cargs[i] = 0;
+	i = 0;
+	while (node->cargs[i] != 0)
+	{
+		dprintf(2, "%d: %s\n", i, node->cargs[i]);
+		i++;
+	}
+}
+
 // Errors do not correspond to bash errors yet
 // 1 = input <
 // 2 = output >
@@ -204,7 +238,11 @@ int	open_redirects(t_cmdn *node, t_shell *sh)
 		if (dup2(sh->pfd[1], STDOUT_FILENO) == -1)
 			errexit("error:", "dup2 stdout", sh, 127);
 	}
-	// Reconstruct cmd omitting redirs
-	if  ()
+	// Reconstruct cargs omitting redirs
+	i = 0;
+	if (inrdrs > 0 || outrdrs > 0)
+	{
+		omit_redirs_from_param(node);
+	}
 	return (0);
 }
