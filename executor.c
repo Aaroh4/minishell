@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/29 17:19:06 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/06 14:06:34 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,14 +121,21 @@ static void	exec_cmd(t_cmdn *node, t_shell *sh)
 	char	**path_array;
 	char	*cmdp;
 	char	*cwd;
+	int		i;
 	
+	i = 0;
+	sh->status = open_redirects(node, sh);
+	/*
 	if (dup2(sh->pfd[0], STDIN_FILENO) == -1)
 		errexit("error:", "dup2 stdin", sh, 127);
+	*/
 	close(sh->pfd[0]);
 	close(sh->efd[0]);
+	/*
 	if (node->last == FALSE && dup2(sh->pfd[1], STDOUT_FILENO) == -1)
 		errexit("error:", "dup2 stdout", sh, 127);
-  	handle_heredocs(node, sh);
+  	*/
+	handle_heredocs(node, sh);
 	close(sh->pfd[1]);
 	cwd = NULL;
 	if (!exec_builtin(node, cwd, sh))
@@ -186,7 +193,7 @@ int	run_cmds(t_shell *sh)
 	t_intvec	*commands;
 
 	if (sh->root == NULL)
-		return (0);
+		return (1);
 	commands = create_intvec();
 	exec_node(sh->root, sh, commands);
 	close(sh->pfd[0]);

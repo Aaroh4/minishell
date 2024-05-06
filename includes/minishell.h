@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/03 23:15:23 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/06 12:17:15 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ typedef struct s_shell
 	int		efd[2]; // Pipe for env export returns
 	char	**cmd; // Most recent expanded cmdarr member
 	int		*hdocs;	// Heredoc array for above most recent cmd
-	int		*redirs; // Redirect array for all redirects
+	int		*redirs; // Redirect array for all redirects of most recent cmd
 	int 	status; // Exit code of the most recent pipe, implement!
 }	t_shell;
 
@@ -87,7 +87,6 @@ char		**ft_remove_quotes(char **cmd);
 char		*get_exec_path(char **path, char *cmd);
 int			wait_for(t_intvec *children);
 void		print_cmdn(t_cmdn *root);
-// char		*trim_string(char *str);
 // Buildins:
 int			pwd_builtin(void);
 int			cd_builtin(char *cwd, char **str);
@@ -103,6 +102,7 @@ char		*ft_heredoc(char *breakchar, int hdocs);
 // Redirects:
 char 		*trim_rdirspace(char *cmd);
 void		get_redirects(t_shell *sh);
+int			open_redirects(t_cmdn *node, t_shell *sh);
 // Error handling:
 void		errexit(char *msg1, char *msg2, t_shell *sh, int exitcode);
 // Initialization and freeing

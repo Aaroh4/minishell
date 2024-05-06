@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 17:27:19 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/01 17:50:36 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/06 12:03:33 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,5 +26,6 @@ void	errexit(char *msg1, char *msg2, t_shell *sh, int exitcode)
 	close(sh->pfd[1]);
 	free_args(sh->cmd);
 	free(sh->hdocs);
+	sh->status = exitcode;
 	exit(exitcode);
 }
