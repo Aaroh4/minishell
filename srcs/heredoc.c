@@ -6,11 +6,11 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 12:09:30 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/26 14:40:23 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/07 13:21:09 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./includes/minishell.h"
+#include "minishell.h"
 
 char	*make_breakchar(char *breakchar, int *i, int *j, int hdocs)
 {

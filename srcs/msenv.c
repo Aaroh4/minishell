@@ -6,11 +6,22 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 16:54:02 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/23 16:46:07 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/07 13:21:32 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./includes/minishell.h"
+#include "minishell.h"
+
+// Still missing check for heredoc and single/double quotes
+char	*move_ucase(char *start)
+{
+	char	*ptr;
+
+	ptr = start;
+	while ((*ptr >= 65 && *ptr <= 90) || *ptr == 95 || *ptr == 63)
+		ptr++;
+	return (ptr);
+}
 
 char	**copy_env_vals(int len, char **envp, char **ms_envp)
 {

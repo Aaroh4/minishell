@@ -6,11 +6,11 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 11:06:04 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/23 15:51:54 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/07 13:21:14 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./includes/minishell.h"
+#include "minishell.h"
 
 void	init_shell_struct(t_shell *sh)
 {
@@ -20,6 +20,7 @@ void	init_shell_struct(t_shell *sh)
 	sh->cmdarr = NULL;
 	sh->cmd = NULL;
 	sh->hdocs = NULL;
+	sh->redirs = NULL;
 	// Should this be -1 to check for actual update?
 	sh->status = 0;
 }
@@ -60,6 +61,8 @@ void	free_new_prompt(t_shell *sh)
 	free_args(sh->cmdarr);
 	close(sh->pfd[0]);
 	close(sh->pfd[1]);
+	close(sh->efd[0]);
+	close(sh->efd[1]);
 	free_args(sh->cmd);
 	free(sh->hdocs);
 	sh->input = NULL;

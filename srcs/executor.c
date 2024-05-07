@@ -6,11 +6,11 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/29 12:31:45 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/07 13:21:05 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./includes/minishell.h"
+#include "minishell.h"
 
 // Path is checked every time from ms_envp since it could have been changed
 // in previous pipe.
@@ -73,7 +73,7 @@ static void	handle_heredocs(t_cmdn *node, t_shell *sh)
 	while (node->hdocs[i] != -1)
 		i++;
 	i--;
-	while (node->hdocs[i] == 0 && i >= 0)
+	while (node->hdocs[i] == 0 && i > 0)
 		i--;
 	if (node->hdocs[i] > 0)
 	{
@@ -121,19 +121,20 @@ static void	exec_cmd(t_cmdn *node, t_shell *sh)
 	char	**path_array;
 	char	*cmdp;
 	char	*cwd;
-	if (dup2(sh->pfd[0], STDIN_FILENO) == -1)
-		errexit("error:", "dup2 stdin", sh, 127);
-	close(sh->pfd[0]);
-	if (node->last == FALSE && dup2(sh->pfd[1], STDOUT_FILENO) == -1)
-		errexit("error:", "dup2 stdout", sh, 127);
-  	handle_heredocs(node, sh);
+	//int		i;
+	
+	// We should keep track of status
+	sh->status = open_redirects(node, sh);
+	handle_heredocs(node, sh);
 	close(sh->pfd[1]);
 	cwd = NULL;
 	if (!exec_builtin(node, cwd, sh))
 	{
-		path_array = ft_split(getenv("PATH"), ":");
+		path_array = ft_split(getenv("PATH"), ":"); 
 		cmdp = get_exec_path(path_array, node->cargs[0]);
 		free(path_array);
+		// Node->cargs for execve should start from command, and not include
+		// the filenames
 		if (!node->cargs[0] || !*node->cargs || !cmdp || execve(cmdp,
 				node->cargs, sh->ms_envp) == -1)
 		{
@@ -141,6 +142,8 @@ static void	exec_cmd(t_cmdn *node, t_shell *sh)
 			errexit("error:", "execve", sh, 127);
 		}
 	}
+	// Function to check if export, if not, just:
+	close(sh->efd[1]);
 	free(cwd);
 	exit(EXIT_SUCCESS);
 }
@@ -167,7 +170,11 @@ static int	exec_node(t_cmdn *node, t_shell *sh, t_intvec *commands)
 		else if (pid == 0)
 			exec_cmd(node, sh);
 		else
+		{
+			// if read(sh->efd[0] > 0)
+			// write new line to sh->ms_envp
 			add_to_intvec(commands, pid);
+		}
 	}
 	exec_node(node->right, sh, commands);
 	return (0);
@@ -178,7 +185,7 @@ int	run_cmds(t_shell *sh)
 	t_intvec	*commands;
 
 	if (sh->root == NULL)
-		return (0);
+		return (1);
 	commands = create_intvec();
 	exec_node(sh->root, sh, commands);
 	close(sh->pfd[0]);
