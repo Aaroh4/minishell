@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 16:20:12 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/06 18:48:00 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/07 09:31:55 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,7 @@ void	get_redirects(t_shell *sh)
 		i++;
 	}
 	i = 0;
+	/*
 	printf("Redirs:");
 	while (sh->redirs[i] != -1)
 	{
@@ -121,6 +122,7 @@ void	get_redirects(t_shell *sh)
 		i++;
 	}
 	printf("\n");
+	*/
 }
 
 static void	omit_redirs_from_param(t_cmdn *node)
@@ -135,21 +137,23 @@ static void	omit_redirs_from_param(t_cmdn *node)
 	flag = FALSE;
 	while (node->redirs[i] != -1)
 	{
-		if (node->redirs[i] > 0 && flag == FALSE)
+		while (node->redirs[i] > 0 && flag == FALSE)
+			i++;
+		if (node->redirs[i] == 0)
 		{
+			dprintf(2, "Moving: %s to position %d\n", node->cargs[i], i);
 			node->cargs[j] = node->cargs[i];
+			// node->cargs[i] = 0;
 			flag = TRUE;
 			j++;
 		}
 		if (node->redirs[i] > 0 && flag == TRUE)
-		{
-			node->cargs[i] = 0;
 			break ;
-		}
 		i++;
 	}
 	node->cargs[i] = 0;
 	i = 0;
+	dprintf(2, "Result:\n");
 	while (node->cargs[i] != 0)
 	{
 		dprintf(2, "%d: %s\n", i, node->cargs[i]);
