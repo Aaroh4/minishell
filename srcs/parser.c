@@ -6,11 +6,11 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/03 20:14:59 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/07 13:21:37 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./includes/minishell.h"
+#include "minishell.h"
 
 // Should here be more validation for cmd and hdocs?
 // Here they are just passed to the command from sh, then the same pointers

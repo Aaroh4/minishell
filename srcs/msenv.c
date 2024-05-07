@@ -6,11 +6,11 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 16:54:02 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/29 12:40:14 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/07 13:21:32 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./includes/minishell.h"
+#include "minishell.h"
 
 // Still missing check for heredoc and single/double quotes
 char	*move_ucase(char *start)

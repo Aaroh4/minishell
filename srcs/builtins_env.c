@@ -6,11 +6,11 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 15:34:19 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/03 21:25:36 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/07 13:20:57 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./includes/minishell.h"
+#include "minishell.h"
 
 // Problem: command might not be at cargs[0]
 // Shells don't execute export in pipes

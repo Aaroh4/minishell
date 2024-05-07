@@ -6,13 +6,14 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/06 12:17:15 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/07 14:00:58 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# include "libft.h"
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
@@ -22,7 +23,6 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <termios.h>
-# include "../libft/libft.h"
 
 #define INITIAL_SIZE 10
 

@@ -6,11 +6,11 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 11:06:04 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/03 17:23:02 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/07 13:21:14 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./includes/minishell.h"
+#include "minishell.h"
 
 void	init_shell_struct(t_shell *sh)
 {

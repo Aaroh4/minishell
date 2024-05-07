@@ -6,12 +6,12 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 13:16:33 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/29 12:56:19 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/07 13:21:28 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./includes/minishell.h"
-#include "./includes/msenv.h"
+#include "minishell.h"
+#include "msenv.h"
 
 static void	init_env_struct(t_env_tdata *envd)
 {

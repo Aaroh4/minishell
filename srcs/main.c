@@ -6,11 +6,11 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:43 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/03 16:44:11 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/07 13:57:21 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./includes/minishell.h"
+#include "minishell.h"
 #include <fcntl.h>
 #include <readline/history.h>
 #include <readline/readline.h>

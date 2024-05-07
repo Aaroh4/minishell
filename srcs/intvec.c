@@ -6,11 +6,11 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 09:24:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/01 17:49:18 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/07 13:21:18 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./includes/minishell.h"
+#include "minishell.h"
 
 t_intvec	*create_intvec(void)
 {
