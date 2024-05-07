@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirect.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 16:20:12 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/07 13:21:43 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/07 14:38:38 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,8 +145,8 @@ int	open_redirects(t_cmdn *node, t_shell *sh)
 		if (node->redirs[i] == 1)
 		{
 			inrdrs++;
-			dprintf(2, "Redir: %d type: %d filename: %s\n", i, node->redirs[i],
-				&node->cargs[i][1]);
+			// dprintf(2, "Redir: %d type: %d filename: %s\n", i, node->redirs[i],
+			//	&node->cargs[i][1]);
 			in_fd = open(&node->cargs[i][1], O_RDONLY);
 			if (in_fd == -1)
 			{
@@ -164,8 +164,8 @@ int	open_redirects(t_cmdn *node, t_shell *sh)
 		else if (node->redirs[i] == 2)
 		{
 			outrdrs++;
-			dprintf(2, "Redir: %d type: %d filename: %s\n", i, node->redirs[i],
-				&node->cargs[i][1]);
+			// dprintf(2, "Redir: %d type: %d filename: %s\n", i, node->redirs[i],
+			//	&node->cargs[i][1]);
 			out_fd = open(&node->cargs[i][1], O_WRONLY | O_CREAT | O_TRUNC,
 					0644);
 			if (out_fd == -1)
@@ -184,8 +184,8 @@ int	open_redirects(t_cmdn *node, t_shell *sh)
 		else if (node->redirs[i] == 3)
 		{
 			outrdrs++;
-			dprintf(2, "Redir: %d type: %d filename: %s\n", i, node->redirs[i],
-				&node->cargs[i][2]);
+			// dprintf(2, "Redir: %d type: %d filename: %s\n", i, node->redirs[i],
+			//	&node->cargs[i][2]);
 			out_fd = open(&node->cargs[i][2], O_WRONLY | O_APPEND | O_CREAT,
 					0644);
 			if (out_fd == -1)
