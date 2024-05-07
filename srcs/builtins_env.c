@@ -3,17 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   builtins_env.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 15:34:19 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/07 13:20:57 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/07 14:29:04 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 // Problem: command might not be at cargs[0]
-// Shells don't execute export in pipes
 void	export_builtin(t_cmdn *node, t_shell *sh)
 {
 	if (node->cargs[1] == NULL)
