@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 16:20:12 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/07 10:34:56 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/07 12:01:04 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,10 +100,10 @@ void	get_redirects(t_shell *sh)
 				// Try to create/open the file in replace mode and redirect STDOUT
 				// to the rightmost file
 			}
-			else if (sh->cmd[i][j + 1] != '>' && 
+			else if (sh->cmd[i][j - 1] != '>' && 
 				sh->cmd[i][j] == '>' && 
 				sh->cmd[i][j + 1] == '>' &&
-				sh->cmd[i][j + 1] != '>')
+				sh->cmd[i][j + 2] != '>')
 			{
 				sh->redirs[i] = 3;
 				// Try to create/open the file in append mode and redirect STDOUT
@@ -141,21 +141,23 @@ static void	omit_redirs_from_param(t_cmdn *node)
 			i++;
 		if (node->redirs[i] == 0)
 		{
-			dprintf(2, "Moving: %s to position %d\n", node->cargs[i], i);
+			dprintf(2, "Moving: %s to position %d\n", node->cargs[i], j);
 			node->cargs[j] = node->cargs[i];
-			node->cargs[i] = 0;
-			k = 0;
-			while (node->cargs[k] != 0)
-			{
-				dprintf(2, "%d: %s\n", i, node->cargs[i]);
-				k++;
-			}
+			if (i != j)
+				node->cargs[i] = 0;
 			flag = TRUE;
 			j++;
 		}
+		k = 0;
+		while (node->cargs[k] != 0)
+		{
+			dprintf(2, "%d: %s\n", k, node->cargs[k]);
+			k++;
+		}
+		dprintf(2, "-------------------\n");
 		if (node->redirs[i] > 0 && flag == TRUE)
 		{
-			node->cargs[i] = 0;
+			node->cargs[j] = 0;
 			break ;
 		}
 		i++;
@@ -190,7 +192,7 @@ int	open_redirects(t_cmdn *node, t_shell *sh)
 		if (node->redirs[i] == 1)
 		{
 			inrdrs++;
-			// dprintf(2, "Redir: %d type: %d filename: %s\n", i, node->redirs[i], &node->cargs[i][1]);
+			dprintf(2, "Redir: %d type: %d filename: %s\n", i, node->redirs[i], &node->cargs[i][1]);
 			in_fd = open(&node->cargs[i][1], O_RDONLY);
 			if (in_fd == -1)
 			{
@@ -224,8 +226,8 @@ int	open_redirects(t_cmdn *node, t_shell *sh)
 		else if (node->redirs[i] == 3)
 		{
 			outrdrs++;
-			dprintf(2, "Redir: %d type: %d filename: %s\n", i, node->redirs[i], &node->cargs[i][1]);
-			out_fd = open(&node->cargs[i][2], O_APPEND);
+			dprintf(2, "Redir: %d type: %d filename: %s\n", i, node->redirs[i], &node->cargs[i][2]);
+			out_fd = open(&node->cargs[i][2], O_WRONLY | O_APPEND | O_CREAT, 0644);
 			if (out_fd == -1)
 			{
 				printf("minishell: %s: Permission denied\n", &node->cargs[i][2]);
