@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:15:11 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/30 12:51:02 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/07 13:19:36 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,32 +14,68 @@
 #include <stdio.h>
 #include <unistd.h>
 
-int	cd_builtin(char *cwd, char **str)
+char	*check_for_home(t_shell *sh)
 {
-	char	cwd2[1024];
-	char	*realcwd;
+	int	i;
 
-	// NEEDS A WHOLE NEW REWRITE BECAUSE THIS IS DOGSHIT!!
-	if (getcwd(cwd2, sizeof(cwd2)) == NULL)
-		perror("getcwd error");
-	if (str[1] == NULL)
+	i = 0;
+	while (sh->ms_envp[i] != '\0')
 	{
-		chdir(cwd);
+		if (!ft_strncmp(sh->ms_envp[i], "HOME=", 5))
+			return (sh->ms_envp[i] + 5);
+		i++;
 	}
-	else if (!ft_strncmp(str[1], ".", 2))
+	return (NULL);
+}
+
+int	find_amount(char *str, char c)
+{
+	int		i;
+	int		count;
+
+	i = 0;
+	count = 0;
+	while (str[i])
+	{
+		if (str[i] == c)
+			count++;
+		i++;
+	}
+	if (str[i] == c)
+		count++;
+	return (count);
+}
+
+int	cd_builtin(t_cmdn *node, t_shell *sh, char	*cwd)
+{
+	char	*home;
+
+	home = check_for_home(sh);
+	if (node->cargs[1] == NULL)
+	{
+		if (home == NULL)
+			write(1, "No home\n", 8);
+		else
+			ft_putstr_fd(home, sh->efd[1]);
 		return (1);
-	else if (!ft_strncmp(str[1], "..", 3))
-	{
-		chdir(ft_substr(cwd2, 0, ft_strlen(cwd2) - ft_strlen(ft_strrchr(cwd2,
-						'/'))));
 	}
+	if (!ft_strncmp(node->cargs[1], "..", 3))
+	{
+		if (find_amount(cwd, '/') == 1)
+			ft_putstr_fd("/", sh->efd[1]);
+		else
+			ft_putstr_fd(ft_substr(cwd, 0, ft_strlen(cwd)
+					- ft_strlen(ft_strrchr(cwd, '/'))), sh->efd[1]);
+		return (1);
+	}
+	if (node->cargs[1][0] != '/' && access(ft_strjoin(cwd, "/"), R_OK) == 0)
+		cwd = ft_strjoin(cwd, "/");
+	cwd = ft_strjoin(cwd, node->cargs[1]);
+	if (access(cwd, R_OK) == 0)
+		ft_putstr_fd(cwd, sh->efd[1]);
 	else
-	{
-		realcwd = ft_strjoin(cwd2, "/");
-		chdir(ft_strjoin(realcwd, str[1]));
-	}
+		ft_putstr_fd(node->cargs[1], sh->efd[1]);
 	return (1);
-	// NEEDS A WHOLE NEW REWRITE BECAUSE THIS IS DOGSHIT!!
 }
 
 int	pwd_builtin(void)
@@ -107,10 +143,61 @@ int	env_builtin(t_shell *sh)
 	int	i;
 
 	i = 0;
-	while (sh->ms_envp[i])
+	while (sh->ms_envp[i] != '\0')
 	{
 		printf("%s\n", sh->ms_envp[i]);
 		i++;
 	}
+	return (1);
+}
+
+char	**remove_array(t_shell *sh)
+{
+	int		j;
+	int		i;
+	int		k;
+	char	**temp;
+
+	j = 0;
+	close (sh->efd[1]);
+	i = ft_atoi(get_next_line(sh->efd[0]));
+	if (i == -1)
+		return (sh->ms_envp);
+	while (sh->ms_envp[j] != '\0')
+		j++;
+	temp = malloc(sizeof(char *) * (j));
+	j = 0;
+	k = 0;
+	while (sh->ms_envp[j] != '\0')
+	{
+		if (j != i)
+			temp[k++] = sh->ms_envp[j];
+		j++;
+	}
+	temp[j] = NULL;
+	return (temp);
+}
+
+int	unset_builtin(t_cmdn *node, t_shell *sh)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (sh->ms_envp[i] != '\0')
+	{
+		j = 0;
+		while (sh->ms_envp[i][j] == node->cargs[1][j] && sh->ms_envp[i][j] != '=')
+			j++;
+		if (node->cargs[1][j] == '\0')
+		{
+			ft_putstr_fd(ft_itoa(i), sh->efd[1]);
+			break ;
+		}
+		i++;
+	}
+	if (j == 0)
+		ft_putstr_fd("-1", sh->efd[1]);
 	return (1);
 }

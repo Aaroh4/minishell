@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins_env.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 15:34:19 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/25 15:48:22 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/06 14:41:09 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,6 @@ void	export_builtin(t_cmdn *node, t_shell *sh)
 	}
 	else // Error bad syntax
 		return ;
-}
-
-void	unset_builtin(t_cmdn *node, t_shell *sh)
-{
-	return (1);
 }
 
 void	env_builtin(t_cmdn *node, t_shell *sh)
