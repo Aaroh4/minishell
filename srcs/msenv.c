@@ -3,14 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   msenv.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 16:54:02 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/29 12:40:14 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/07 14:30:45 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./includes/minishell.h"
+#include "minishell.h"
+
+// Still missing check for heredoc and single/double quotes
+char	*move_ucase(char *start)
+{
+	char	*ptr;
+
+	ptr = start;
+	while ((*ptr >= 65 && *ptr <= 90) || *ptr == 95 || *ptr == 63)
+		ptr++;
+	return (ptr);
+}
 
 // Still missing check for heredoc and single/double quotes
 char	*move_ucase(char *start)

@@ -6,22 +6,24 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/06 17:12:55 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/07 14:24:46 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# include "libft.h"
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
 # include <signal.h>
 # include <string.h>
+# include <fcntl.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <termios.h>
-# include "../libft/libft.h"
 
 #define INITIAL_SIZE 10
 
@@ -45,8 +47,9 @@ typedef struct s_cmdn
 	t_ntype			ntype;
 	struct s_cmdn	*left;
 	struct s_cmdn	*right;
-	char			**cargs; // cargs[i] == "<< END" = "Heredoc text"
+	char			**cargs;
 	int				*hdocs;
+	int				*redirs;
 	t_bool			last;
 }	t_cmdn;	
 
@@ -66,7 +69,8 @@ typedef struct s_shell
 	int		pfd[2]; // Pipe file descriptors
 	int		efd[2]; // Pipe for env export returns
 	char	**cmd; // Most recent expanded cmdarr member
-	int		*hdocs;	// Heredoc array for above most recentcmd
+	int		*hdocs;	// Heredoc array for above most recent cmd
+	int		*redirs; // Redirect array for all redirects of most recent cmd
 	int 	status; // Exit code of the most recent pipe, implement!
 }	t_shell;
 
@@ -84,7 +88,6 @@ char		**ft_remove_quotes(char **cmd);
 char		*get_exec_path(char **path, char *cmd);
 int			wait_for(t_intvec *children);
 void		print_cmdn(t_cmdn *root);
-// char		*trim_string(char *str);
 // Buildins:
 int			pwd_builtin(void);
 int			cd_builtin(t_cmdn *node, t_shell *sh, char	*cwd);
@@ -102,6 +105,10 @@ char		*move_ucase(char *start);
 void		populate_env_vars(t_cmdn *node, t_shell *sh);
 // Heredoc:
 char		*ft_heredoc(char *breakchar, int hdocs);
+// Redirects:
+char 		*trim_rdirspace(char *cmd);
+void		get_redirects(t_shell *sh);
+int			open_redirects(t_cmdn *node, t_shell *sh);
 // Error handling:
 void		errexit(char *msg1, char *msg2, t_shell *sh, int exitcode);
 // Initialization and freeing

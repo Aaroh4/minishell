@@ -6,35 +6,52 @@
 #    By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/22 12:36:32 by ahamalai          #+#    #+#              #
-#    Updated: 2024/04/29 11:49:43 by mburakow         ###   ########.fr        #
+#    Updated: 2024/05/07 14:03:45 by mburakow         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = minishell
-LIBFTDIR = ./libft
-MAKE = make
-CC = cc
-CFLAGS = -Wall -Wextra -Werror -g -I ~/.brew/opt/readline/include
-HEAD = includes/minishell.h
-SRCS = main.c builtins.c parser.c executor.c utils.c intvec.c msenv.c \
- msenv_replace.c heredoc.c error.c init_free.c
-OBJS = $(SRCS:.c=.o)
+NAME 			=	minishell
+CC 				=	cc
+CFLAGS 			=	-Wall -Wextra -Werror -I ~/.brew/opt/readline/include
+DEBUG_FLAGS 	=	-g
+SRC_DIR			=	./srcs
+INC_DIRS		=	./incs ./libft/incs
+INCLUDE 		=	$(foreach dir, $(INC_DIRS), -I $(dir))
+MAKE 			=	make
+SRCS 			=	main.c builtins.c parser.c executor.c utils.c intvec.c \
+                    msenv.c msenv_replace.c heredoc.c error.c init_free.c \
+					redirect.c
+OBJ_DIR			=	./objs
+OBJS			=	$(SRCS:%.c=$(OBJ_DIR)/%.o)
+LIBFT_DIR		=	./libft
+LIBFT			=	$(LIBFT_DIR)/libft.a
 
-all : $(NAME)
+$(OBJ_DIR)/%.o:		$(SRC_DIR)/%.c
+					$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
 
-$(NAME): $(OBJS)
-		@$(MAKE) -C $(LIBFTDIR)
-		@$(CC) $(CFLAGS) $(OBJS) ./libft/libft.a -o $(NAME) -lreadline -L ~/.brew/opt/readline/lib
+all : 				$(NAME)
+
+debug: 				CFLAGS += $(DEBUG_FLAGS)
+debug:				all
+
+$(NAME):			$(LIBFT) $(OBJ_DIR) $(OBJS)
+					$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME) -lreadline -L ~/.brew/opt/readline/lib
+
+$(LIBFT):
+					make -C $(LIBFT_DIR) all
+
+$(OBJ_DIR):
+					mkdir -p $(OBJ_DIR)
 
 clean:
-		@rm -f $(OBJS)
-		@$(MAKE) clean -C $(LIBFTDIR)
+					@$(MAKE) -C $(LIBFT_DIR) clean
+					rm -rf $(OBJ_DIR)
 
-fclean: clean
-		@rm -f $(NAME)
-		@rm -f libft.a
-		@$(MAKE) fclean -C $(LIBFTDIR)
+fclean:				
+					@$(MAKE) -C $(LIBFT_DIR) fclean
+					rm -rf $(OBJ_DIR)
+					rm -f $(NAME)
 
-re: fclean all
+re:					fclean all
 
-.PHONY: all clean fclean re bonus
+.PHONY: 			all clean fclean re bonus libft

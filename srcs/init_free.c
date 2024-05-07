@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   init_free.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 11:06:04 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/29 17:09:56 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/07 14:29:34 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./includes/minishell.h"
+
+#include "minishell.h"
 
 void	init_shell_struct(t_shell *sh)
 {
@@ -20,6 +21,7 @@ void	init_shell_struct(t_shell *sh)
 	sh->cmdarr = NULL;
 	sh->cmd = NULL;
 	sh->hdocs = NULL;
+	sh->redirs = NULL;
 	// Should this be -1 to check for actual update?
 	sh->status = 0;
 }

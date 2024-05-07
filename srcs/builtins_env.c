@@ -6,11 +6,11 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 15:34:19 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/06 14:41:09 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/07 14:29:04 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./includes/minishell.h"
+#include "minishell.h"
 
 // Problem: command might not be at cargs[0]
 void	export_builtin(t_cmdn *node, t_shell *sh)
@@ -36,6 +36,11 @@ void	export_builtin(t_cmdn *node, t_shell *sh)
 	}
 	else // Error bad syntax
 		return ;
+}
+
+void	unset_builtin(t_cmdn *node, t_shell *sh)
+{
+	return (1);
 }
 
 void	env_builtin(t_cmdn *node, t_shell *sh)

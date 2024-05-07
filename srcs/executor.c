@@ -6,11 +6,11 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/07 13:15:17 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/07 14:28:15 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./includes/minishell.h"
+#include "minishell.h"
 
 // Path is checked every time from ms_envp since it could have been changed
 // in previous pipe.
@@ -116,20 +116,19 @@ static void	exec_cmd(t_cmdn *node, t_shell *sh, char *cwd)
 {
 	char	**path_array;
 	char	*cmdp;
-
-	if (dup2(sh->pfd[0], STDIN_FILENO) == -1)
-		errexit("error:", "dup2 stdin", sh, 127);
-	close(sh->pfd[0]);
-	close(sh->efd[0]);
-	if (node->last == FALSE && dup2(sh->pfd[1], STDOUT_FILENO) == -1)
-		errexit("error:", "dup2 stdout", sh, 127);
-  	handle_heredocs(node, sh);
+	//int		i;
+	
+	// We should keep track of status
+	sh->status = open_redirects(node, sh);
+	handle_heredocs(node, sh);
 	close(sh->pfd[1]);
 	if (!exec_builtin(node, sh, cwd))
 	{
-		path_array = ft_split(getenv("PATH"), ":");
+		path_array = ft_split(getenv("PATH"), ":"); 
 		cmdp = get_exec_path(path_array, node->cargs[0]);
 		free(path_array);
+		// Node->cargs for execve should start from command, and not include
+		// the filenames
 		if (!node->cargs[0] || !*node->cargs || !cmdp || execve(cmdp,
 				node->cargs, sh->ms_envp) == -1)
 		{
@@ -249,7 +248,7 @@ int	run_cmds(t_shell *sh)
 	t_intvec	*commands;
 
 	if (sh->root == NULL)
-		return (0);
+		return (1);
 	commands = create_intvec();
 	exec_node(sh->root, sh, commands);
 	close(sh->pfd[0]);

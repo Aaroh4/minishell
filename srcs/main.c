@@ -6,11 +6,11 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:43 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/06 17:22:18 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/07 14:29:51 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./includes/minishell.h"
+#include "minishell.h"
 #include <fcntl.h>
 #include <readline/history.h>
 #include <readline/readline.h>
@@ -48,7 +48,7 @@ void	ft_handler(int signum)
 }
 
 // Implementing the bash -c flag to run one command without
-// entering the prompt loop.
+// entering the prompt loop. For use with tester for example.
 static int	check_inline_param(int argc, char **argv, t_shell *sh, struct termios	oterm)
 {
 	int	i;

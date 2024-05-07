@@ -6,13 +6,12 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:15:11 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/07 13:19:36 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/07 14:26:06 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./includes/minishell.h"
-#include <stdio.h>
-#include <unistd.h>
+
+#include "minishell.h"
 
 char	*check_for_home(t_shell *sh)
 {

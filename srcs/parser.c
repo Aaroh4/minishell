@@ -3,16 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/29 15:42:11 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/07 14:30:25 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./includes/minishell.h"
+#include "minishell.h"
 
 // Should here be more validation for cmd and hdocs?
+// Here they are just passed to the command from sh, then the same pointers
+// are used again for the next cmd.
 static t_cmdn	*init_cmd_node(t_ntype type, t_shell *sh, t_bool last)
 {
 	t_cmdn	*new_cmdn;
@@ -29,6 +31,7 @@ static t_cmdn	*init_cmd_node(t_ntype type, t_shell *sh, t_bool last)
 		{
 			new_cmdn->cargs = sh->cmd;
 			new_cmdn->hdocs = sh->hdocs;
+			new_cmdn->redirs = sh->redirs;
 		}
 		new_cmdn->last = last;
 		sh->cmd = NULL;
@@ -39,7 +42,7 @@ static t_cmdn	*init_cmd_node(t_ntype type, t_shell *sh, t_bool last)
 	return (new_cmdn);
 }
 
-static void	trim_quote_alloc_hdoc(t_shell *sh)
+static void	trim_quote_alloc_hdoc_rdir(t_shell *sh)
 {
 	int	i;
 
@@ -51,14 +54,17 @@ static void	trim_quote_alloc_hdoc(t_shell *sh)
 	}
 	sh->cmd = ft_remove_quotes(sh->cmd);
 	sh->hdocs = ft_calloc((i + 1), sizeof(int));
-	if (sh->hdocs == NULL)
+	sh->redirs = ft_calloc((i + 1), sizeof(int));
+	if (sh->hdocs == NULL || sh->redirs  == NULL)
 	{
-		perror("hdocs malloc error");
+		perror("hdocs or redirs malloc error");
 		exit(1);
 	}
 	sh->hdocs[i] = -1;
+	sh->redirs[i] = -1;
 }
 
+/*
 char	*ft_give_fixed(char *str, int *i, char *temp)
 {
 	char	*temp2;
@@ -139,6 +145,7 @@ char	*ft_make_easy_heredoc(char *str)
 	temp[j] = '\0';
 	return (temp);
 }
+*/
 
 static void	get_heredocs(t_shell *sh)
 {
@@ -173,12 +180,14 @@ static t_cmdn	*create_node(t_cmdn *current, t_shell *sh, int index)
 	len = 0;
 	while (sh->cmdarr[len] != NULL)
 		len++;
-	sh->cmdarr[index] = ft_make_easy_heredoc(sh->cmdarr[index]);
+	// sh->cmdarr[index] = ft_make_easy_heredoc(sh->cmdarr[index]);
+	sh->cmdarr[index] = trim_rdirspace(sh->cmdarr[index]);
 	sh->cmd = ft_split_time_space(sh->cmdarr[index], ' ');
 	if (!(sh->cmd))
 		errexit("error: ", "root malloc", sh, 1);
-	trim_quote_alloc_hdoc(sh);
+	trim_quote_alloc_hdoc_rdir(sh);
 	get_heredocs(sh);
+	get_redirects(sh);
 	if (index < len - 2)
 	{
 		current->left = init_cmd_node(COMMAND, sh, FALSE);
@@ -192,6 +201,8 @@ static t_cmdn	*create_node(t_cmdn *current, t_shell *sh, int index)
 	return (current);
 }
 
+// Creates root node, splits the input along pipes and
+// creates the nodes in a tree structure.
 void	parse_input(t_shell *sh)
 {
 	t_cmdn	*current;
