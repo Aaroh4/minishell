@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/07 14:28:15 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/08 11:31:19 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,12 +46,12 @@ char	**ft_remove_array(char **str, int i, t_cmdn *node)
 	int		k;
 
 	j = 0;
-	while (str[j] != '\0')
+	while (str[j] != 0)
 		j++;
 	temp = malloc(sizeof(char *) * j);
 	j = 0;
 	k = 0;
-	while (str[j] != '\0')
+	while (str[j] != 0)
 	{
 		if (i != j)
 			temp[k] = str[j];
@@ -81,7 +81,7 @@ static void	handle_heredocs(t_cmdn *node, t_shell *sh)
 		ft_putstr_fd(node->cargs[i], sh->pfd[1]);
 	}
 	i = 0;
-	while (node->cargs[i] != '\0')
+	while (node->cargs[i] != 0)
 	{
 		if (node->hdocs[i] > 0)
 		{
@@ -145,11 +145,11 @@ char	**make_temp(t_shell *sh, char *str)
 	char	**temp;
 
 	i = 0;
-	while (sh->ms_envp[i] != '\0')
+	while (sh->ms_envp[i] != 0)
 		i++;
 	temp = malloc(sizeof(char *) * (i + 2));
 	i = 0;
-	while (sh->ms_envp[i] != '\0')
+	while (sh->ms_envp[i] != 0)
 	{
 		temp[i] = sh->ms_envp[i];
 		i++;
@@ -182,9 +182,9 @@ void	modify_env(t_shell *sh, int a, char *cwd)
 	}
 	if (a == 2)
 		str = ft_strjoin("OLDPWD", cwd);
-	if (str == '\0')
+	if (str == 0)
 		return ;
-	while (sh->ms_envp[i] != '\0')
+	while (sh->ms_envp[i] != 0)
 	{
 		j = 0;
 		while (sh->ms_envp[i][j] == str[j] && sh->ms_envp[i][j] != '=')
