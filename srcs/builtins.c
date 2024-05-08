@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:15:11 by ahamalai          #+#    #+#             */
 /*   Updated: 2024/05/08 14:38:13 by ahamalai         ###   ########.fr       */
@@ -18,7 +18,7 @@ char	*check_for_home(t_shell *sh)
 	int	i;
 
 	i = 0;
-	while (sh->ms_envp[i] != '\0')
+	while (sh->ms_envp[i] != 0)
 	{
 		if (!ft_strncmp(sh->ms_envp[i], "HOME=", 5))
 			return (sh->ms_envp[i] + 5);
@@ -171,7 +171,7 @@ int	env_builtin(t_shell *sh)
 	int	i;
 
 	i = 0;
-	while (sh->ms_envp[i] != '\0')
+	while (sh->ms_envp[i] != 0)
 	{
 		printf("%s\n", sh->ms_envp[i]);
 		i++;
@@ -191,12 +191,12 @@ char	**remove_array(t_shell *sh)
 	i = ft_atoi(get_next_line(sh->efd[0]));
 	if (i == -1)
 		return (sh->ms_envp);
-	while (sh->ms_envp[j] != '\0')
+	while (sh->ms_envp[j] != 0)
 		j++;
 	temp = malloc(sizeof(char *) * (j));
 	j = 0;
 	k = 0;
-	while (sh->ms_envp[j] != '\0')
+	while (sh->ms_envp[j] != 0)
 	{
 		if (j != i)
 			temp[k++] = sh->ms_envp[j];
@@ -213,7 +213,7 @@ int	unset_builtin(t_cmdn *node, t_shell *sh)
 
 	i = 0;
 	j = 0;
-	while (sh->ms_envp[i] != '\0')
+	while (sh->ms_envp[i] != 0)
 	{
 		j = 0;
 		while (sh->ms_envp[i][j] == node->cargs[1][j] && sh->ms_envp[i][j] != '=')
