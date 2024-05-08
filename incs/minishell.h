@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/08 19:38:34 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/08 20:29:01 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,7 @@ void		get_redirects(t_shell *sh);
 int			open_redirects(t_cmdn *node, t_shell *sh);
 // Error handling:
 void		errexit(char *msg1, char *msg2, char *msg3, t_shell *sh);
+void		errexitcode(char *msg1, char *msg2, int status, t_shell *sh);
 // Initialization and freeing
 void		init_shell_struct(t_shell *sh);
 void		free_args(char **args);
