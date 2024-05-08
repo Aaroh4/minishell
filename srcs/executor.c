@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/08 15:58:44 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/08 17:46:24 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ static int	exec_builtin(t_cmdn *node, t_shell *sh, char *cwd)
 	else if (node->cargs[0] && !ft_strncmp(node->cargs[0], "unset", 6))
 		return (unset_builtin(node, sh));
 	else if (node->cargs[0] && !ft_strncmp(node->cargs[0], "env", 4))
-		return (env_builtin(sh));
+		return (env_builtin(sh, FALSE));
 	return (0);
 }
 

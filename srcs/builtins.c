@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:15:11 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/08 14:38:13 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/08 18:09:31 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,8 +155,14 @@ int	echo_builtin(char **arg)
 
 int	export_builtin(t_cmdn *node, t_shell *sh)
 {
-	int	i;
+	int		i;
 
+	i = 0;
+	if (node->cargs[1] == 0)
+	{
+		env_builtin(sh, TRUE);
+		return (1);
+	}
 	i = 0;
 	while ((node->cargs[1][i] >= 'a' && node->cargs[1][i] <= 'z')
 		|| (node->cargs[1][i] >= 'A' && node->cargs[1][i] <= 'Z'))
@@ -166,14 +172,28 @@ int	export_builtin(t_cmdn *node, t_shell *sh)
 	return (1);
 }
 
-int	env_builtin(t_shell *sh)
+int	env_builtin(t_shell *sh, t_bool export)
 {
 	int	i;
+	int j;
+	int epos;
 
 	i = 0;
 	while (sh->ms_envp[i] != 0)
 	{
-		printf("%s\n", sh->ms_envp[i]);
+		j = 0;
+		if (export)
+		{
+			epos = ft_strcpos(sh->ms_envp[i], '=');
+			ft_putstr_fd("declare -x ", 1);
+			while (j <= epos)
+				ft_putchar_fd(sh->ms_envp[i][j++], 1);
+			ft_putchar_fd('"', 1);
+			ft_putstr_fd(&sh->ms_envp[i][j], 1);
+			ft_putendl_fd("\"", 1);
+		}
+		else
+			printf("%s\n", sh->ms_envp[i]);
 		i++;
 	}
 	return (1);

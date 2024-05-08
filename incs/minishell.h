@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/08 12:17:59 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/08 17:46:41 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ int			pwd_builtin(void);
 int			cd_builtin(t_cmdn *node, t_shell *sh, char	*cwd);
 void		exit_in_main(t_cmdn *node, t_shell *sh);
 int			echo_builtin(char **arg);
-int			env_builtin(t_shell *sh);
+int			env_builtin(t_shell *sh, t_bool export);
 int			export_builtin(t_cmdn *node, t_shell *sh);
 int			unset_builtin(t_cmdn *node, t_shell *sh);
 char		**remove_array(t_shell *sh);
