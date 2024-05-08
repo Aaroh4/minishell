@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/08 17:46:41 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/08 19:38:34 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ char		*get_exec_path(char **path, char *cmd);
 int			wait_for(t_intvec *children);
 void		print_cmdn(t_cmdn *root);
 // Buildins:
-int			pwd_builtin(void);
+int			pwd_builtin(t_shell *sh);
 int			cd_builtin(t_cmdn *node, t_shell *sh, char	*cwd);
 void		exit_in_main(t_cmdn *node, t_shell *sh);
 int			echo_builtin(char **arg);
@@ -99,7 +99,7 @@ int			unset_builtin(t_cmdn *node, t_shell *sh);
 char		**remove_array(t_shell *sh);
 // Environment variables:
 char 		*replace_envp(char* input, t_shell *sh);
-char		**copy_envp(char **envp);
+char		**copy_envp(char **envp, t_shell *sh);
 char		*move_ucase(char *start);
 void		populate_env_vars(t_cmdn *node, t_shell *sh);
 // Heredoc:
@@ -109,7 +109,7 @@ char 		*trim_rdirspace(char *cmd);
 void		get_redirects(t_shell *sh);
 int			open_redirects(t_cmdn *node, t_shell *sh);
 // Error handling:
-void		errexit(char *msg1, char *msg2, t_shell *sh, int exitcode);
+void		errexit(char *msg1, char *msg2, char *msg3, t_shell *sh);
 // Initialization and freeing
 void		init_shell_struct(t_shell *sh);
 void		free_args(char **args);

@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/08 17:46:24 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/08 19:38:44 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ static int	exec_builtin(t_cmdn *node, t_shell *sh, char *cwd)
 	else if (node->cargs[0] && !ft_strncmp(node->cargs[0], "cd", 3))
 		return (cd_builtin(node, sh, cwd));
 	else if (node->cargs[0] && !ft_strncmp(node->cargs[0], "pwd", 4))
-		return (pwd_builtin());
+		return (pwd_builtin(sh));
 	else if (node->cargs[0] && !ft_strncmp(node->cargs[0], "export", 7))
 		return (export_builtin(node, sh));
 	else if (node->cargs[0] && !ft_strncmp(node->cargs[0], "unset", 6))
@@ -116,9 +116,7 @@ static void	exec_cmd(t_cmdn *node, t_shell *sh, char *cwd)
 {
 	char	**path_array;
 	char	*cmdp;
-	//int		i;
 	
-	// We should keep track of status
 	sh->status = open_redirects(node, sh);
 	handle_heredocs(node, sh);
 	close(sh->pfd[1]);
@@ -127,15 +125,13 @@ static void	exec_cmd(t_cmdn *node, t_shell *sh, char *cwd)
 		path_array = ft_split(getenv("PATH"), ":"); 
 		cmdp = get_exec_path(path_array, node->cargs[0]);
 		free(path_array);
-		// Node->cargs for execve should start from command, and not include
-		// the filenames
 		if (!node->cargs[0] || !*node->cargs || !cmdp || execve(cmdp,
-				node->cargs, sh->ms_envp) == -1)
-		{
-			errexit("error:", "execve", sh, 127);
-		}
+			node->cargs, sh->ms_envp) == -1)
+			errexit("error:", "execve", NULL, sh);
 	}
 	close(sh->efd[1]);
+	if (node->last)
+		sh->status = 0;
 	exit(EXIT_SUCCESS);
 }
 
@@ -210,7 +206,7 @@ static int	exec_node(t_cmdn *node, t_shell *sh, t_intvec *commands)
 
 	cwd = getcwd(buffer, sizeof(buffer));
 	if (cwd == NULL)
-		errexit("error:", "getcwd", sh, 1);
+		errexit("error:", "getcwd", NULL, sh);
 	if (node == NULL)
 		return (0);
 	exec_node(node->left, sh, commands);
@@ -222,7 +218,7 @@ static int	exec_node(t_cmdn *node, t_shell *sh, t_intvec *commands)
 		{
 			sh->status = wait_for(commands);
 			free_intvec(commands);
-			errexit("Error:", "fork failure", sh, 1);
+			errexit("Error:", "fork failure", NULL, sh);
 		}
 		else if (pid == 0)
 			exec_cmd(node, sh, cwd);
