@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:15:11 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/07 14:26:06 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/08 14:38:13 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,13 +88,42 @@ int	pwd_builtin(void)
 	return (1);
 }
 
-void	exit_builtin(t_shell *sh)
+void	exit_in_main(t_cmdn *node, t_shell *sh)
 {
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	if (sh->cmdarr[1] == NULL)
+		write(1, "exit\n", 5);
+	if (node->cargs[1] != NULL && node->hdocs[1] == 0)
+	{
+		while (node->cargs[1][i] != '\0')
+			i++;
+		while (ft_isdigit(node->cargs[1][j]) && node->cargs[1][j] != '\0')
+			j++;
+		if (j == i)
+			write(1, "NUM\n", 4); // PUT THE NUM FROM CARGS TO THE STATUS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! //
+		else
+			printf("exit: %s: numeric argument required\n", node->cargs[1]);
+	}
+	if (sh->cmdarr[1] == NULL)
+	{
+		free_new_prompt(sh);
+		free_args(sh->ms_envp);
+		exit(0);
+	}
 	free_new_prompt(sh);
 	free_args(sh->ms_envp);
-	write(1, "exit\n", 5);
-	exit(0);
 }
+
+//int	exit_builtin(t_cmdn *node, t_shell *sh)
+//{
+//	if (node->cargs != NULL)
+//		ft_putstr_fd(node->cargs[1], sh->efd[1]);
+//	return (1);
+//}
 
 int	echo_builtin(char **arg)
 {

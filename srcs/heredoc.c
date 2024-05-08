@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 12:09:30 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/07 13:21:09 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/08 15:10:41 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,15 @@ char	*make_breakchar(char *breakchar, int *i, int *j, int hdocs)
 	return (breakchar);
 }
 
+void	ft_handler_heredoc(int signum)
+{
+	signum = 1;
+	//rl_replace_line("", 0);
+	write(1, "\n> ", 3);
+	//rl_on_new_line();
+	//rl_redisplay();
+}
+
 char	*ft_heredoc(char *breakchar, int hdocs)
 {
 	char	*buf;
@@ -43,6 +52,7 @@ char	*ft_heredoc(char *breakchar, int hdocs)
 	int		i;
 	int		j;
 
+	signal(SIGINT, ft_handler_heredoc);
 	buf = NULL;
 	astr = malloc(1);
 	astr = "\0";
@@ -54,6 +64,8 @@ char	*ft_heredoc(char *breakchar, int hdocs)
 		write(1, "> ", 2);
 		buf = get_next_line(0);
 			// if (!buf) // ERROR CHECK HERE DO NOT MISS THIS ONE BEFORE SENDING BACK THIS PROJECT!!!#!!#:LKJHGC
+		if (buf == NULL)
+			return (NULL);
 		if (!ft_strncmp(breakchar, buf, ft_strlen(breakchar)))
 			break ;
 		if (j == hdocs)

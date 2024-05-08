@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 16:07:48 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/07 13:21:47 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/08 15:59:26 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ char	*get_exec_path(char **path, char *cmd)
 
 	execpath = NULL;
 	slashpath = NULL;
+	if (access(cmd, 0) == 0 && cmd[0] == '/')
+		return (cmd);
 	while (*path)
 	{
 		slashpath = ft_strjoin(*path, "/");

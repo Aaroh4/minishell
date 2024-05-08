@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/07 14:24:46 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/08 12:17:59 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,9 +91,8 @@ void		print_cmdn(t_cmdn *root);
 // Buildins:
 int			pwd_builtin(void);
 int			cd_builtin(t_cmdn *node, t_shell *sh, char	*cwd);
-void		exit_builtin(t_shell *sh);
+void		exit_in_main(t_cmdn *node, t_shell *sh);
 int			echo_builtin(char **arg);
-int			export_builtin(t_cmdn *node, t_shell *sh);
 int			env_builtin(t_shell *sh);
 int			export_builtin(t_cmdn *node, t_shell *sh);
 int			unset_builtin(t_cmdn *node, t_shell *sh);
