@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/08 11:31:19 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/08 15:58:44 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,11 +95,13 @@ static void	handle_heredocs(t_cmdn *node, t_shell *sh)
 
 static int	exec_builtin(t_cmdn *node, t_shell *sh, char *cwd)
 {
-	if (node->cargs[0] && !ft_strncmp(node->cargs[0], "echo", 5))
+	if (node->cargs[0] && !ft_strncmp(node->cargs[0], "exit", 5))
+		return (1);
+	else if (node->cargs[0] && !ft_strncmp(node->cargs[0], "echo", 5))
 		return (echo_builtin(node->cargs));
 	else if (node->cargs[0] && !ft_strncmp(node->cargs[0], "cd", 3))
 		return (cd_builtin(node, sh, cwd));
-	if (node->cargs[0] && !ft_strncmp(node->cargs[0], "pwd", 4))
+	else if (node->cargs[0] && !ft_strncmp(node->cargs[0], "pwd", 4))
 		return (pwd_builtin());
 	else if (node->cargs[0] && !ft_strncmp(node->cargs[0], "export", 7))
 		return (export_builtin(node, sh));
@@ -107,8 +109,6 @@ static int	exec_builtin(t_cmdn *node, t_shell *sh, char *cwd)
 		return (unset_builtin(node, sh));
 	else if (node->cargs[0] && !ft_strncmp(node->cargs[0], "env", 4))
 		return (env_builtin(sh));
-	else if (node->cargs[0] && !ft_strncmp(node->cargs[0], "exit", 5))
-		exit_builtin(sh);
 	return (0);
 }
 
@@ -236,6 +236,8 @@ static int	exec_node(t_cmdn *node, t_shell *sh, t_intvec *commands)
 					sh->ms_envp = remove_array(sh);
 			else if (!ft_strncmp("cd", node->cargs[0], ft_strlen(node->cargs[0])))
 					modify_env(sh, 1, cwd);
+			else if (!ft_strncmp("exit", node->cargs[0], ft_strlen(node->cargs[0])))
+					exit_in_main(node, sh);
 			add_to_intvec(commands, pid);
 		}
 	}

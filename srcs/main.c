@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:43 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/07 14:29:51 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/08 15:13:03 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	ft_handler(int signum)
 {
 	signum = 1;
 	rl_replace_line("", 0);
-	write(1, "\n", signum);
+	write(1, "\n", 1);
 	rl_on_new_line();
 	rl_redisplay();
 }
@@ -62,8 +62,6 @@ static int	check_inline_param(int argc, char **argv, t_shell *sh, struct termios
 				errexit("Error :", "pipe initialization", sh, 1);
 			enable_raw_mode();
 			sh->input = ft_strdup(argv[i + 1]);
-			if (sh->input == NULL || !ft_strncmp(sh->input, "exit", 5))
-				exit_builtin(sh);
 			parse_input(sh);
 			run_cmds(sh);
 			disable_raw_mode(oterm);
@@ -85,19 +83,19 @@ int	main(int argc, char **argv, char **envp)
 	init_shell_struct(&sh);
 	if (tcgetattr(STDIN_FILENO, &oterm) == -1)
 		perror("tcgetattr");
-	signal(SIGINT, ft_handler);
 	signal(SIGQUIT, SIG_IGN);
 	rl_clear_history();
 	sh.ms_envp = copy_envp(envp);
 	check_inline_param(argc, argv, &sh, oterm);
 	while (1)
 	{
+		signal(SIGINT, ft_handler);
 		if (pipe(sh.pfd) == -1 || pipe(sh.efd) == -1)
 			errexit("Error :", "pipe initialization", &sh, 1);
 		enable_raw_mode();
 		sh.input = readline("minishell > ");
-		if (sh.input == NULL || !ft_strncmp(sh.input, "exit", 5))
-			exit_builtin(&sh);
+		if (sh.input == NULL)
+			exit (0);
 		add_history(sh.input);
 		parse_input(&sh);
 		run_cmds(&sh);
