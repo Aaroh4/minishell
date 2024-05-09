@@ -55,10 +55,7 @@ char	*alloc_new_arr(char *input, t_shell *sh, t_env_tdata *envd)
 		+ ft_strlen(envd->env_val) + ft_strlen(envd->end);
 	new_arr = (char *)malloc((envd->total_len + 1) * sizeof(char));
 	if (new_arr == NULL)
-	{
-		perror("ms_envp malloc 3 error");
-		exit(1);
-	}
+		errexit("ms_envp: ", "malloc 3 error", NULL, sh);
 	envd->temp = input;
 	return (new_arr);
 }
@@ -90,11 +87,6 @@ void	write_new_arr(char *new_arr, t_env_tdata *envd)
 	new_arr[ft_strlen(new_arr)] = '\0';
 }
 
-// Some characters or combinations seem to prevent env substitution,
-// when directly after the env. This has not yet been researched/implemented.
-// Should we include hdoc checks here or before at populate_env_vars?
-// These mix things up after $ENV: #$%^+, possibly others.
-// Small/big chars in bash after found, f.ex. $USERkayttaja remove the cmd.
 char	*replace_envp(char *input, t_shell *sh)
 {
 	t_env_tdata	envd;

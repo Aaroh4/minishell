@@ -77,14 +77,14 @@ int	cd_builtin(t_cmdn *node, t_shell *sh, char	*cwd)
 	return (1);
 }
 
-int	pwd_builtin(void)
+int	pwd_builtin(t_shell *sh)
 {
 	char	cwd[1024];
 
 	if (getcwd(cwd, sizeof(cwd)) != NULL)
 		printf("%s\n", cwd);
 	else
-		perror("getcwd error");
+		errexit("pwd:", "getcwd error", NULL, sh);
 	return (1);
 }
 
@@ -158,25 +158,55 @@ int	echo_builtin(char **arg)
 
 int	export_builtin(t_cmdn *node, t_shell *sh)
 {
-	int	i;
+	int		i;
 
 	i = 0;
-	while ((node->cargs[1][i] >= 'a' && node->cargs[1][i] <= 'z')
-		|| (node->cargs[1][i] >= 'A' && node->cargs[1][i] <= 'Z'))
-		i++;
-	if (node->cargs[1][i] == '=')
-		ft_putstr_fd(node->cargs[1], sh->efd[1]);
+	if (node->cargs[1] == 0)
+	{
+		env_builtin(sh, TRUE);
+		return (1);
+	}
+	i = 0;
+	if ((node->cargs[1][0] >= 'a' && node->cargs[1][0] <= 'z')
+		|| (node->cargs[1][0] >= 'A' && node->cargs[1][0] <= 'Z')
+		|| (node->cargs[1][0] == '_'))
+	{
+		while ((node->cargs[1][i] >= 'a' && node->cargs[1][i] <= 'z')
+			|| (node->cargs[1][i] >= 'A' && node->cargs[1][i] <= 'Z')
+			|| (node->cargs[1][i] >= '0' && node->cargs[1][i] <= '9')
+			|| (node->cargs[1][i] == '_'))
+			i++;
+		if (node->cargs[1][i] == '=')
+			ft_putstr_fd(node->cargs[1], sh->efd[1]);
+	}
+	else
+		errexit("export: '", node->cargs[1], "': not a valid identifier", sh);
+	// "': not a valid identifier"
 	return (1);
 }
 
-int	env_builtin(t_shell *sh)
+int	env_builtin(t_shell *sh, t_bool export)
 {
 	int	i;
+	int j;
+	int epos;
 
 	i = 0;
 	while (sh->ms_envp[i] != 0)
 	{
-		printf("%s\n", sh->ms_envp[i]);
+		j = 0;
+		if (export)
+		{
+			epos = ft_strcpos(sh->ms_envp[i], '=');
+			ft_putstr_fd("declare -x ", 1);
+			while (j <= epos)
+				ft_putchar_fd(sh->ms_envp[i][j++], 1);
+			ft_putchar_fd('"', 1);
+			ft_putstr_fd(&sh->ms_envp[i][j], 1);
+			ft_putendl_fd("\"", 1);
+		}
+		else
+			printf("%s\n", sh->ms_envp[i]);
 		i++;
 	}
 	return (1);
