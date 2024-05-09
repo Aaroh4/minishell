@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:15:11 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/08 19:38:14 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/08 17:47:47 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,14 +77,14 @@ int	cd_builtin(t_cmdn *node, t_shell *sh, char	*cwd)
 	return (1);
 }
 
-int	pwd_builtin(t_shell *sh)
+int	pwd_builtin(void)
 {
 	char	cwd[1024];
 
 	if (getcwd(cwd, sizeof(cwd)) != NULL)
 		printf("%s\n", cwd);
 	else
-		errexit("pwd:", "getcwd error", NULL, sh);
+		perror("getcwd error");
 	return (1);
 }
 
@@ -104,15 +104,18 @@ void	exit_in_main(t_cmdn *node, t_shell *sh)
 		while (ft_isdigit(node->cargs[1][j]) && node->cargs[1][j] != '\0')
 			j++;
 		if (j == i)
-			write(1, "NUM\n", 4); // PUT THE NUM FROM CARGS TO THE STATUS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! //
+			j = ft_atoi(node->cargs[1]);
 		else
+		{
 			printf("exit: %s: numeric argument required\n", node->cargs[1]);
+			j = 255;
+		}
 	}
 	if (sh->cmdarr[1] == NULL)
 	{
 		free_new_prompt(sh);
 		free_args(sh->ms_envp);
-		exit(0);
+		exit(j);
 	}
 	free_new_prompt(sh);
 	free_args(sh->ms_envp);
@@ -155,55 +158,25 @@ int	echo_builtin(char **arg)
 
 int	export_builtin(t_cmdn *node, t_shell *sh)
 {
-	int		i;
+	int	i;
 
 	i = 0;
-	if (node->cargs[1] == 0)
-	{
-		env_builtin(sh, TRUE);
-		return (1);
-	}
-	i = 0;
-	if ((node->cargs[1][0] >= 'a' && node->cargs[1][0] <= 'z')
-		|| (node->cargs[1][0] >= 'A' && node->cargs[1][0] <= 'Z')
-		|| (node->cargs[1][0] == '_'))
-	{
-		while ((node->cargs[1][i] >= 'a' && node->cargs[1][i] <= 'z')
-			|| (node->cargs[1][i] >= 'A' && node->cargs[1][i] <= 'Z')
-			|| (node->cargs[1][i] >= '0' && node->cargs[1][i] <= '9')
-			|| (node->cargs[1][i] == '_'))
-			i++;
-		if (node->cargs[1][i] == '=')
-			ft_putstr_fd(node->cargs[1], sh->efd[1]);
-	}
-	else
-		errexit("export: '", node->cargs[1], "': not a valid identifier", sh);
-	// "': not a valid identifier"
+	while ((node->cargs[1][i] >= 'a' && node->cargs[1][i] <= 'z')
+		|| (node->cargs[1][i] >= 'A' && node->cargs[1][i] <= 'Z'))
+		i++;
+	if (node->cargs[1][i] == '=')
+		ft_putstr_fd(node->cargs[1], sh->efd[1]);
 	return (1);
 }
 
-int	env_builtin(t_shell *sh, t_bool export)
+int	env_builtin(t_shell *sh)
 {
 	int	i;
-	int j;
-	int epos;
 
 	i = 0;
 	while (sh->ms_envp[i] != 0)
 	{
-		j = 0;
-		if (export)
-		{
-			epos = ft_strcpos(sh->ms_envp[i], '=');
-			ft_putstr_fd("declare -x ", 1);
-			while (j <= epos)
-				ft_putchar_fd(sh->ms_envp[i][j++], 1);
-			ft_putchar_fd('"', 1);
-			ft_putstr_fd(&sh->ms_envp[i][j], 1);
-			ft_putendl_fd("\"", 1);
-		}
-		else
-			printf("%s\n", sh->ms_envp[i]);
+		printf("%s\n", sh->ms_envp[i]);
 		i++;
 	}
 	return (1);

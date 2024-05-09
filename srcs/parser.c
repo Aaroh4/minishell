@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/08 19:41:30 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/08 18:17:23 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static t_cmdn	*init_cmd_node(t_ntype type, t_shell *sh, t_bool last)
 		sh->hdocs = NULL;
 	}
 	else
-		errexit("error: ", "cmd node malloc", NULL, sh);
+		errexit("error: ", "cmd node malloc", sh, 1);
 	return (new_cmdn);
 }
 
@@ -56,83 +56,12 @@ static void	trim_quote_alloc_hdoc_rdir(t_shell *sh)
 	sh->hdocs = ft_calloc((i + 1), sizeof(int));
 	sh->redirs = ft_calloc((i + 1), sizeof(int));
 	if (sh->hdocs == NULL || sh->redirs  == NULL)
-		errexit("hdocs or redirs malloc error", NULL, NULL, sh);
+	{
+		perror("hdocs or redirs malloc error");
+		exit(1);
+	}
 	sh->hdocs[i] = -1;
 	sh->redirs[i] = -1;
-}
-
-static void	get_heredocs(t_shell *sh)
-{
-	int		i;
-	int		j;
-	char	*temp;
-
-	i = 0;
-	while (sh->cmd[i] != NULL)
-	{
-		j = 0;
-		while (sh->cmd[i][j] != '\0')
-		{
-			if (sh->cmd[i][j] == '<' && sh->cmd[i][j + 1] == '<'
-				&& sh->cmd[i][j + 2] != '<' && sh->cmd[i][j + 2] != '\0')
-			{
-				sh->hdocs[i]++;
-				temp = ft_heredoc(sh->cmd[i], sh->hdocs[i]);
-			}
-			j++;
-		}
-		if (sh->hdocs[i] > 0)
-			sh->cmd[i] = temp;
-		i++;
-	}
-}
-
-static t_cmdn	*create_node(t_cmdn *current, t_shell *sh, int index)
-{
-	int	len;
-
-	len = 0;
-	while (sh->cmdarr[len] != NULL)
-		len++;
-	// sh->cmdarr[index] = ft_make_easy_heredoc(sh->cmdarr[index]);
-	sh->cmdarr[index] = trim_rdirspace(sh->cmdarr[index]);
-	sh->cmd = ft_split_time_space(sh->cmdarr[index], ' ');
-	if (!(sh->cmd))
-		errexit("error: ", "root malloc", NULL, sh);
-	trim_quote_alloc_hdoc_rdir(sh);
-	get_heredocs(sh);
-	get_redirects(sh);
-	if (index < len - 2)
-	{
-		current->left = init_cmd_node(COMMAND, sh, FALSE);
-		current->right = init_cmd_node(PIPELINE, sh, FALSE);
-		current = current->right;
-	}
-	else if (index == len - 2)
-		current->left = init_cmd_node(COMMAND, sh, FALSE);
-	else
-		current->right = init_cmd_node(COMMAND, sh, TRUE);
-	return (current);
-}
-
-// Creates root node, splits the input along pipes and
-// creates the nodes in a tree structure.
-void	parse_input(t_shell *sh)
-{
-	t_cmdn	*current;
-	int		i;
-
-	sh->root = init_cmd_node(PIPELINE, sh, FALSE);
-	if (!(sh->root))
-		errexit("error: ", "root malloc", NULL, sh);
-	sh->cmdarr = ft_split(sh->input, "|");
-	current = sh->root;
-	i = 0;
-	while (sh->cmdarr[i] != NULL)
-	{
-		current = create_node(current, sh, i);
-		i++;
-	}
 }
 
 /*
@@ -217,3 +146,77 @@ char	*ft_make_easy_heredoc(char *str)
 	return (temp);
 }
 */
+
+static void	get_heredocs(t_shell *sh)
+{
+	int		i;
+	int		j;
+	char	*temp;
+
+	i = 0;
+	while (sh->cmd[i] != NULL)
+	{
+		j = 0;
+		while (sh->cmd[i][j] != '\0')
+		{
+			if (sh->cmd[i][j] == '<' && sh->cmd[i][j + 1] == '<'
+				&& sh->cmd[i][j + 2] != '<' && sh->cmd[i][j + 2] != '\0')
+			{
+				sh->hdocs[i]++;
+				temp = ft_heredoc(sh->cmd[i], sh->hdocs[i]);
+			}
+			j++;
+		}
+		if (sh->hdocs[i] > 0)
+			sh->cmd[i] = temp;
+		i++;
+	}
+}
+
+static t_cmdn	*create_node(t_cmdn *current, t_shell *sh, int index)
+{
+	int	len;
+
+	len = 0;
+	while (sh->cmdarr[len] != NULL)
+		len++;
+	// sh->cmdarr[index] = ft_make_easy_heredoc(sh->cmdarr[index]);
+	sh->cmdarr[index] = trim_rdirspace(sh->cmdarr[index]);
+	sh->cmd = ft_split_time_space(sh->cmdarr[index], ' ');
+	if (!(sh->cmd))
+		errexit("error: ", "root malloc", sh, 1);
+	trim_quote_alloc_hdoc_rdir(sh);
+	get_heredocs(sh);
+	get_redirects(sh);
+	if (index < len - 2)
+	{
+		current->left = init_cmd_node(COMMAND, sh, FALSE);
+		current->right = init_cmd_node(PIPELINE, sh, FALSE);
+		current = current->right;
+	}
+	else if (index == len - 2)
+		current->left = init_cmd_node(COMMAND, sh, FALSE);
+	else
+		current->right = init_cmd_node(COMMAND, sh, TRUE);
+	return (current);
+}
+
+// Creates root node, splits the input along pipes and
+// creates the nodes in a tree structure.
+void	parse_input(t_shell *sh)
+{
+	t_cmdn	*current;
+	int		i;
+
+	sh->root = init_cmd_node(PIPELINE, sh, FALSE);
+	if (!(sh->root))
+		errexit("error: ", "root malloc", sh, 1);
+	sh->cmdarr = ft_split(sh->input, "|");
+	current = sh->root;
+	i = 0;
+	while (sh->cmdarr[i] != NULL)
+	{
+		current = create_node(current, sh, i);
+		i++;
+	}
+}

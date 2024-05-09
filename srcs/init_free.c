@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 11:06:04 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/08 15:19:30 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/08 18:20:51 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	free_cmdn(t_cmdn *node)
 void	free_new_prompt(t_shell *sh)
 {
 	free(sh->input);
-	//free_cmdn(sh->root);
+	free_cmdn(sh->root);
 	free_args(sh->cmdarr);
 	close(sh->pfd[0]);
 	close(sh->pfd[1]);
