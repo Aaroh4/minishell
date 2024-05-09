@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:43 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/08 19:10:31 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/09 16:19:21 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ static int	check_inline_param(int argc, char **argv, t_shell *sh, struct termios
 			run_cmds(sh);
 			disable_raw_mode(oterm);
 			free_new_prompt(sh);
+			free(sh->input);
 			free_args(sh->ms_envp);
 			exit(0);
 		}

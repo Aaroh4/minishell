@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:15:11 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/08 19:38:14 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/09 16:15:01 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -250,6 +250,7 @@ int	unset_builtin(t_cmdn *node, t_shell *sh)
 			j++;
 		if (node->cargs[1][j] == '\0')
 		{
+			// THIS LEAKS!!!
 			ft_putstr_fd(ft_itoa(i), sh->efd[1]);
 			break ;
 		}

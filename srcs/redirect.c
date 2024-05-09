@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 16:20:12 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/09 13:03:40 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/09 17:24:09 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,19 +70,35 @@ char	*trim_rdirspace(char *cmd)
 	return (cmd);
 }
 
-// Rewrite this:
+void get_redirects(t_shell *sh)
+{
+	int i;
+	char *c;
+
+	while (sh->cmd[++i] != NULL)
+	{
+		c = sh->cmd[i];
+		while (c)
+		{
+			
+			c++;
+		}
+	}
+}
+
+/*
 void	get_redirects(t_shell *sh)
 {
 	int	i;
-	int	j;
+	int j;
 
-	i = -1;
+	i = 0;
 	while (sh->cmd[++i] != NULL)
 	{
 		j = -1;
 		while (sh->cmd[i][++j] != '\0')
 		{
-			if (sh->cmd[i][j - 1] != '<' && sh->cmd[i][j] == '<' && sh->cmd[i][j
+			if ((j == 0 || sh->cmd[i][j - 1] != '<') && sh->cmd[i][j] == '<' && sh->cmd[i][j
 				+ 1] != '<')
 				sh->redirs[i] = 1;
 			else if (sh->cmd[i][j - 1] != '>' && sh->cmd[i][j] == '>'
@@ -94,6 +110,7 @@ void	get_redirects(t_shell *sh)
 		}
 	}
 }
+*/
 
 // Reconstruct cargs omitting redirs
 static void	omit_redirs_from_param(t_cmdn *node)
