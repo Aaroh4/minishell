@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 16:20:12 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/08 20:37:53 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/09 13:03:40 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,12 +147,7 @@ int	open_redirects(t_cmdn *node, t_shell *sh)
 			inrdrs++;
 			in_fd = open(&node->cargs[i][1], O_RDONLY);
 			if (in_fd == -1)
-			{
-				errexit():
-				printf("minishell: %s: No such file or directory\n",
-					&node->cargs[i][1]);
-				return (1);
-			}
+				errexit(&node->cargs[i][1], "No such file or directory", NULL, sh);
 			else if (dup2(in_fd, STDIN_FILENO) == -1)
 				errexit("error:", "dup2 stdin", NULL, sh);
 			close(in_fd);
