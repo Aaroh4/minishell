@@ -6,7 +6,7 @@
 #    By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/22 12:36:32 by ahamalai          #+#    #+#              #
-#    Updated: 2024/05/07 14:03:45 by mburakow         ###   ########.fr        #
+#    Updated: 2024/05/09 14:36:24 by mburakow         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,7 +32,7 @@ $(OBJ_DIR)/%.o:		$(SRC_DIR)/%.c
 all : 				$(NAME)
 
 debug: 				CFLAGS += $(DEBUG_FLAGS)
-debug:				all
+debug:				alld
 
 $(NAME):			$(LIBFT) $(OBJ_DIR) $(OBJS)
 					$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME) -lreadline -L ~/.brew/opt/readline/lib
