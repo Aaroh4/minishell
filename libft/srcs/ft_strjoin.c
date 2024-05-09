@@ -6,10 +6,9 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 12:08:05 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/08 18:14:00 by ahamalai         ###   ########.fr       */
+/*   Updated: 2023/11/13 11:05:40 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #include "libft.h"
 
 char	*ft_strjoin(char const *s1, char const *s2)
