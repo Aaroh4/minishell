@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 13:16:33 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/08 20:23:04 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/10 10:56:01 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,9 @@ char	*alloc_new_arr(char *input, t_shell *sh, t_env_tdata *envd)
 	determine_env(sh, envd);
 	envd->total_len = ft_strlen(input) - ft_strlen(envd->start)
 		+ ft_strlen(envd->env_val) + ft_strlen(envd->end);
-	new_arr = (char *)malloc((envd->total_len + 1) * sizeof(char));
+	new_arr = (char *)db_malloc((envd->total_len + 1) * sizeof(char));
 	if (new_arr == NULL)
-		errexit("ms_envp: ", "malloc 3 error", NULL, sh);
+		errexit("ms_envp: ", "db_malloc 3 error", NULL, sh);
 	envd->temp = input;
 	return (new_arr);
 }

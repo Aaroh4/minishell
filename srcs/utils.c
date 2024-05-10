@@ -6,15 +6,15 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 16:07:48 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/10 10:26:34 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/10 10:56:04 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
- void	*db_malloc(size_t size)
+ void	*db_db_malloc(size_t size)
  {
-	return (malloc(size));
+	return (db_malloc(size));
  }
 
 char	*get_exec_path(char **path, char *cmd)

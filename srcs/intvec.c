@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 09:24:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/07 13:21:18 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/10 10:55:59 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ t_intvec	*create_intvec(void)
 {
 	t_intvec	*intvec;
 
-	intvec = (t_intvec *)malloc(sizeof(t_intvec));
+	intvec = (t_intvec *)db_malloc(sizeof(t_intvec));
 	if (intvec == NULL)
 		exit(1);
 	intvec->array = (int *)ft_calloc(INITIAL_SIZE, sizeof(int));

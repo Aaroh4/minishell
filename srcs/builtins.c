@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:15:11 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/09 16:15:01 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/10 10:55:54 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,7 +223,7 @@ char	**remove_array(t_shell *sh)
 		return (sh->ms_envp);
 	while (sh->ms_envp[j] != 0)
 		j++;
-	temp = malloc(sizeof(char *) * (j));
+	temp = db_malloc(sizeof(char *) * (j));
 	j = 0;
 	k = 0;
 	while (sh->ms_envp[j] != 0)

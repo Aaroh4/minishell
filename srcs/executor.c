@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/10 10:23:18 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/10 10:55:57 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	*ft_remove_hdocs(int i, t_cmdn *node)
 	j = 0;
 	while (node->hdocs[j] != -1)
 		j++;
-	temp = malloc(sizeof(int *) * j);
+	temp = db_malloc(sizeof(int *) * j);
 	j = 0;
 	k = 0;
 	while (node->hdocs[j] != -1)
@@ -48,7 +48,7 @@ char	**ft_remove_array(char **str, int i, t_cmdn *node)
 	j = 0;
 	while (str[j] != 0)
 		j++;
-	temp = malloc(sizeof(char *) * j);
+	temp = db_malloc(sizeof(char *) * j);
 	j = 0;
 	k = 0;
 	while (str[j] != 0)
@@ -146,7 +146,7 @@ char	**make_temp(t_shell *sh, char *str)
 	i = 0;
 	while (sh->ms_envp[i] != 0)
 		i++;
-	temp = malloc(sizeof(char *) * (i + 2));
+	temp = db_malloc(sizeof(char *) * (i + 2));
 	i = 0;
 	while (sh->ms_envp[i] != 0)
 	{

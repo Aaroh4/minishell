@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_substr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 11:56:39 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/18 13:59:12 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/10 10:53:26 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 		sub_len++;
 	if (sub_len < len)
 		len = sub_len;
-	ret = malloc(len + 1);
+	ret = db_malloc(len + 1);
 	if (!ret)
 		return (0);
 	ret[len] = '\0';

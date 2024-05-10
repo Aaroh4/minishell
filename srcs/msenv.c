@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 16:54:02 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/08 18:59:23 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/10 10:56:01 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,9 @@ char	**copy_env_vals(int len, char **envp, char **ms_envp, t_shell *sh)
 	while (i < len)
 	{
 		slen = ft_strlen(envp[i]);
-		ms_envp[i] = (char *)malloc((slen + 1) * sizeof(char));
+		ms_envp[i] = (char *)db_malloc((slen + 1) * sizeof(char));
 		if (ms_envp[i] == NULL)
-			errexit("minishell: ", "envp malloc 2 error", NULL, sh);
+			errexit("minishell: ", "envp db_malloc 2 error", NULL, sh);
 		ft_memcpy(ms_envp[i], envp[i], slen * sizeof(char));
 		ms_envp[i][slen] = '\0';
 		i++;
@@ -51,9 +51,9 @@ char	**copy_envp(char **envp, t_shell *sh)
 	len = 0;
 	while (envp[len])
 		len++;
-	ms_envp = (char **)malloc((len + 1) * sizeof(char *));
+	ms_envp = (char **)db_malloc((len + 1) * sizeof(char *));
 	if (ms_envp == NULL)
-		errexit("minishell: ", "envp malloc 1 error", NULL, sh);
+		errexit("minishell: ", "envp db_malloc 1 error", NULL, sh);
 	copy_env_vals(len, envp, ms_envp, sh);
 	return (ms_envp);
 }

@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/03 12:03:00 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/24 18:46:48 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/10 10:53:26 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ static int	do_split(char **arr, char const *s, char c, int i)
 				i += jcheck[1];
 			else
 			{
-				arr[word] = (char *)malloc(sizeof(char) * (jcheck[1] + 2));
+				arr[word] = (char *)db_malloc(sizeof(char) * (jcheck[1] + 2));
 				if (!arr[word])
 					return (freemem(arr, word));
 				do_word(arr[word++], s + i, c, jcheck[0]);
@@ -110,7 +110,7 @@ char	**ft_split_time_space(char const *s, char c)
 	count = wordcount(s, c);
 	if (count == -1)
 		return (NULL);
-	arr = (char **)malloc(sizeof(char *) * (count + 1));
+	arr = (char **)db_malloc(sizeof(char *) * (count + 1));
 	if (!arr)
 		return (NULL);
 	arr[count] = 0;

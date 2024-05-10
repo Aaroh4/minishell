@@ -6,15 +6,15 @@
 #    By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/22 12:36:32 by ahamalai          #+#    #+#              #
-#    Updated: 2024/05/09 16:59:26 by mburakow         ###   ########.fr        #
+#    Updated: 2024/05/10 11:06:06 by mburakow         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME 			=	minishell
 CC 				=	cc
 CFLAGS 			=	-Wall -Wextra -Werror -I ~/.brew/opt/readline/include
-DEBUG_FLAGS 	=	-g -O0
-# -fsanitize=address
+DEBUG_FLAGS 	=	-g
+# -O0 -fsanitize=address
 SRC_DIR			=	./srcs
 INC_DIRS		=	./incs ./libft/incs
 INCLUDE 		=	$(foreach dir, $(INC_DIRS), -I $(dir))

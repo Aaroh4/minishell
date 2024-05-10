@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 11:22:20 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/18 14:21:11 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/10 10:54:48 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,10 @@
 # include <stddef.h>
 # include <stdarg.h>
 # include <stdlib.h>
+
+// DEBUG
+
+void	*db_malloc(size_t size);
 
 // LIBFT
 

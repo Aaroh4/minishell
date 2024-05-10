@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 12:09:30 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/08 15:10:41 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/10 10:55:58 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ char	*ft_heredoc(char *breakchar, int hdocs)
 
 	signal(SIGINT, ft_handler_heredoc);
 	buf = NULL;
-	astr = malloc(1);
+	astr = db_malloc(1);
 	astr = "\0";
 	i = 0;
 	j = 0;
