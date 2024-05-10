@@ -127,7 +127,10 @@ static void	exec_cmd(t_cmdn *node, t_shell *sh, char *cwd)
 		free(path_array);
 		if (!node->cargs[0] || !*node->cargs || !cmdp || execve(cmdp,
 			node->cargs, sh->ms_envp) == -1)
+		{
+			perror("Execve says ");
 			errexitcode(node->cargs[0], ": command not found", 127, sh);
+		}
 	}
 	close(sh->efd[1]);
 	if (node->last)

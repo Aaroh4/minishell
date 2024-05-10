@@ -32,7 +32,7 @@ $(OBJ_DIR)/%.o:		$(SRC_DIR)/%.c
 all : 				$(NAME)
 
 debug: 				CFLAGS += $(DEBUG_FLAGS)
-debug:				all
+debug:				alld
 
 $(NAME):			$(LIBFT) $(OBJ_DIR) $(OBJS)
 					$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME) -lreadline -L ~/.brew/opt/readline/lib
