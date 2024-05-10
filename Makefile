@@ -3,17 +3,17 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+         #
+#    By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/22 12:36:32 by ahamalai          #+#    #+#              #
-#    Updated: 2024/05/09 14:36:24 by mburakow         ###   ########.fr        #
+#    Updated: 2024/05/09 14:34:59 by ahamalai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME 			=	minishell
 CC 				=	cc
 CFLAGS 			=	-Wall -Wextra -Werror -I ~/.brew/opt/readline/include
-DEBUG_FLAGS 	=	-g
+DEBUG_FLAGS 	=	-fsanitize=address -g
 SRC_DIR			=	./srcs
 INC_DIRS		=	./incs ./libft/incs
 INCLUDE 		=	$(foreach dir, $(INC_DIRS), -I $(dir))
