@@ -6,7 +6,7 @@
 #    By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/19 12:03:42 by ahamalai          #+#    #+#              #
-#    Updated: 2024/05/10 11:05:58 by mburakow         ###   ########.fr        #
+#    Updated: 2024/05/10 11:59:21 by mburakow         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,7 +38,7 @@ $(NAME) 		: 	$(OBJS) | $(OBJ_DIR)
 					@ar -crs $(NAME) $(OBJS)
 
 $(OBJ_DIR)/%.o  :	$(SRC_DIR)/%.c | $(OBJ_DIR)
-					$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
+					$(CC) $(CFLAGS) $(INCLUDE) -g -c $< -o $@
 
 $(OBJ_DIR)		:
 					mkdir -p $(OBJ_DIR)

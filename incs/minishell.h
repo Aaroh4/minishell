@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/09 15:13:25 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/10 12:21:43 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,7 @@ void		errexitcode(char *msg1, char *msg2, int status, t_shell *sh);
 void		init_shell_struct(t_shell *sh);
 void		free_args(char **args);
 void		free_cmdn(t_cmdn *node);
+void		free_fork(t_shell *sh);
 void		free_new_prompt(t_shell *sh);
 // Signals
 void		disable_raw_mode(struct termios oterm);

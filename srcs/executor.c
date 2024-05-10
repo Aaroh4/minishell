@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/10 10:55:57 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/10 12:58:27 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,14 +127,13 @@ static void	exec_cmd(t_cmdn *node, t_shell *sh, char *cwd)
 		free(path_array);
 		if (!node->cargs[0] || !*node->cargs || !cmdp || execve(cmdp,
 			node->cargs, sh->ms_envp) == -1)
-		{
-			perror("Execve says ");
 			errexitcode(node->cargs[0], ": command not found", 127, sh);
-		}
 	}
 	close(sh->efd[1]);
 	if (node->last)
 		sh->status = 0;
+	// free(cwd);
+	free_fork(sh);
 	exit(EXIT_SUCCESS);
 }
 
@@ -227,8 +226,7 @@ static int	exec_node(t_cmdn *node, t_shell *sh, t_intvec *commands)
 			exec_cmd(node, sh, cwd);
 		else
 		{
-			// if read(sh->efd[0] > 0)
-			// write new line to sh->ms_envp
+			dprintf(2, "Child PID: %d\n", pid);
 			if (!ft_strncmp("export", node->cargs[0], ft_strlen(node->cargs[0])))
 				modify_env(sh, 0, cwd);
 			else if (!ft_strncmp("unset", node->cargs[0], ft_strlen(node->cargs[0])))

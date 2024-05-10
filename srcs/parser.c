@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/10 10:56:03 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/10 13:34:55 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ static t_cmdn	*init_cmd_node(t_ntype type, t_shell *sh, t_bool last)
 		new_cmdn->right = NULL;
 		new_cmdn->cargs = NULL;
 		new_cmdn->hdocs = NULL;
+		new_cmdn->redirs = NULL;
 		if (type == COMMAND)
 		{
 			new_cmdn->cargs = sh->cmd;
@@ -36,6 +37,7 @@ static t_cmdn	*init_cmd_node(t_ntype type, t_shell *sh, t_bool last)
 		new_cmdn->last = last;
 		sh->cmd = NULL;
 		sh->hdocs = NULL;
+		sh->redirs = NULL;
 	}
 	else
 		errexit("error: ", "cmd node db_malloc", NULL, sh);
