@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 16:20:12 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/09 17:24:09 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/10 09:44:24 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,23 +70,6 @@ char	*trim_rdirspace(char *cmd)
 	return (cmd);
 }
 
-void get_redirects(t_shell *sh)
-{
-	int i;
-	char *c;
-
-	while (sh->cmd[++i] != NULL)
-	{
-		c = sh->cmd[i];
-		while (c)
-		{
-			
-			c++;
-		}
-	}
-}
-
-/*
 void	get_redirects(t_shell *sh)
 {
 	int	i;
@@ -98,19 +81,19 @@ void	get_redirects(t_shell *sh)
 		j = -1;
 		while (sh->cmd[i][++j] != '\0')
 		{
-			if ((j == 0 || sh->cmd[i][j - 1] != '<') && sh->cmd[i][j] == '<' && sh->cmd[i][j
-				+ 1] != '<')
+			if ((j == 0 || sh->cmd[i][j - 1] != '<') && sh->cmd[i][j] == '<' &&
+					sh->cmd[i][j + 1] != '<') 
 				sh->redirs[i] = 1;
-			else if (sh->cmd[i][j - 1] != '>' && sh->cmd[i][j] == '>'
-				&& sh->cmd[i][j + 1] != '>')
+			else if ((j == 0 || sh->cmd[i][j - 1] != '>') && 
+					sh->cmd[i][j] == '>' && sh->cmd[i][j + 1] != '>')
 				sh->redirs[i] = 2;
-			else if (sh->cmd[i][j - 1] != '>' && sh->cmd[i][j] == '>'
-				&& sh->cmd[i][j + 1] == '>' && sh->cmd[i][j + 2] != '>')
+			else if ((j == 0 || sh->cmd[i][j - 1] != '>') && 
+					sh->cmd[i][j] == '>' && sh->cmd[i][j + 1] == '>' && 
+					sh->cmd[i][j + 2] != '>')
 				sh->redirs[i] = 3;
 		}
 	}
 }
-*/
 
 // Reconstruct cargs omitting redirs
 static void	omit_redirs_from_param(t_cmdn *node)

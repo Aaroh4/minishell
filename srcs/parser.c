@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/09 16:42:21 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/10 09:43:53 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,9 +153,7 @@ void	parse_input(t_shell *sh)
 	if (!(sh->root))
 		errexit("error: ", "root malloc", NULL, sh);
 	sh->cmdarr = ft_split(sh->input, "|");
-	dprintf(2, "Free Willy\n");
 	free(sh->input);
-	dprintf(2, "4 real\n");
 	current = sh->root;
 	i = 0;
 	while (sh->cmdarr[i] != NULL)

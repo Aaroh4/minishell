@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 11:06:04 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/09 16:46:05 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/10 09:53:55 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,10 @@ void	free_cmdn(t_cmdn *node)
 		return ;
 	free_cmdn(node->left);
 	free_args(node->cargs);
+	free(node->hdocs);
+	free(node->redirs);
+	node->hdocs = NULL;
+	node->redirs = NULL;
 	node->cargs = NULL;
 	free(node);
 	free_cmdn(node->right);
