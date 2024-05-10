@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 16:07:48 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/08 15:59:26 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/09 16:40:05 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,46 +81,18 @@ void	print_cmdn(t_cmdn *node)
 	print_cmdn(node->right);
 }
 
-char	**ft_remove_slash(char **cmd)
-{
-	int	i;
-	int	j;
-
-	i = 1;
-	while (cmd[i] != NULL)
-	{
-		j = 0;
-		while (cmd[i][j] != '\0')
-		{
-			if (cmd[i][j + 1] == '\"' && cmd[i][j] == '\\')
-			{
-				while (cmd[i][j] != '\0')
-				{
-					cmd[i][j] = cmd[i][j + 1];
-					j++;
-					// printf("%s:%d:%d\n", cmd[i], i, j);
-				}
-				j = 0;
-			}
-			j++;
-		}
-		i++;
-	}
-	return (cmd);
-}
-
 char	**ft_remove_quotes(char **cmd)
 {
 	int	i;
 	int	j;
 
-	i = 0;
-	while (cmd[i] != NULL)
+	i = -1;
+	while (cmd[++i] != NULL)
 	{
 		j = 0;
 		while (cmd[i][j] != '\0')
 		{
-			if (cmd[i][j] == '\"' && cmd[i][j - 1] != '\\')
+			if (cmd[i][j] == '\"')
 			{
 				while (cmd[i][j] != '\0')
 				{
@@ -129,11 +101,10 @@ char	**ft_remove_quotes(char **cmd)
 				}
 				j = 0;
 			}
-			j++;
+			else
+				j++;
 		}
-		i++;
 	}
-	cmd = ft_remove_slash(cmd);
 	return (cmd);
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split_time_space.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/03 12:03:00 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/24 18:46:48 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/10 12:06:50 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,7 @@ void	ft_wording(char *dest, int *i, int *j, char const *s)
 	*j = *i;
 	while (s[*i] != '|' && s[*i] != '\0')
 		(*i)++;
-	while (s[*i] != '\"')
-		(*i)--;
-	dest[*i] = s[*i];
-	dest[*i + 1] = '\0';
+	dest[*i] = '\0';
 	(*i)--;
 	while (*i >= *j)
 	{
@@ -118,23 +115,3 @@ char	**ft_split_time_space(char const *s, char c)
 		return (NULL);
 	return (arr);
 }
-/*
-int	main(void)
-{
-	char	**arr;
-	int		i;
-
-	i = 0;
-	arr = ft_split("echo \" fd \" | wc -l", ' ');
-	if (!arr)
-	{
-		write(1, "nothing in arr\n", 15);
-		return (1);
-	}
-	while (arr[i] != '\0')
-	{
-		printf("%s\n", arr[i]);
-		i++;
-	}
-	return (0);
-} */

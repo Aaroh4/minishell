@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/08 19:41:30 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/09 16:46:16 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,9 @@ static t_cmdn	*init_cmd_node(t_ntype type, t_shell *sh, t_bool last)
 
 static void	trim_quote_alloc_hdoc_rdir(t_shell *sh)
 {
-	int	i;
+	int		i;
 
+	i = 0;
 	i = 0;
 	while (sh->cmd[i] != NULL)
 	{

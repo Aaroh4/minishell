@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/08 20:30:44 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/10 13:51:22 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ static void	exec_cmd(t_cmdn *node, t_shell *sh, char *cwd)
 {
 	char	**path_array;
 	char	*cmdp;
-	
+
 	sh->status = open_redirects(node, sh);
 	handle_heredocs(node, sh);
 	close(sh->pfd[1]);
@@ -150,7 +150,7 @@ char	**make_temp(t_shell *sh, char *str)
 		temp[i] = sh->ms_envp[i];
 		i++;
 	}
-	temp[i] = str;
+	temp[i] = ft_subbstr(str, 0, ft_strlen(str) - 1);
 	temp[i + 1] = NULL;
 	return (temp);
 }
@@ -166,33 +166,37 @@ void	modify_env(t_shell *sh, int a, char *cwd)
 	str = get_next_line(sh->efd[0]);
 	if (str == NULL)
 		return ;
-	if (a == 1)
+	while (str != NULL)
 	{
-		if (chdir(str) == -1)
+		if (a == 1)
 		{
-			printf("cd: %s: No such file or directory\n", str);
-			return ;
+			if (chdir(str) == -1)
+			{
+				printf("cd: %s: No such file or directory\n", str);
+				return ;
+			}
+			str = ft_strjoin("PWD=", str);
+			modify_env(sh, 2, cwd);
 		}
-		str = ft_strjoin("PWD=", str);
-		modify_env(sh, 2, cwd);
-	}
-	if (a == 2)
-		str = ft_strjoin("OLDPWD", cwd);
-	if (str == 0)
-		return ;
-	while (sh->ms_envp[i] != 0)
-	{
-		j = 0;
-		while (sh->ms_envp[i][j] == str[j] && sh->ms_envp[i][j] != '=')
-			j++;
+		if (a == 2)
+			str = ft_strjoin("OLDPWD", cwd);
+		if (str == 0)
+			return ;
+		while (sh->ms_envp[i] != 0)
+		{
+			j = 0;
+			while (sh->ms_envp[i][j] == str[j] && sh->ms_envp[i][j] != '=')
+				j++;
+			if (str[j] == '=')
+				break ;
+			i++;
+		}
 		if (str[j] == '=')
-			break ;
-		i++;
+			sh->ms_envp[i] = ft_subbstr(str, 0, ft_strlen(str) - 1);
+		else
+			sh->ms_envp = make_temp(sh, str);
+		str = get_next_line(sh->efd[0]);
 	}
-	if (str[j] == '=')
-		sh->ms_envp[i] = str;
-	else
-		sh->ms_envp = make_temp(sh, str);
 	close(sh->efd[0]);
 }
 
@@ -200,7 +204,7 @@ void	modify_env(t_shell *sh, int a, char *cwd)
 // Might not work with bonuses though
 static int	exec_node(t_cmdn *node, t_shell *sh, t_intvec *commands)
 {
-	int	pid;
+	int		pid;
 	char	buffer[1024];
 	char	*cwd;
 
