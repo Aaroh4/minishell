@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:15:11 by ahamalai          #+#    #+#             */
 /*   Updated: 2024/05/09 16:15:01 by mburakow         ###   ########.fr       */
@@ -12,6 +12,16 @@
 
 
 #include "minishell.h"
+
+int	get_cargs_count(t_cmdn *node)
+{
+	int	i;
+
+	i = 0;
+	while (node->cargs[i] != NULL)
+		i++;
+	return (i - 1);
+}
 
 char	*check_for_home(t_shell *sh)
 {
@@ -118,12 +128,6 @@ void	exit_in_main(t_cmdn *node, t_shell *sh)
 	free_args(sh->ms_envp);
 }
 
-//int	exit_builtin(t_cmdn *node, t_shell *sh)
-//{
-//	if (node->cargs != NULL)
-//		ft_putstr_fd(node->cargs[1], sh->efd[1]);
-//	return (1);
-//}
 
 int	echo_builtin(char **arg)
 {
@@ -156,29 +160,32 @@ int	echo_builtin(char **arg)
 int	export_builtin(t_cmdn *node, t_shell *sh)
 {
 	int		i;
+	int		j;
 
-	i = 0;
 	if (node->cargs[1] == 0)
 	{
 		env_builtin(sh, TRUE);
 		return (1);
 	}
-	i = 0;
-	if ((node->cargs[1][0] >= 'a' && node->cargs[1][0] <= 'z')
-		|| (node->cargs[1][0] >= 'A' && node->cargs[1][0] <= 'Z')
-		|| (node->cargs[1][0] == '_'))
+	j = 0;
+	while (node->cargs[++j] != '\0')
 	{
-		while ((node->cargs[1][i] >= 'a' && node->cargs[1][i] <= 'z')
-			|| (node->cargs[1][i] >= 'A' && node->cargs[1][i] <= 'Z')
-			|| (node->cargs[1][i] >= '0' && node->cargs[1][i] <= '9')
-			|| (node->cargs[1][i] == '_'))
-			i++;
-		if (node->cargs[1][i] == '=')
-			ft_putstr_fd(node->cargs[1], sh->efd[1]);
+		i = 0;
+		if ((ft_isalpha(node->cargs[j][0])) || (node->cargs[j][0] == '_'))
+		{
+			while ((ft_isalnum(node->cargs[j][i])) || (node->cargs[j][i] == '_'))
+				i++;
+			if (node->cargs[j][i] == '=')
+			{
+				ft_putstr_fd(node->cargs[j], sh->efd[1]);
+				ft_putstr_fd("\n", sh->efd[1]);
+			}
+			else
+				printf("export: \'%s\': not a valid identifier\n", node->cargs[j]);
+		}
+		else
+			printf("export: \'%s\': not a valid identifier\n", node->cargs[j]);
 	}
-	else
-		errexit("export: '", node->cargs[1], "': not a valid identifier", sh);
-	// "': not a valid identifier"
 	return (1);
 }
 

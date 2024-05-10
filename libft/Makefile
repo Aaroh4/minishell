@@ -3,7 +3,7 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+         #
+#    By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/19 12:03:42 by ahamalai          #+#    #+#              #
 #    Updated: 2024/05/09 16:59:32 by mburakow         ###   ########.fr        #

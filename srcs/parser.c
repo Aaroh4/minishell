@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
 /*   Updated: 2024/05/10 09:43:53 by mburakow         ###   ########.fr       */
@@ -70,8 +70,9 @@ static char	*strtrim_nomalloc(char *str, char c)
 
 static void	trim_quote_alloc_hdoc_rdir(t_shell *sh)
 {
-	int	i;
+	int		i;
 
+	i = 0;
 	i = 0;
 	while (sh->cmd[i] != NULL)
 	{
