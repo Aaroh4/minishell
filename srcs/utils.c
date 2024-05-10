@@ -6,11 +6,16 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 16:07:48 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/09 14:02:37 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/10 10:26:34 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+ void	*db_malloc(size_t size)
+ {
+	return (malloc(size));
+ }
 
 char	*get_exec_path(char **path, char *cmd)
 {
@@ -111,8 +116,8 @@ char	**ft_remove_quotes(char **cmd)
 	return (cmd);
 }
 
-/* At the moment accounts only for space characters,
-	are other characters necessary?
+// At the moment accounts only for space characters,
+//	are other characters necessary?
 char	*trim_string(char *str)
 {
 	char	*end;
@@ -127,4 +132,3 @@ char	*trim_string(char *str)
 	end[1] = '\0';
 	return (str);
 }
-*/

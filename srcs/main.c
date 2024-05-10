@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:43 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/10 12:14:25 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/09 16:19:21 by mburakow         ###   ########.fr       */r
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ static int	check_inline_param(int argc, char **argv, t_shell *sh, struct termios
 			run_cmds(sh);
 			disable_raw_mode(oterm);
 			free_new_prompt(sh);
+			free(sh->input);
 			free_args(sh->ms_envp);
 			exit(0);
 		}

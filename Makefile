@@ -13,7 +13,8 @@
 NAME 			=	minishell
 CC 				=	cc
 CFLAGS 			=	-Wall -Wextra -Werror -I ~/.brew/opt/readline/include
-DEBUG_FLAGS 	=	-fsanitize=address -g
+DEBUG_FLAGS 	=	-g -O0
+# -fsanitize=address
 SRC_DIR			=	./srcs
 INC_DIRS		=	./incs ./libft/incs
 INCLUDE 		=	$(foreach dir, $(INC_DIRS), -I $(dir))
@@ -32,7 +33,7 @@ $(OBJ_DIR)/%.o:		$(SRC_DIR)/%.c
 all : 				$(NAME)
 
 debug: 				CFLAGS += $(DEBUG_FLAGS)
-debug:				alld
+debug:				all
 
 $(NAME):			$(LIBFT) $(OBJ_DIR) $(OBJS)
 					$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME) -lreadline -L ~/.brew/opt/readline/lib
