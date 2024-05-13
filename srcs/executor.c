@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/10 10:23:18 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/10 16:08:27 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,7 @@ static void	exec_cmd(t_cmdn *node, t_shell *sh, char *cwd)
 			node->cargs, sh->ms_envp) == -1)
 		{
 			perror("Execve says ");
-			errexitcode(node->cargs[0], ": command not found", 127, sh);
+			//errexitcode(node->cargs[0], ": command not found", 127, sh);
 		}
 	}
 	close(sh->efd[1]);
@@ -224,7 +224,7 @@ static int	exec_node(t_cmdn *node, t_shell *sh, t_intvec *commands)
 		if (pid == -1)
 		{
 			sh->status = wait_for(commands);
-			free_intvec(commands);
+			//free_intvec(commands);
 			errexit("Error:", "fork failure", NULL, sh);
 		}
 		else if (pid == 0)
