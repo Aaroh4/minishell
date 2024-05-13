@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/10 14:13:46 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/13 15:46:06 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,6 +155,7 @@ void	parse_input(t_shell *sh)
 		errexit("error: ", "root malloc", NULL, sh);
 	sh->cmdarr = ft_split(sh->input, "|");
 	free(sh->input);
+	sh->input = NULL;
 	current = sh->root;
 	i = 0;
 	while (sh->cmdarr[i] != NULL)

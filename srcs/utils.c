@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 16:07:48 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/13 12:49:35 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/13 15:53:52 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,8 @@ char	*get_exec_path(char **path, char *cmd)
 
 	execpath = NULL;
 	slashpath = NULL;
-	if (access(cmd, X_OK) == 0) //  && (cmd[0] == '/' || cmd[0] == '.'))
-		// dprintf(2, "%s :Access X ok\n", cmd);
+	if (access(cmd, X_OK) == 0)
 		return (ft_strdup(cmd));
-	// else
-	// 	dprintf(2, "%s :Access X not ok\n", cmd);
 	while (*path)
 	{
 		slashpath = ft_strjoin(*path, "/");

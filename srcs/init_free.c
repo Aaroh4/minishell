@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 11:06:04 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/13 13:14:55 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/13 14:07:55 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ void	free_new_prompt(t_shell *sh)
 void	free_child(t_shell *sh)
 {
 	free_cmdn(sh->root);
-	dprintf(2, "Freed root.\n");
+	dprintf(2, "Freed root cmd structure.\n");
 	free_args(sh->cmdarr);
 	dprintf(2, "Freed cmdarr.\n");
 	free_args(sh->ms_envp);
