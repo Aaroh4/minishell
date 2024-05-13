@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_free.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 11:06:04 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/10 09:53:55 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/10 14:17:33 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	free_cmdn(t_cmdn *node)
 	free_cmdn(node->left);
 	free_args(node->cargs);
 	free(node->hdocs);
-	free(node->redirs);
+	//free(node->redirs);
 	node->hdocs = NULL;
 	node->redirs = NULL;
 	node->cargs = NULL;
