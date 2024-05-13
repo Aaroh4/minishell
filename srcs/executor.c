@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/13 16:36:22 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/13 16:58:46 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,23 @@ static int	exec_builtin(t_cmdn *node, t_shell *sh, char *cwd)
 	return (0);
 }
 
+static char *get_msenv(char *name, t_shell *sh)
+{
+	int	i;
+
+	i = 0;
+	while (sh->ms_envp[i] != NULL)
+	{
+		if (!ft_strncmp(sh->ms_envp[i], name, ft_strlen(name)))
+		{
+			// dprintf(2, "PATH: %s\n", &sh->ms_envp[i][5]);
+			return (&sh->ms_envp[i][5]);
+		}
+		i++;
+	}
+	return (NULL);
+}
+
 static void	exec_cmd(t_cmdn *node, t_shell *sh, char *cwd)
 {
 	char	**path_array;
@@ -131,7 +148,7 @@ static void	exec_cmd(t_cmdn *node, t_shell *sh, char *cwd)
 	if (!exec_builtin(node, sh, cwd))
 	{
 		// USE YOUR OWN ENV PATH!!
-		path_array = ft_split(getenv("PATH"), ":"); 
+		path_array = ft_split(get_msenv("PATH", sh), ":"); 
 		cmdp = get_exec_path(path_array, node->cargs[0]);
 		free_args(path_array);
 		if (!node->cargs[0] || !*node->cargs || !cmdp || execve(cmdp,
