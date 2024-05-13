@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_free.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 11:06:04 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/10 14:17:33 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/13 13:14:55 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,12 @@ void	init_shell_struct(t_shell *sh)
 	sh->status = 0;
 }
 
+// Upper pointer must be freed even if only value is NULL
 void	free_args(char **args)
 {
 	int	i;
 
-	if (!args || !*args)
+	if (!args) // || !*args)
 		return ;
 	i = 0;
 	while (args[i])
@@ -54,8 +55,8 @@ void	free_cmdn(t_cmdn *node)
 	node->hdocs = NULL;
 	node->redirs = NULL;
 	node->cargs = NULL;
-	free(node);
 	free_cmdn(node->right);
+	free(node);
 	node = NULL;
 }
 
@@ -70,6 +71,34 @@ void	free_new_prompt(t_shell *sh)
 	free_args(sh->cmd);
 	free(sh->hdocs);
 	free(sh->redirs);
+	sh->input = NULL;
+	sh->root = NULL;
+	sh->cmdarr = NULL;
+	sh->cmd = NULL;
+	sh->hdocs = NULL;
+	sh->redirs = NULL;
+}
+
+void	free_child(t_shell *sh)
+{
+	free_cmdn(sh->root);
+	dprintf(2, "Freed root.\n");
+	free_args(sh->cmdarr);
+	dprintf(2, "Freed cmdarr.\n");
+	free_args(sh->ms_envp);
+	dprintf(2, "Freed ms_envp.\n");
+	close(sh->pfd[0]);
+	// close(sh->pfd[1]);
+	close(sh->efd[0]);
+	// close(sh->efd[1]);
+	free_args(sh->cmd);
+	dprintf(2, "Freed cmd.\n");
+	// free(sh->input);
+	// dprintf(2, "Freed input.\n");
+	free(sh->hdocs);
+	dprintf(2, "Freed hdocs.\n");
+	free(sh->redirs);
+	dprintf(2, "Freed redirs.\n");
 	sh->input = NULL;
 	sh->root = NULL;
 	sh->cmdarr = NULL;

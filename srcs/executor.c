@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/10 16:08:27 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/13 12:54:28 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,10 +131,14 @@ static void	exec_cmd(t_cmdn *node, t_shell *sh, char *cwd)
 			perror("Execve says ");
 			//errexitcode(node->cargs[0], ": command not found", 127, sh);
 		}
+		free(cmdp);
 	}
 	close(sh->efd[1]);
 	if (node->last)
 		sh->status = 0;
+	free_child(sh);
+	while (getchar() != '\n')
+		usleep(1);
 	exit(EXIT_SUCCESS);
 }
 
@@ -208,10 +212,10 @@ void	modify_env(t_shell *sh, int a, char *cwd)
 static int	exec_node(t_cmdn *node, t_shell *sh, t_intvec *commands)
 {
 	int		pid;
-	char	buffer[1024];
+	// char	buffer[1024];
 	char	*cwd;
 
-	cwd = getcwd(buffer, sizeof(buffer));
+	cwd = getcwd(NULL, 0);
 	if (cwd == NULL)
 		errexit("error:", "getcwd", NULL, sh);
 	if (node == NULL)
@@ -228,7 +232,10 @@ static int	exec_node(t_cmdn *node, t_shell *sh, t_intvec *commands)
 			errexit("Error:", "fork failure", NULL, sh);
 		}
 		else if (pid == 0)
+		{
+			free_intvec(commands);
 			exec_cmd(node, sh, cwd);
+		}
 		else
 		{
 			// if read(sh->efd[0] > 0)
@@ -245,6 +252,7 @@ static int	exec_node(t_cmdn *node, t_shell *sh, t_intvec *commands)
 		}
 	}
 	exec_node(node->right, sh, commands);
+	free(cwd);
 	return (0);
 }
 
