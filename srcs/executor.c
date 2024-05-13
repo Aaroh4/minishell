@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/13 16:58:46 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/13 19:00:28 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,7 @@ static void wait_for_leaks()
 
 static int	exec_builtin(t_cmdn *node, t_shell *sh, char *cwd)
 {
+	dprintf(2, "Checking for builtin...\n");
 	if (node->cargs[0] && !ft_strncmp(node->cargs[0], "exit", 5))
 		return (1);
 	else if (node->cargs[0] && !ft_strncmp(node->cargs[0], "echo", 5))
@@ -145,17 +146,17 @@ static void	exec_cmd(t_cmdn *node, t_shell *sh, char *cwd)
 	close(sh->pfd[1]);
 	path_array = NULL;
 	cmdp = NULL;
-	if (!exec_builtin(node, sh, cwd))
+	if (!(exec_builtin(node, sh, cwd)))
 	{
-		// USE YOUR OWN ENV PATH!!
 		path_array = ft_split(get_msenv("PATH", sh), ":"); 
 		cmdp = get_exec_path(path_array, node->cargs[0]);
 		free_args(path_array);
 		if (!node->cargs[0] || !*node->cargs || !cmdp || execve(cmdp,
 			node->cargs, sh->ms_envp) == -1)
 			errexitcode(node->cargs[0], ": command not found", 127, sh);
-		free(cmdp);
+		// free(cmdp);
 	}
+	dprintf(2, "After if...\n");
 	close(sh->efd[1]);
 	if (node->last)
 		sh->status = 0;

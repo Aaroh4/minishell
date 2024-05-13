@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 11:06:04 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/13 14:07:55 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/13 18:17:06 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,13 +49,15 @@ void	free_cmdn(t_cmdn *node)
 	if (node == NULL)
 		return ;
 	free_cmdn(node->left);
+	free_cmdn(node->right);
 	free_args(node->cargs);
 	free(node->hdocs);
-	//free(node->redirs);
+	free(node->redirs);
+	node->cargs = NULL;
 	node->hdocs = NULL;
 	node->redirs = NULL;
-	node->cargs = NULL;
-	free_cmdn(node->right);
+	node->left = NULL;
+	node->right = NULL;
 	free(node);
 	node = NULL;
 }
@@ -70,13 +72,13 @@ void	free_new_prompt(t_shell *sh)
 	close(sh->efd[1]);
 	free_args(sh->cmd);
 	free(sh->hdocs);
-	free(sh->redirs);
+	// free(sh->redirs);
 	sh->input = NULL;
 	sh->root = NULL;
 	sh->cmdarr = NULL;
 	sh->cmd = NULL;
 	sh->hdocs = NULL;
-	sh->redirs = NULL;
+	//sh->redirs = NULL;
 }
 
 void	free_child(t_shell *sh)
@@ -97,12 +99,14 @@ void	free_child(t_shell *sh)
 	// dprintf(2, "Freed input.\n");
 	free(sh->hdocs);
 	dprintf(2, "Freed hdocs.\n");
-	free(sh->redirs);
-	dprintf(2, "Freed redirs.\n");
+	// free(sh->redirs);
+	// dprintf(2, "Freed redirs.\n");
 	sh->input = NULL;
 	sh->root = NULL;
 	sh->cmdarr = NULL;
+	sh->ms_envp = NULL;
 	sh->cmd = NULL;
 	sh->hdocs = NULL;
 	sh->redirs = NULL;
+	dprintf(2, "Freeing child process complete.\n");
 }

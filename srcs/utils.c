@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 16:07:48 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/13 15:53:52 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/13 18:33:58 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,12 +117,25 @@ char	**ft_remove_quotes(char **cmd)
 //	are other characters necessary?
 char	*trim_string(char *str)
 {
+	int		i;
 	char	*end;
+	char 	*curs;
 
-	while ((unsigned char)*str == 32)
-		str++;
-	if (*str == '\0')
+	i = 0;
+	while ((unsigned char)str[i] == 32)
+		i++;
+	curs = &str[i];
+	i = 0;
+	if (*curs == '\0')
+	{
+		str[i] = *curs;
 		return (str);
+	}
+	while (*curs != '\0')
+	{
+		str[i++] = *curs;
+		curs++;
+	}
 	end = str + ft_strlen(str) - 1;
 	while (end > str && (unsigned char)*end == 32)
 		end--;

@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 16:20:12 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/10 09:44:24 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/13 18:20:31 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,8 @@ static void	trim_inputs(char *c)
 	}
 }
 
+// Gets the spaces away from between rediir symbols < > >>
+// for easier manipulation later on.
 char	*trim_rdirspace(char *cmd)
 {
 	char	*c;
