@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/14 18:12:14 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/14 23:00:26 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -304,13 +304,20 @@ static int	exec_node(t_cmdn *node, t_shell *sh, t_intvec *commands)
 int	run_cmds(t_shell *sh)
 {
 	t_intvec	*commands;
+	int			len;
 
 	if (sh->root == NULL)
 		return (1);
 	commands = create_intvec(sh);
+	len = 0;
+	while (sh->cmdarr[len])
+		len++;
+	if (len > 1)
+	{
+		if (pipe(sh->pfd) == -1 || pipe(sh->efd) == -1)
+			errexit("error :", "pipe initialization", NULL, sh);
+	}
 	exec_node(sh->root, sh, commands);
-	close(sh->pfd[0]);
-	close(sh->pfd[1]);
 	sh->status = wait_for(commands);
 	free_intvec(commands);
 	return (0);

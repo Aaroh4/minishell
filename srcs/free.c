@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 11:06:04 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/14 16:04:39 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/14 22:36:45 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,16 +73,24 @@ void	free_cmdn(t_cmdn *node)
 
 void	free_new_prompt(t_shell *sh)
 {
+	int len;
+	
 	free_cmdn(sh->root);
 	// dprintf(2, "Freed root cmd structure.\n");
+	len = 0;
+	while (sh->cmdarr[len])
+		len++;
+	if (len > 1)
+	{
+		close(sh->pfd[0]);
+		close(sh->pfd[1]);
+		close(sh->efd[0]);
+		close(sh->efd[1]);
+	}
 	free_args(sh->cmdarr);
 	// dprintf(2, "Freed cmdarr.\n");
-	close(sh->pfd[0]);
-	close(sh->pfd[1]);
-	close(sh->efd[0]);
-	close(sh->efd[1]);
-	close(sh->sfd[0]);
-	close(sh->sfd[1]);
+	// close(sh->sfd[0]);
+	// close(sh->sfd[1]);
 	free_args(sh->cmd);
 	// dprintf(2, "Freed cmd.\n");
 	free(sh->hdocs);
