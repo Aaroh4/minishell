@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+         #
+#    By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/22 12:36:32 by ahamalai          #+#    #+#              #
-#    Updated: 2024/05/09 14:34:59 by ahamalai         ###   ########.fr        #
+#    Updated: 2024/05/14 08:35:55 by mburakow         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,14 +14,14 @@ NAME 			=	minishell
 CC 				=	cc
 CFLAGS 			=	-Wall -Wextra -Werror -I ~/.brew/opt/readline/include
 DEBUG_FLAGS 	=	-g -O0
-# -fsanitize=address
+# -O0 -fsanitize=address
 SRC_DIR			=	./srcs
 INC_DIRS		=	./incs ./libft/incs
 INCLUDE 		=	$(foreach dir, $(INC_DIRS), -I $(dir))
 MAKE 			=	make
 SRCS 			=	main.c builtins.c parser.c executor.c utils.c intvec.c \
-                    msenv.c msenv_replace.c heredoc.c error.c init_free.c \
-					redirect.c
+                    msenv.c msenv_replace.c heredoc.c error.c free.c \
+					redirect.c init.c
 OBJ_DIR			=	./objs
 OBJS			=	$(SRCS:%.c=$(OBJ_DIR)/%.o)
 LIBFT_DIR		=	./libft

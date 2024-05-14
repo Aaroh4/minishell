@@ -1,30 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init_free.c                                        :+:      :+:    :+:   */
+/*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 11:06:04 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/13 18:17:06 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/14 09:10:09 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "minishell.h"
-
-void	init_shell_struct(t_shell *sh)
-{
-	sh->ms_envp = NULL;
-	sh->input = NULL;
-	sh->root = NULL;
-	sh->cmdarr = NULL;
-	sh->cmd = NULL;
-	sh->hdocs = NULL;
-	sh->redirs = NULL;
-	// Should this be -1 to check for actual update?
-	sh->status = 0;
-}
 
 // Upper pointer must be freed even if only value is NULL
 void	free_args(char **args)
@@ -48,8 +34,11 @@ void	free_cmdn(t_cmdn *node)
 {
 	if (node == NULL)
 		return ;
-	free_cmdn(node->left);
-	free_cmdn(node->right);
+	if (node->left)
+		free_cmdn(node->left);
+	if (node->right)
+		free_cmdn(node->right);
+	// if (node->args)
 	free_args(node->cargs);
 	free(node->hdocs);
 	free(node->redirs);
@@ -84,21 +73,21 @@ void	free_new_prompt(t_shell *sh)
 void	free_child(t_shell *sh)
 {
 	free_cmdn(sh->root);
-	dprintf(2, "Freed root cmd structure.\n");
+	// dprintf(2, "Freed root cmd structure.\n");
 	free_args(sh->cmdarr);
-	dprintf(2, "Freed cmdarr.\n");
+	// dprintf(2, "Freed cmdarr.\n");
 	free_args(sh->ms_envp);
-	dprintf(2, "Freed ms_envp.\n");
+	// dprintf(2, "Freed ms_envp.\n");
 	close(sh->pfd[0]);
 	// close(sh->pfd[1]);
 	close(sh->efd[0]);
 	// close(sh->efd[1]);
 	free_args(sh->cmd);
-	dprintf(2, "Freed cmd.\n");
+	// dprintf(2, "Freed cmd.\n");
 	// free(sh->input);
 	// dprintf(2, "Freed input.\n");
 	free(sh->hdocs);
-	dprintf(2, "Freed hdocs.\n");
+	// dprintf(2, "Freed hdocs.\n");
 	// free(sh->redirs);
 	// dprintf(2, "Freed redirs.\n");
 	sh->input = NULL;
@@ -108,5 +97,5 @@ void	free_child(t_shell *sh)
 	sh->cmd = NULL;
 	sh->hdocs = NULL;
 	sh->redirs = NULL;
-	dprintf(2, "Freeing child process complete.\n");
+	// dprintf(2, "Freeing child process complete.\n");
 }

@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/13 19:00:28 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/14 09:04:52 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,15 +93,8 @@ static void	handle_heredocs(t_cmdn *node, t_shell *sh)
 	}
 }
 
-static void wait_for_leaks()
-{
-	while (1)
-		usleep(10);
-}
-
 static int	exec_builtin(t_cmdn *node, t_shell *sh, char *cwd)
 {
-	dprintf(2, "Checking for builtin...\n");
 	if (node->cargs[0] && !ft_strncmp(node->cargs[0], "exit", 5))
 		return (1);
 	else if (node->cargs[0] && !ft_strncmp(node->cargs[0], "echo", 5))
@@ -136,6 +129,14 @@ static char *get_msenv(char *name, t_shell *sh)
 	return (NULL);
 }
 
+/*
+static void wait_for_leaks()
+{
+	while (1)
+		usleep(10);
+}
+*/
+
 static void	exec_cmd(t_cmdn *node, t_shell *sh, char *cwd)
 {
 	char	**path_array;
@@ -154,14 +155,15 @@ static void	exec_cmd(t_cmdn *node, t_shell *sh, char *cwd)
 		if (!node->cargs[0] || !*node->cargs || !cmdp || execve(cmdp,
 			node->cargs, sh->ms_envp) == -1)
 			errexitcode(node->cargs[0], ": command not found", 127, sh);
-		// free(cmdp);
 	}
-	dprintf(2, "After if...\n");
 	close(sh->efd[1]);
+	/* Doesn't get passed to the parent...
 	if (node->last)
 		sh->status = 0;
+	*/
 	free_child(sh);
-	wait_for_leaks();
+	node = NULL;
+	// wait_for_leaks();
 	exit(EXIT_SUCCESS);
 }
 
@@ -238,29 +240,35 @@ static int	exec_node(t_cmdn *node, t_shell *sh, t_intvec *commands)
 	char	buffer[1024];
 	char	*cwd;
 
-	cwd = getcwd(buffer, sizeof(buffer));
-	if (cwd == NULL)
-		errexit("error:", "getcwd", NULL, sh);
 	if (node == NULL)
 		return (0);
-	exec_node(node->left, sh, commands);
+	pid = 0;
+	cwd = NULL;
+	if (node->left!= NULL)
+		exec_node(node->left, sh, commands);
 	if (node->ntype == COMMAND)
 	{
+		cwd = getcwd(buffer, sizeof(buffer));
+		if (cwd == NULL)
+			errexit("error:", "getcwd", NULL, sh);
 		populate_env_vars(node, sh);
 		pid = fork();
+		// sleep(3);
 		if (pid == -1)
 		{
 			sh->status = wait_for(commands);
-			free_intvec(commands);
+			// free_intvec(commands);
 			errexit("Error:", "fork failure", NULL, sh);
 		}
 		else if (pid == 0)
 		{
-			free_intvec(commands);
+			// sleep(5);
+			// free_intvec(commands);
 			exec_cmd(node, sh, cwd);
 		}
 		else
 		{
+			// dprintf(2, "PID : %d\n", pid);
 			// if read(sh->efd[0] > 0)
 			// write new line to sh->ms_envp
 			if (!ft_strncmp("export", node->cargs[0], ft_strlen(node->cargs[0])))
@@ -271,11 +279,12 @@ static int	exec_node(t_cmdn *node, t_shell *sh, t_intvec *commands)
 					modify_env(sh, 1, cwd);
 			else if (!ft_strncmp("exit", node->cargs[0], ft_strlen(node->cargs[0])))
 					exit_in_main(node, sh);
+			if (commands != NULL)
 			add_to_intvec(commands, pid);
 		}
 	}
-	exec_node(node->right, sh, commands);
-	// free(cwd);
+	if (node->right != NULL)
+		exec_node(node->right, sh, commands);
 	return (0);
 }
 

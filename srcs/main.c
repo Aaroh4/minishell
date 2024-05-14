@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:43 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/10 16:36:29 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/13 21:17:11 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ void	disable_raw_mode(struct termios oterm)
 void	ft_handler(int signum)
 {
 	signum = 1;
+	while (signum)
+		signum--;
 	rl_replace_line("", 0);
 	write(1, "\n", 1);
 	rl_on_new_line();

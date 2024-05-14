@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 12:09:30 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/13 18:51:35 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/13 21:18:37 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,8 @@ int	heredoc_loop(char **astr, char *breakchar, int j, int hdocs)
 void	ft_handler_heredoc(int signum)
 {
 	signum = 1;
+	while (signum)
+		signum++;
 	write(1, "\n> ", 3);
 }
 
