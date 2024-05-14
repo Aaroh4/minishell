@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 16:54:02 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/14 16:21:07 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/14 17:33:23 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,31 +43,7 @@ char	**copy_env_vals(int len, char **envp, char **ms_envp, t_shell *sh)
 	return (ms_envp);
 }
 
-// bs func fix
-void	add_to_shell_level(t_shell *sh)
-{
-	char	*level;
-	char	*new_level;
 
-	level = get_env_val("SHLVL", sh);
-	if (level == NULL)
-	{
-		new_level = ft_strdup("1");
-		if (new_level == NULL)
-			errexit("minishell: ", "malloc error", NULL, sh);
-		set_env_var("SHLVL", new_level, sh);
-		free(new_level);
-	}
-	else
-	{
-		new_level = ft_itoa(ft_atoi(level) + 1);
-		if (new_level == NULL)
-			errexit("minishell: ", "malloc error", NULL, sh);
-		set_env_var("SHLVL", new_level, sh);
-		free(new_level);
-	}
-	free(level);
-}
 
 char	**copy_envp(char **envp, t_shell *sh)
 {
@@ -84,6 +60,8 @@ char	**copy_envp(char **envp, t_shell *sh)
 	return (ms_envp);
 }
 
+
+// Change all env variable names $ENV from input to their values
 void	populate_env_vars(t_cmdn *node, t_shell *sh)
 {
 	int	i;

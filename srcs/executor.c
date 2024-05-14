@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/14 14:48:43 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/14 18:12:14 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,6 +189,7 @@ char	**make_temp(t_shell *sh, char *str)
 	return (temp);
 }
 
+// Can waitpid handle this?
 void	modify_status(t_shell *sh)
 {
 	char	*str;

@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:43 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/14 16:07:27 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/14 18:38:20 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	ft_handler(int signum)
 
 // Implementing the bash -c flag to run one command without
 // entering the prompt loop. For use with tester for example.
-static int	check_inline_param(int argc, char **argv, t_shell *sh, struct termios	oterm)
+static int	check_inline_param(int argc, char **argv, t_shell *sh, struct termios oterm)
 {
 	int	i;
 
@@ -73,7 +73,8 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_shell			sh;
 	struct termios	oterm;
-	int			i;
+	int				i;
+	int				shlvl;
 
 	init_shell_struct(&sh);
 	if (tcgetattr(STDIN_FILENO, &oterm) == -1)
@@ -81,6 +82,9 @@ int	main(int argc, char **argv, char **envp)
 	signal(SIGQUIT, SIG_IGN);
 	rl_clear_history();
 	sh.ms_envp = copy_envp(envp, &sh);
+	// Set SHLVL one higher like in bash :)
+	shlvl = ft_atoi(get_env_val_by_name("SHLVL", &sh)) + 1;
+	modify_env_internal("SHLVL", ft_itoa(shlvl), &sh);
 	i = 0;
 	while(sh.ms_envp[i])
 	{
@@ -88,26 +92,26 @@ int	main(int argc, char **argv, char **envp)
 		i++;
 	}
 	check_inline_param(argc, argv, &sh, oterm);
-	dprintf(2, "Welcome to minishell!\n");
+	// dprintf(2, "Welcome to minishell!\n");
 	while (1)
 	{
 		signal(SIGINT, ft_handler);
-		dprintf(2, "Signals\n");
+		// dprintf(2, "Signals\n");
 		if (pipe(sh.pfd) == -1 || pipe(sh.efd) == -1 || pipe(sh.sfd) == -1)
 			errexit("error :", "pipe initialization", NULL, &sh);
-		dprintf(2, "Pipes\n");
+		// dprintf(2, "Pipes\n");
 		enable_raw_mode();
-		dprintf(2, "Raw mode enabled\n");
+		// dprintf(2, "Raw mode enabled\n");
 		sh.input = readline("minishell > ");
-		dprintf(2, "Readline\n");
+		// dprintf(2, "Readline\n");
 		if (sh.input == NULL)
 			exit (0);
 		add_history(sh.input);
-		dprintf(2, "Added to history\n");
+		// dprintf(2, "Added to history\n");
 		parse_input(&sh);
-		dprintf(2, "Parsing ready\n");
+		// dprintf(2, "Parsing ready\n");
 		run_cmds(&sh);
-		dprintf(2, "Run ready\n");
+		// dprintf(2, "Run ready\n");
 		free_new_prompt(&sh);
 		disable_raw_mode(oterm);
 	}

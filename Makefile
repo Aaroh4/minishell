@@ -6,7 +6,7 @@
 #    By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/22 12:36:32 by ahamalai          #+#    #+#              #
-#    Updated: 2024/05/14 08:35:55 by mburakow         ###   ########.fr        #
+#    Updated: 2024/05/14 16:44:40 by mburakow         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,8 +20,8 @@ INC_DIRS		=	./incs ./libft/incs
 INCLUDE 		=	$(foreach dir, $(INC_DIRS), -I $(dir))
 MAKE 			=	make
 SRCS 			=	main.c builtins.c parser.c executor.c utils.c intvec.c \
-                    msenv.c msenv_replace.c heredoc.c error.c free.c \
-					redirect.c init.c
+                    msenv.c msenv_replace.c msenv_modify.c heredoc.c error.c \
+					free.c redirect.c init.c 
 OBJ_DIR			=	./objs
 OBJS			=	$(SRCS:%.c=$(OBJ_DIR)/%.o)
 LIBFT_DIR		=	./libft

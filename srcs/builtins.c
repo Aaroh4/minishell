@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:15:11 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/14 13:44:33 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/14 17:44:43 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,6 +160,14 @@ int	echo_builtin(char **arg)
 	return (1);
 }
 
+/*
+int modify_env(char *name, char *value, t_shell *sh)
+{
+	
+}
+
+*/
+
 int	export_builtin(t_cmdn *node, t_shell *sh)
 {
 	int		i;
@@ -260,7 +268,6 @@ int	unset_builtin(t_cmdn *node, t_shell *sh)
 			j++;
 		if (node->cargs[1][j] == '\0')
 		{
-			// THIS LEAKS!!!
 			ft_putstr_fd(ft_itoa(i), sh->efd[1]);
 			break ;
 		}
