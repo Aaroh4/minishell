@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 08:34:10 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/14 08:40:13 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/14 12:00:02 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	init_shell_struct(t_shell *sh)
 	sh->hdocs = NULL;
 	sh->redirs = NULL;
 	// Should this be -1 to check for actual update?
-	sh->status = 0;
+	sh->status = 99;
 }
 
 // Should here be more validation for cmd and hdocs?

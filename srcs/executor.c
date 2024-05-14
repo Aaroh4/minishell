@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/14 10:47:21 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/14 14:48:43 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,16 +129,19 @@ static char *get_msenv(char *name, t_shell *sh)
 	return (NULL);
 }
 
+/*
 static void wait_for_leaks()
 {
 	while (1)
 		usleep(10);
 }
+*/
 
 static void	exec_cmd(t_cmdn *node, t_shell *sh, char *cwd)
 {
 	char	**path_array;
 	char	*cmdp;
+	char	*temp;
 
 	sh->status = open_redirects(node, sh);
 	handle_heredocs(node, sh);
@@ -154,14 +157,15 @@ static void	exec_cmd(t_cmdn *node, t_shell *sh, char *cwd)
 			node->cargs, sh->ms_envp) == -1)
 			errexitcode(node->cargs[0], ": command not found", 127, sh);
 	}
-	close(sh->efd[1]);
-	/* Doesn't get passed to the parent...
 	if (node->last)
-		sh->status = 0;
-	*/
+	{
+		temp = ft_itoa(sh->status);
+		ft_putendl_fd(temp, sh->sfd[1]);
+		free(temp);
+	}
+	close_all_pipes(sh);
 	// free_child(sh);
-	node = NULL;
-	wait_for_leaks();
+	// wait_for_leaks();
 	exit(EXIT_SUCCESS);
 }
 
@@ -183,6 +187,18 @@ char	**make_temp(t_shell *sh, char *str)
 	temp[i] = ft_subbstr(str, 0, ft_strlen(str) - 1);
 	temp[i + 1] = NULL;
 	return (temp);
+}
+
+void	modify_status(t_shell *sh)
+{
+	char	*str;
+
+	close(sh->sfd[1]);
+	str = get_next_line(sh->sfd[0]);
+	if (str == NULL)
+		return ;
+	sh->status = ft_atoi(str);
+	close(sh->sfd[0]);
 }
 
 void	modify_env(t_shell *sh, int a, char *cwd)
@@ -266,19 +282,17 @@ static int	exec_node(t_cmdn *node, t_shell *sh, t_intvec *commands)
 		}
 		else
 		{
-			// dprintf(2, "PID : %d\n", pid);
-			// if read(sh->efd[0] > 0)
-			// write new line to sh->ms_envp
+			modify_status(sh);
 			if (!ft_strncmp("export", node->cargs[0], ft_strlen(node->cargs[0])))
 				modify_env(sh, 0, cwd);
 			else if (!ft_strncmp("unset", node->cargs[0], ft_strlen(node->cargs[0])))
-					sh->ms_envp = remove_array(sh);
+				sh->ms_envp = remove_array(sh);
 			else if (!ft_strncmp("cd", node->cargs[0], ft_strlen(node->cargs[0])))
-					modify_env(sh, 1, cwd);
+				modify_env(sh, 1, cwd);
 			else if (!ft_strncmp("exit", node->cargs[0], ft_strlen(node->cargs[0])))
-					exit_in_main(node, sh);
+				exit_in_main(node, sh);
 			if (commands != NULL)
-			add_to_intvec(commands, pid);
+				add_to_intvec(commands, pid, sh);
 		}
 	}
 	if (node->right != NULL)
@@ -292,7 +306,7 @@ int	run_cmds(t_shell *sh)
 
 	if (sh->root == NULL)
 		return (1);
-	commands = create_intvec();
+	commands = create_intvec(sh);
 	exec_node(sh->root, sh, commands);
 	close(sh->pfd[0]);
 	close(sh->pfd[1]);

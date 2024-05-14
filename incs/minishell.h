@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/14 08:39:14 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/14 14:48:43 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ typedef struct s_shell
 	char	**cmdarr; // Array of commands, for easy freeing
 	int		pfd[2]; // Pipe file descriptors
 	int		efd[2]; // Pipe for env export returns
+	int		sfd[2]; // Pipe for status code returns
 	char	**cmd; // Most recent expanded cmdarr member
 	int		*hdocs;	// Heredoc array for above most recent cmd
 	int		*redirs; // Redirect array for all redirects of most recent cmd
@@ -78,10 +79,11 @@ typedef struct s_shell
 void		parse_input(t_shell *sh);
 // Executor:
 int			run_cmds(t_shell *sh);
+void		modify_status(t_shell *sh);
 // Dynamic Integer Array:
-t_intvec*	create_intvec(void);
-void		expand_intvec(t_intvec *dynarr);
-int			add_to_intvec(t_intvec *dynarr, int value);
+t_intvec*	create_intvec(t_shell *sh);
+void		expand_intvec(t_intvec *dynarr, t_shell *sh);
+int			add_to_intvec(t_intvec *dynarr, int value, t_shell *sh);
 void		free_intvec(t_intvec *intvec);
 // Utilities:
 char		**ft_remove_quotes(char **cmd);
@@ -116,10 +118,12 @@ void		errexitcode(char *msg1, char *msg2, int status, t_shell *sh);
 void		init_shell_struct(t_shell *sh);
 t_cmdn		*init_cmd_node(t_ntype type, t_shell *sh, t_bool last);
 // Freeing
+void 		free(void* p);
 void		free_args(char **args);
 void		free_cmdn(t_cmdn *node);
 void		free_child(t_shell *sh);
 void		free_new_prompt(t_shell *sh);
+void		close_all_pipes(t_shell *sh);
 // Signals
 void		disable_raw_mode(struct termios oterm);
 void		enable_raw_mode(void);

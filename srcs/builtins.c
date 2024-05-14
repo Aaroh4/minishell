@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:15:11 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/14 09:20:55 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/14 13:44:33 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int	cd_builtin(t_cmdn *node, t_shell *sh, char	*cwd)
 	if (node->cargs[1] == NULL)
 	{
 		if (home == NULL)
-			write(1, "No home\n", 8);
+			write(1, "cd: HOME not set\n", 17);
 		else
 			ft_putstr_fd(home, sh->efd[1]);
 		return (1);

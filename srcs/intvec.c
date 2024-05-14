@@ -6,31 +6,31 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 09:24:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/07 13:21:18 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/14 14:48:43 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_intvec	*create_intvec(void)
+t_intvec	*create_intvec(t_shell *sh)
 {
 	t_intvec	*intvec;
 
 	intvec = (t_intvec *)malloc(sizeof(t_intvec));
 	if (intvec == NULL)
-		exit(1);
+		errexitcode(" error :", "intvec malloc", 1, sh);
 	intvec->array = (int *)ft_calloc(INITIAL_SIZE, sizeof(int));
 	if (intvec->array == NULL)
 	{
 		free(intvec);
-		exit(1);
+		errexitcode(" error :", "intvec create malloc", 1, sh);
 	}
 	intvec->size = 0;
 	intvec->capacity = INITIAL_SIZE;
 	return (intvec);
 }
 
-void	expand_intvec(t_intvec *intvec)
+void	expand_intvec(t_intvec *intvec, t_shell *sh)
 {
 	size_t	new_capacity;
 	int		*newarr;
@@ -43,7 +43,7 @@ void	expand_intvec(t_intvec *intvec)
 	{
 		free(intvec->array);
 		free(intvec);
-		exit(1);
+		errexitcode(" error :", "intvec expand malloc", 1, sh);
 	}
 	i = 0;
 	while (intvec->array[i] != 0)
@@ -57,12 +57,12 @@ void	expand_intvec(t_intvec *intvec)
 	intvec->capacity = new_capacity;
 }
 
-int	add_to_intvec(t_intvec *intvec, int value)
+int	add_to_intvec(t_intvec *intvec, int value, t_shell *sh)
 {
 	if (intvec->size == intvec->capacity)
-		expand_intvec(intvec);
+		expand_intvec(intvec, sh);
 	else if (intvec->size > intvec->capacity)
-		exit(1);
+		errexitcode(" error :", "intvec add", 1, sh);
 	intvec->array[intvec->size] = value;
 	intvec->size += 1;
 	return (1);
