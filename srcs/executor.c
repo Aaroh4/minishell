@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/14 09:04:52 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/14 10:47:21 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,13 +129,11 @@ static char *get_msenv(char *name, t_shell *sh)
 	return (NULL);
 }
 
-/*
 static void wait_for_leaks()
 {
 	while (1)
 		usleep(10);
 }
-*/
 
 static void	exec_cmd(t_cmdn *node, t_shell *sh, char *cwd)
 {
@@ -161,9 +159,9 @@ static void	exec_cmd(t_cmdn *node, t_shell *sh, char *cwd)
 	if (node->last)
 		sh->status = 0;
 	*/
-	free_child(sh);
+	// free_child(sh);
 	node = NULL;
-	// wait_for_leaks();
+	wait_for_leaks();
 	exit(EXIT_SUCCESS);
 }
 
@@ -257,13 +255,13 @@ static int	exec_node(t_cmdn *node, t_shell *sh, t_intvec *commands)
 		if (pid == -1)
 		{
 			sh->status = wait_for(commands);
-			// free_intvec(commands);
+			free_intvec(commands);
 			errexit("Error:", "fork failure", NULL, sh);
 		}
 		else if (pid == 0)
 		{
 			// sleep(5);
-			// free_intvec(commands);
+			free_intvec(commands);
 			exec_cmd(node, sh, cwd);
 		}
 		else

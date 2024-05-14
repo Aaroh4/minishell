@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 11:06:04 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/14 09:10:09 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/14 10:33:45 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,12 +90,12 @@ void	free_child(t_shell *sh)
 	// dprintf(2, "Freed hdocs.\n");
 	// free(sh->redirs);
 	// dprintf(2, "Freed redirs.\n");
-	sh->input = NULL;
+	// sh->input = NULL;
 	sh->root = NULL;
 	sh->cmdarr = NULL;
 	sh->ms_envp = NULL;
 	sh->cmd = NULL;
 	sh->hdocs = NULL;
-	sh->redirs = NULL;
+	// c sh->redirs = NULL;
 	// dprintf(2, "Freeing child process complete.\n");
 }
