@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/15 13:18:42 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/15 16:04:34 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,7 +148,7 @@ static void	exec_cmd(t_cmdn *node, t_shell *sh, char *cwd)
 		path_array = ft_split(get_msenv("PATH", sh), ":"); 
 		cmdp = get_exec_path(path_array, node->cargs[0]);
 		free_args(path_array);
-		// dprintf(2, "cmdp: %s\n", cmdp);
+		dprintf(2, "cmdp: %s\n", cmdp);
 		if (!node->cargs[0] || !*node->cargs || !cmdp || execve(cmdp,
 			node->cargs, sh->ms_envp) == -1)
 			errexitcode(node->cargs[0], ": command not found", 127, sh);
