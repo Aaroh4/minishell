@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:43 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/15 10:14:17 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/15 13:00:14 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,6 @@ static int	check_inline_param(int argc, char **argv, t_shell *sh, struct termios
 	{
 		if (!ft_strncmp(argv[i], "-c", ft_strlen(argv[i])))
 		{
-			//if (pipe(sh->pfd) == -1)
-			//	errexit("Error :", "pipe initialization", NULL, sh);
 			enable_raw_mode();
 			sh->input = ft_strdup(argv[i + 1]);
 			parse_input(sh);
@@ -68,7 +66,6 @@ static int	check_inline_param(int argc, char **argv, t_shell *sh, struct termios
 	return (i);
 }
 
-// Removed free_args(sh->ms_envp); from end
 int	main(int argc, char **argv, char **envp)
 {
 	t_shell			sh;
@@ -81,15 +78,12 @@ int	main(int argc, char **argv, char **envp)
 	signal(SIGQUIT, SIG_IGN);
 	rl_clear_history();
 	sh.ms_envp = copy_envp(envp, &sh);
-	// Set SHLVL one higher like in bash :)
 	shlvl = ft_atoi(get_env_val_by_name("SHLVL", &sh)) + 1;
 	modify_env_internal("SHLVL", ft_itoa(shlvl), &sh);
 	check_inline_param(argc, argv, &sh, oterm);
 	while (1)
 	{
 		signal(SIGINT, ft_handler);
-		//if (pipe(sh.pfd) == -1 || pipe(sh.efd) == -1 || pipe(sh.sfd) == -1)
-		//	errexit("error :", "pipe initialization", NULL, &sh);
 		enable_raw_mode();
 		sh.input = readline("minishell > ");
 		if (sh.input == NULL)
@@ -101,26 +95,3 @@ int	main(int argc, char **argv, char **envp)
 		disable_raw_mode(oterm);
 	}
 }
-
-/*
-// ENVP test main:
-int	main(int argc, char **argv, char **envp)
-{
-	char	**ms_envp;
-	char	*input;
-	char	*str;
-
-	if (argc == 2)
-	{
-		handle_arguments(argc, argv);
-		ms_envp = copy_envp(envp);
-		input = "Used: $USER, shell: $SHELL, not working $NOT_WORK end.";
-		str = ft_strdup(input);
-		ft_putendl_fd(str, 2);
-		str = replace_envp(str, ms_envp);
-		ft_putendl_fd(str, 2);
-		free(str);
-	}
-	return (0);
-}
-*/

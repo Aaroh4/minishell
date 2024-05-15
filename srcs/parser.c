@@ -6,37 +6,11 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/15 10:37:56 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/15 13:18:52 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/*
-static char	*strtrim_nomalloc(char *str, char c)
-{
-	char	*cursor;
-	int		i;
-
-	cursor = str;
-	while (cursor)
-	{
-		if (*cursor == c)
-		{
-			i = 0;
-			while (cursor[i + 1])
-			{
-				cursor[i] = cursor[1 + 1];
-			} 
-		} 
-		else
-		{
-
-		}
-		cursor++;
-	}
-}
-*/
 
 static void	trim_quote_alloc_hdoc_rdir(t_shell *sh)
 {
@@ -91,10 +65,8 @@ static t_cmdn	*create_node(t_cmdn *current, t_shell *sh, int index)
 	len = 0;
 	while (sh->cmdarr[len] != NULL)
 		len++;
-	// sh->cmdarr[index] = ft_make_easy_heredoc(sh->cmdarr[index]);
 	sh->cmdarr[index] = trim_rdirspace(sh->cmdarr[index]);
 	sh->cmd = ft_split_time_space(sh->cmdarr[index], ' ');
-	// free(sh->cmdarr[index]);
 	if (!(sh->cmd))
 		errexit("error: ", "root malloc", NULL, sh);
 	trim_quote_alloc_hdoc_rdir(sh);
@@ -103,7 +75,7 @@ static t_cmdn	*create_node(t_cmdn *current, t_shell *sh, int index)
 	if (index < len - 2)
 	{
 		current->left = init_cmd_node(COMMAND, sh, FALSE);
-		current->right = init_cmd_node(PIPELINE, sh, FALSE); // or AND or OR
+		current->right = init_cmd_node(PIPELINE, sh, FALSE);
 		current = current->right;
 	}
 	else if (index == len - 2)
@@ -113,6 +85,8 @@ static t_cmdn	*create_node(t_cmdn *current, t_shell *sh, int index)
 	return (current);
 }
 
+// Right now this creates both pipes if there are more than one command.
+// How pipes should work is create only pfd for multiple, efd for single builtin.
 void	create_pipes(t_shell *sh)
 {
 	int cmdcount;
@@ -125,7 +99,6 @@ void	create_pipes(t_shell *sh)
 		if (pipe(sh->pfd) == -1 || pipe(sh->efd) == -1) //  || pipe(sh.sfd) == -1)
 			errexit("error :", "pipe initialization", NULL, sh);
 	}
-	dprintf(2, "Command count: %d\n", cmdcount);
 	sh->cmdcount = cmdcount;
 }
 
@@ -153,86 +126,3 @@ void	parse_input(t_shell *sh)
 		i++;
 	}
 }
-
-/*
-char	*ft_give_fixed(char *str, int *i, char *temp)
-{
-	char	*temp2;
-	int		j;
-
-	j = 0;
-	temp2 = malloc(sizeof(char) * ft_strlen(str) + ft_strlen(temp) + 1);
-	while (temp[j] != '\0')
-	{
-		temp2[j] = temp[j];
-		j++;
-	}
-	while (str[*i] != '\0')
-	{
-		if (str[*i] != '<' && str[*i - 1] == '<' && str[*i - 2] == '<')
-			while (str[*i] == ' ')
-				*i += 1;
-		temp2[j] = str[*i];
-		*i += 1;
-		j += 1;
-	}
-	temp2[j] = '\0';
-	return (temp2);
-}
-
-char	*ft_fix_for_space(char *str)
-{
-	int		i;
-	int		j;
-	int		hdocs;
-	char	*temp;
-
-	i = 0;
-	hdocs = 0;
-	while (str[i++] != '\0')
-		if (str[i - 1] != '<'
-			&& str[i] == '<' && str[i + 1] == '<' && str[i + 2] != '<')
-			hdocs++;
-	i = 0;
-	j = 0;
-	temp = malloc(sizeof(char) * ft_strlen(str) + hdocs + 1);
-	while (str[i] != '\0')
-	{
-		if (str[i - 1] != '<' && str[i] == '<' && str[i + 1] == '<' && str[i
-				+ 2] != '<')
-		{
-			temp[j] = ' ';
-			j++;
-		}
-		temp[j++] = str[i++];
-	}
-	temp[j] = '\0';
-	return (temp);
-}
-
-char	*ft_make_easy_heredoc(char *str)
-{
-	int		i;
-	int		j;
-	char	*temp;
-
-	i = 0;
-	j = 0;
-	str = ft_fix_for_space(str);
-	temp = malloc(sizeof(char) * ft_strlen(str) + 2);
-	while (str[i] != '\0')
-	{
-		if (str[i - 1] != '<'
-			&& str[i] == '<' && str[i + 1] == '<' && str[i + 2] != '<')
-			return (ft_give_fixed(str, &i, temp));
-		else
-		{
-			temp[j] = str[i];
-			i++;
-			j++;
-		}
-	}
-	temp[j] = '\0';
-	return (temp);
-}
-*/

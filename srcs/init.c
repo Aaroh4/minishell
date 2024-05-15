@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 08:34:10 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/14 12:00:02 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/15 13:07:35 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,10 @@ void	init_shell_struct(t_shell *sh)
 	sh->cmd = NULL;
 	sh->hdocs = NULL;
 	sh->redirs = NULL;
-	// Should this be -1 to check for actual update?
 	sh->status = 99;
 }
 
-// Should here be more validation for cmd and hdocs?
-// Here they are just passed to the command from sh, then the same pointers
-// are used again for the next cmd.
+
 t_cmdn	*init_cmd_node(t_ntype type, t_shell *sh, t_bool last)
 {
 	t_cmdn	*new_cmdn;

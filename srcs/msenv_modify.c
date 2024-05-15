@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:42:56 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/14 18:32:51 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/15 13:01:49 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ char	*get_env_val_by_name(char *name, t_shell *sh)
 	int		i;
 	int		eqpos;
 	char	*env_name;
-	// char	*value;
 
 	i = 0;
 	eqpos = 0;
@@ -57,10 +56,7 @@ char	*get_env_val_by_name(char *name, t_shell *sh)
 		eqpos = ft_strcpos(sh->ms_envp[i], 61);
 		env_name = ft_substr(sh->ms_envp[i], 0, eqpos);
 		if (!ft_strncmp(name, env_name, eqpos))
-		{
-			// value = ft_strdup(sh->ms_envp[i], eqpos);
 			return(&sh->ms_envp[i][eqpos + 1]);
-		}
 		i++;
 	}
 	return (NULL);

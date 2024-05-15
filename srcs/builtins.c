@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:15:11 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/14 17:44:43 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/15 12:56:57 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,14 +159,6 @@ int	echo_builtin(char **arg)
 	}
 	return (1);
 }
-
-/*
-int modify_env(char *name, char *value, t_shell *sh)
-{
-	
-}
-
-*/
 
 int	export_builtin(t_cmdn *node, t_shell *sh)
 {

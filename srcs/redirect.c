@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 16:20:12 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/15 10:55:18 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/15 13:06:57 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,6 @@ static void	omit_redirs_from_param(t_cmdn *node)
 	node->cargs[i] = 0;
 }
 
-// Errors do not correspond to bash errors yet
 // 1 = input <
 // 2 = output >
 // 3 = output append >>

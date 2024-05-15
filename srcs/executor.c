@@ -6,14 +6,12 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/15 11:48:58 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/15 13:18:42 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// Path is checked every time from ms_envp since it could have been changed
-// in previous pipe.
 int	*ft_remove_hdocs(int i, t_cmdn *node)
 {
 	int	j;
@@ -39,7 +37,7 @@ int	*ft_remove_hdocs(int i, t_cmdn *node)
 	return (temp);
 }
 
-char	**ft_remove_array(char **str, int i, t_cmdn *node)
+static char	**remove_from_array(char **str, int i, t_cmdn *node)
 {
 	char	**temp;
 	int		j;
@@ -85,7 +83,7 @@ static void	handle_heredocs(t_cmdn *node, t_shell *sh)
 	{
 		if (node->hdocs[i] > 0)
 		{
-			node->cargs = ft_remove_array(node->cargs, i, node);
+			node->cargs = remove_from_array(node->cargs, i, node);
 			i = 0;
 		}
 		else
@@ -120,10 +118,7 @@ static char *get_msenv(char *name, t_shell *sh)
 	while (sh->ms_envp[i] != NULL)
 	{
 		if (!ft_strncmp(sh->ms_envp[i], name, ft_strlen(name)))
-		{
-			// dprintf(2, "PATH: %s\n", &sh->ms_envp[i][5]);
 			return (&sh->ms_envp[i][5]);
-		}
 		i++;
 	}
 	return (NULL);
@@ -141,38 +136,23 @@ static void	exec_cmd(t_cmdn *node, t_shell *sh, char *cwd)
 {
 	char	**path_array;
 	char	*cmdp;
-	// char	*temp;
 
 	sh->status = open_redirects(node, sh);
-	dprintf(2, "status: %d\n", sh->status);
 	handle_heredocs(node, sh);
-	dprintf(2, "heredocs handled\n");
 	if (sh->cmdcount > 1)
 		close(sh->pfd[1]);
 	path_array = NULL;
 	cmdp = NULL;
 	if (!(exec_builtin(node, sh, cwd)))
 	{
-		dprintf(2, "executing regular command\n");
 		path_array = ft_split(get_msenv("PATH", sh), ":"); 
 		cmdp = get_exec_path(path_array, node->cargs[0]);
 		free_args(path_array);
-		dprintf(2, "cmdp: %s\n", cmdp);
+		// dprintf(2, "cmdp: %s\n", cmdp);
 		if (!node->cargs[0] || !*node->cargs || !cmdp || execve(cmdp,
 			node->cargs, sh->ms_envp) == -1)
 			errexitcode(node->cargs[0], ": command not found", 127, sh);
 	}
-	else
-		dprintf(2, "executing builtin command\n");
-	/*
-	if (node->last && sh->cmdcount > 1)
-	{
-		dprintf(2, "sending status to parent\n");
-		temp = ft_itoa(sh->status);
-		ft_putendl_fd(temp, sh->sfd[1]);
-		free(temp);
-	}
-	*/
 	if (sh->cmdcount > 1)
 	{
 		close(sh->pfd[0]);
@@ -203,21 +183,6 @@ char	**make_temp(t_shell *sh, char *str)
 	temp[i + 1] = NULL;
 	return (temp);
 }
-
-/*
-// Can waitpid handle this?
-void	modify_status(t_shell *sh)
-{
-	char	*str;
-
-	close(sh->sfd[1]);
-	str = get_next_line(sh->sfd[0]);
-	if (str == NULL)
-		return ;
-	sh->status = ft_atoi(str);
-	close(sh->sfd[0]);
-}
-*/
 
 void	modify_env(t_shell *sh, int a, char *cwd)
 {
@@ -264,8 +229,6 @@ void	modify_env(t_shell *sh, int a, char *cwd)
 	close(sh->efd[0]);
 }
 
-// If node->right type command it's last so rockit
-// Might not work with bonuses though
 static int	exec_node(t_cmdn *node, t_shell *sh, t_intvec *commands)
 {
 	int		pid;
@@ -285,7 +248,6 @@ static int	exec_node(t_cmdn *node, t_shell *sh, t_intvec *commands)
 			errexit("error:", "getcwd", NULL, sh);
 		populate_env_vars(node, sh);
 		pid = fork();
-		// sleep(3);
 		if (pid == -1)
 		{
 			sh->status = wait_for(commands);
@@ -294,14 +256,11 @@ static int	exec_node(t_cmdn *node, t_shell *sh, t_intvec *commands)
 		}
 		else if (pid == 0)
 		{
-			// sleep(5);
 			free_intvec(commands);
 			exec_cmd(node, sh, cwd);
 		}
 		else
 		{
-			dprintf(2, "executing parent\n");	
-			// modify_status(sh);
 			if (!ft_strncmp("export", node->cargs[0], ft_strlen(node->cargs[0])))
 				modify_env(sh, 0, cwd);
 			else if (!ft_strncmp("unset", node->cargs[0], ft_strlen(node->cargs[0])))
@@ -312,10 +271,8 @@ static int	exec_node(t_cmdn *node, t_shell *sh, t_intvec *commands)
 				exit_in_main(node, sh);
 			if (commands != NULL)
 				add_to_intvec(commands, pid, sh);
-			dprintf(2, "executed parent\n");
 		}
 	}
-	dprintf(2, "executing right\n");
 	if (node->right != NULL)
 		exec_node(node->right, sh, commands);
 	return (0);

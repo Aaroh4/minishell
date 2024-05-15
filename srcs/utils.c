@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 16:07:48 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/15 11:13:38 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/15 13:17:22 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 	return (malloc(size));
  }
 
+// This needs work!
 char	*get_exec_path(char **path, char *cmd)
 {
 	char	*slashpath;
@@ -30,7 +31,7 @@ char	*get_exec_path(char **path, char *cmd)
 	{
 		if ((*path)[0] == '/')
         {
-            execpath = ft_strdup(cmd); // cmd is the absolute path
+            execpath = ft_strdup(cmd);
             if (access(execpath, X_OK) == 0)
                 return (execpath);
         }
@@ -61,17 +62,10 @@ int	wait_for(t_intvec *commands)
 
 	while (commands->array[nc + 1])
 	{
-		// ft_putstr_fd("Waited for :", 2);
-		// ft_putnbr_fd(waitpid(commands->array[nc], &status, 0), 2);
-		// ft_putchar_fd('\n', 2);
-		//dprintf(2, "PID: %d Status: %d\n", commands->array[nc], WEXITSTATUS(status));
-		dprintf(2, "Waiting for PID: %d\n", commands->array[nc]);
 		waitpid(commands->array[nc], &status, 0);
 		nc++;
 	}
-	dprintf(2, "Waiting for PID: %d\n", commands->array[nc]);
 	waitpid(commands->array[nc], &status, 0);
-	//dprintf(2, "PID: %d Status: %d\n", commands->array[nc], WEXITSTATUS(status));
 	return (WEXITSTATUS(status));
 }
 
