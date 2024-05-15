@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:43 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/14 22:34:44 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/15 10:14:17 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,8 @@ static int	check_inline_param(int argc, char **argv, t_shell *sh, struct termios
 	{
 		if (!ft_strncmp(argv[i], "-c", ft_strlen(argv[i])))
 		{
-			if (pipe(sh->pfd) == -1)
-				errexit("Error :", "pipe initialization", NULL, sh);
+			//if (pipe(sh->pfd) == -1)
+			//	errexit("Error :", "pipe initialization", NULL, sh);
 			enable_raw_mode();
 			sh->input = ft_strdup(argv[i + 1]);
 			parse_input(sh);
@@ -73,7 +73,6 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_shell			sh;
 	struct termios	oterm;
-	// int				i;
 	int				shlvl;
 
 	init_shell_struct(&sh);
@@ -85,23 +84,12 @@ int	main(int argc, char **argv, char **envp)
 	// Set SHLVL one higher like in bash :)
 	shlvl = ft_atoi(get_env_val_by_name("SHLVL", &sh)) + 1;
 	modify_env_internal("SHLVL", ft_itoa(shlvl), &sh);
-	/*
-	i = 0;
-	while(sh.ms_envp[i])
-	{
-		printf("%s\n", sh.ms_envp[i]);
-		i++;
-	}
-	*/
 	check_inline_param(argc, argv, &sh, oterm);
-	// dprintf(2, "Welcome to minishell!\n");
 	while (1)
 	{
 		signal(SIGINT, ft_handler);
-		// dprintf(2, "Signals\n");
 		//if (pipe(sh.pfd) == -1 || pipe(sh.efd) == -1 || pipe(sh.sfd) == -1)
 		//	errexit("error :", "pipe initialization", NULL, &sh);
-		// dprintf(2, "Pipes\n");
 		enable_raw_mode();
 		sh.input = readline("minishell > ");
 		if (sh.input == NULL)

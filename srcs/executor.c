@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/14 23:00:26 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/15 11:48:58 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,29 +141,44 @@ static void	exec_cmd(t_cmdn *node, t_shell *sh, char *cwd)
 {
 	char	**path_array;
 	char	*cmdp;
-	char	*temp;
+	// char	*temp;
 
 	sh->status = open_redirects(node, sh);
+	dprintf(2, "status: %d\n", sh->status);
 	handle_heredocs(node, sh);
-	close(sh->pfd[1]);
+	dprintf(2, "heredocs handled\n");
+	if (sh->cmdcount > 1)
+		close(sh->pfd[1]);
 	path_array = NULL;
 	cmdp = NULL;
 	if (!(exec_builtin(node, sh, cwd)))
 	{
+		dprintf(2, "executing regular command\n");
 		path_array = ft_split(get_msenv("PATH", sh), ":"); 
 		cmdp = get_exec_path(path_array, node->cargs[0]);
 		free_args(path_array);
+		dprintf(2, "cmdp: %s\n", cmdp);
 		if (!node->cargs[0] || !*node->cargs || !cmdp || execve(cmdp,
 			node->cargs, sh->ms_envp) == -1)
 			errexitcode(node->cargs[0], ": command not found", 127, sh);
 	}
-	if (node->last)
+	else
+		dprintf(2, "executing builtin command\n");
+	/*
+	if (node->last && sh->cmdcount > 1)
 	{
+		dprintf(2, "sending status to parent\n");
 		temp = ft_itoa(sh->status);
 		ft_putendl_fd(temp, sh->sfd[1]);
 		free(temp);
 	}
-	close_all_pipes(sh);
+	*/
+	if (sh->cmdcount > 1)
+	{
+		close(sh->pfd[0]);
+		close(sh->efd[0]);
+		close(sh->efd[1]);
+	}
 	// free_child(sh);
 	// wait_for_leaks();
 	exit(EXIT_SUCCESS);
@@ -189,6 +204,7 @@ char	**make_temp(t_shell *sh, char *str)
 	return (temp);
 }
 
+/*
 // Can waitpid handle this?
 void	modify_status(t_shell *sh)
 {
@@ -201,6 +217,7 @@ void	modify_status(t_shell *sh)
 	sh->status = ft_atoi(str);
 	close(sh->sfd[0]);
 }
+*/
 
 void	modify_env(t_shell *sh, int a, char *cwd)
 {
@@ -283,7 +300,8 @@ static int	exec_node(t_cmdn *node, t_shell *sh, t_intvec *commands)
 		}
 		else
 		{
-			modify_status(sh);
+			dprintf(2, "executing parent\n");	
+			// modify_status(sh);
 			if (!ft_strncmp("export", node->cargs[0], ft_strlen(node->cargs[0])))
 				modify_env(sh, 0, cwd);
 			else if (!ft_strncmp("unset", node->cargs[0], ft_strlen(node->cargs[0])))
@@ -294,8 +312,10 @@ static int	exec_node(t_cmdn *node, t_shell *sh, t_intvec *commands)
 				exit_in_main(node, sh);
 			if (commands != NULL)
 				add_to_intvec(commands, pid, sh);
+			dprintf(2, "executed parent\n");
 		}
 	}
+	dprintf(2, "executing right\n");
 	if (node->right != NULL)
 		exec_node(node->right, sh, commands);
 	return (0);
@@ -304,19 +324,10 @@ static int	exec_node(t_cmdn *node, t_shell *sh, t_intvec *commands)
 int	run_cmds(t_shell *sh)
 {
 	t_intvec	*commands;
-	int			len;
 
 	if (sh->root == NULL)
 		return (1);
 	commands = create_intvec(sh);
-	len = 0;
-	while (sh->cmdarr[len])
-		len++;
-	if (len > 1)
-	{
-		if (pipe(sh->pfd) == -1 || pipe(sh->efd) == -1)
-			errexit("error :", "pipe initialization", NULL, sh);
-	}
 	exec_node(sh->root, sh, commands);
 	sh->status = wait_for(commands);
 	free_intvec(commands);

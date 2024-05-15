@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 17:27:19 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/14 14:48:43 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/15 10:04:26 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,13 @@ void	errexit(char *msg1, char *msg2, char *msg3, t_shell *sh)
 	// free(sh->input);
 	free_cmdn(sh->root);
 	free_args(sh->cmdarr);
-	close(sh->pfd[0]);
-	close(sh->pfd[1]);
+	if (sh->cmdcount > 1)
+	{
+		close(sh->pfd[0]);
+		close(sh->pfd[1]);
+		close(sh->efd[0]);
+		close(sh->efd[1]);
+	}
 	free_args(sh->cmd);
 	free(sh->hdocs);
 	sh->status = 1;
@@ -43,8 +48,13 @@ void	errexitcode(char *msg1, char *msg2, int status, t_shell *sh)
 	// free(sh->input);
 	free_cmdn(sh->root);
 	free_args(sh->cmdarr);
-	close(sh->pfd[0]);
-	close(sh->pfd[1]);
+	if (sh->cmdcount > 1)
+	{
+		close(sh->pfd[0]);
+		close(sh->pfd[1]);
+		close(sh->efd[0]);
+		close(sh->efd[1]);
+	}
 	free_args(sh->cmd);
 	free(sh->hdocs);
 	sh->status = status;

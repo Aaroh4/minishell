@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/14 18:06:52 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/15 10:12:30 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ typedef struct s_shell
 	int		*hdocs;	// Heredoc array for above most recent cmd
 	int		*redirs; // Redirect array for all redirects of most recent cmd
 	int 	status; // Exit code of the most recent pipe, implement!
+	int		cmdcount;
 }	t_shell;
 
 // Parser:
@@ -91,6 +92,7 @@ char		*get_exec_path(char **path, char *cmd);
 int			wait_for(t_intvec *children);
 void		print_cmdn(t_cmdn *root);
 char		*trim_string(char *str);
+void		create_pipes(t_shell *sh);
 // Buildins:
 int			pwd_builtin(t_shell *sh);
 int			cd_builtin(t_cmdn *node, t_shell *sh, char	*cwd);
