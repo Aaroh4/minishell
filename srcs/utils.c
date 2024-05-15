@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 16:07:48 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/15 16:58:18 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/15 18:01:22 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,20 +18,27 @@
  }
 
 // This needs work! ~ should go to home, / should go to root
-char	*get_exec_path(char **path, char *cmd)
+char	*get_exec_path(char **path, char *cmd, t_shell *sh)
 {
 	char	*slashpath;
 	char	*execpath;
 
 	execpath = NULL;
 	slashpath = NULL;
-	if (cmd[0] == '.' || cmd[0] == '~' ||  cmd[0] == '/')
+	if (cmd[0] == '.' || cmd[0] == '/')
 	{
 		if (access(cmd, X_OK) != -1)
 			return (cmd);
 	}
+	else if (cmd[0] == '~')
+	{
+		slashpath = get_env_val_by_name("HOME", sh);
+		execpath = ft_strjoin(slashpath, &cmd[1]);
+		return (execpath);
+	}
 	else
 	{
+
 		while (*path)
 		{
 			slashpath = ft_strjoin(*path, "/");
