@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 16:07:48 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/15 16:23:12 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/15 16:58:18 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 	return (malloc(size));
  }
 
-// This needs work!
+// This needs work! ~ should go to home, / should go to root
 char	*get_exec_path(char **path, char *cmd)
 {
 	char	*slashpath;
@@ -25,22 +25,24 @@ char	*get_exec_path(char **path, char *cmd)
 
 	execpath = NULL;
 	slashpath = NULL;
-	// Case 1: path works straight
-	//if (access(cmd, X_OK) == 0)
-	//	return (ft_strdup(cmd));
-	// Case 2: absolute path
-
-	// Case 3: relative path
-	while (*path)
+	if (cmd[0] == '.' || cmd[0] == '~' ||  cmd[0] == '/')
 	{
-		slashpath = ft_strjoin(*path, "/");
-		execpath = ft_strjoin(slashpath, cmd);
-		free(slashpath);
-		slashpath = NULL;
-		if (access(execpath, X_OK) != -1)
-			return (execpath);
-		path++;
+		if (access(cmd, X_OK) != -1)
+			return (cmd);
 	}
+	else
+	{
+		while (*path)
+		{
+			slashpath = ft_strjoin(*path, "/");
+			execpath = ft_strjoin(slashpath, cmd);
+			free(slashpath);
+			slashpath = NULL;
+			if (access(execpath, X_OK) != -1)
+				return (execpath);
+			path++;
+		}
+	}		
 	return (NULL);
 }
 
