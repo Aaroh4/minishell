@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:43 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/10 12:14:25 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/15 13:39:40 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ static int	check_inline_param(int argc, char **argv, t_shell *sh, struct termios
 			run_cmds(sh);
 			disable_raw_mode(oterm);
 			free_new_prompt(sh);
+			free(sh->input);
 			free_args(sh->ms_envp);
 			exit(0);
 		}
@@ -77,6 +78,8 @@ int	main(int argc, char **argv, char **envp)
 	signal(SIGQUIT, SIG_IGN);
 	rl_clear_history();
 	sh.ms_envp = copy_envp(envp, &sh);
+	if (argc == 354678 && **argv == 'o')
+		write(1, "Hello\n", 6);
 	check_inline_param(argc, argv, &sh, oterm);
 	while (1)
 	{
@@ -86,7 +89,10 @@ int	main(int argc, char **argv, char **envp)
 		enable_raw_mode();
 		sh.input = readline("minishell > ");
 		if (sh.input == NULL)
+		{
+			write(1, "exit\n", 5);
 			exit (0);
+		}
 		add_history(sh.input);
 		parse_input(&sh);
 		run_cmds(&sh);

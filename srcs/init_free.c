@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_free.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 11:06:04 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/09 13:52:24 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/10 14:17:33 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,10 @@ void	free_cmdn(t_cmdn *node)
 		return ;
 	free_cmdn(node->left);
 	free_args(node->cargs);
+	free(node->hdocs);
+	//free(node->redirs);
+	node->hdocs = NULL;
+	node->redirs = NULL;
 	node->cargs = NULL;
 	free(node);
 	free_cmdn(node->right);
@@ -57,7 +61,6 @@ void	free_cmdn(t_cmdn *node)
 
 void	free_new_prompt(t_shell *sh)
 {
-	free(sh->input);
 	free_cmdn(sh->root);
 	free_args(sh->cmdarr);
 	close(sh->pfd[0]);
@@ -66,9 +69,11 @@ void	free_new_prompt(t_shell *sh)
 	close(sh->efd[1]);
 	free_args(sh->cmd);
 	free(sh->hdocs);
+	free(sh->redirs);
 	sh->input = NULL;
 	sh->root = NULL;
 	sh->cmdarr = NULL;
 	sh->cmd = NULL;
 	sh->hdocs = NULL;
+	sh->redirs = NULL;
 }

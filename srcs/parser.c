@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/09 13:50:25 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/10 14:13:46 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,32 @@ static t_cmdn	*init_cmd_node(t_ntype type, t_shell *sh, t_bool last)
 	return (new_cmdn);
 }
 
+/*
+static char	*strtrim_nomalloc(char *str, char c)
+{
+	char	*cursor;
+	int		i;
+
+	cursor = str;
+	while (cursor)
+	{
+		if (*cursor == c)
+		{
+			i = 0;
+			while (cursor[i + 1])
+			{
+				cursor[i] = cursor[1 + 1];
+			} 
+		} 
+		else
+		{
+
+		}
+		cursor++;
+	}
+}
+*/
+
 static void	trim_quote_alloc_hdoc_rdir(t_shell *sh)
 {
 	int		i;
@@ -50,7 +76,7 @@ static void	trim_quote_alloc_hdoc_rdir(t_shell *sh)
 	i = 0;
 	while (sh->cmd[i] != NULL)
 	{
-		sh->cmd[i] = ft_strtrim(sh->cmd[i], " ");
+		sh->cmd[i] = trim_string(sh->cmd[i]);
 		i++;
 	}
 	sh->cmd = ft_remove_quotes(sh->cmd);
@@ -98,6 +124,7 @@ static t_cmdn	*create_node(t_cmdn *current, t_shell *sh, int index)
 	// sh->cmdarr[index] = ft_make_easy_heredoc(sh->cmdarr[index]);
 	sh->cmdarr[index] = trim_rdirspace(sh->cmdarr[index]);
 	sh->cmd = ft_split_time_space(sh->cmdarr[index], ' ');
+	// free(sh->cmdarr[index]);
 	if (!(sh->cmd))
 		errexit("error: ", "root malloc", NULL, sh);
 	trim_quote_alloc_hdoc_rdir(sh);
@@ -106,7 +133,7 @@ static t_cmdn	*create_node(t_cmdn *current, t_shell *sh, int index)
 	if (index < len - 2)
 	{
 		current->left = init_cmd_node(COMMAND, sh, FALSE);
-		current->right = init_cmd_node(PIPELINE, sh, FALSE);
+		current->right = init_cmd_node(PIPELINE, sh, FALSE); // or AND or OR
 		current = current->right;
 	}
 	else if (index == len - 2)
@@ -127,6 +154,7 @@ void	parse_input(t_shell *sh)
 	if (!(sh->root))
 		errexit("error: ", "root malloc", NULL, sh);
 	sh->cmdarr = ft_split(sh->input, "|");
+	free(sh->input);
 	current = sh->root;
 	i = 0;
 	while (sh->cmdarr[i] != NULL)

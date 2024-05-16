@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/10 13:51:22 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/15 12:42:40 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,14 +122,16 @@ static void	exec_cmd(t_cmdn *node, t_shell *sh, char *cwd)
 	close(sh->pfd[1]);
 	if (!exec_builtin(node, sh, cwd))
 	{
-		path_array = ft_split(getenv("PATH"), ":"); 
+		path_array = ft_split(getenv("PATH"), ":");
 		cmdp = get_exec_path(path_array, node->cargs[0]);
 		free(path_array);
+		if ((node->cargs[0] && !ft_strncmp(node->cargs[0], "bash", 4)))
+			sh->ms_envp[20] = "SHLVL=2";
 		if (!node->cargs[0] || !*node->cargs || !cmdp || execve(cmdp,
 			node->cargs, sh->ms_envp) == -1)
 		{
 			perror("Execve says ");
-			errexitcode(node->cargs[0], ": command not found", 127, sh);
+			//errexitcode(node->cargs[0], ": command not found", 127, sh);
 		}
 	}
 	close(sh->efd[1]);
@@ -153,6 +155,7 @@ char	**make_temp(t_shell *sh, char *str)
 		temp[i] = sh->ms_envp[i];
 		i++;
 	}
+	free(sh->ms_envp);
 	temp[i] = ft_subbstr(str, 0, ft_strlen(str) - 1);
 	temp[i + 1] = NULL;
 	return (temp);
@@ -198,8 +201,10 @@ void	modify_env(t_shell *sh, int a, char *cwd)
 			sh->ms_envp[i] = ft_subbstr(str, 0, ft_strlen(str) - 1);
 		else
 			sh->ms_envp = make_temp(sh, str);
+		free(str);
 		str = get_next_line(sh->efd[0]);
 	}
+	free(str);
 	close(sh->efd[0]);
 }
 
@@ -210,7 +215,9 @@ static int	exec_node(t_cmdn *node, t_shell *sh, t_intvec *commands)
 	int		pid;
 	char	buffer[1024];
 	char	*cwd;
+	char	**temp;
 
+	temp = NULL;
 	cwd = getcwd(buffer, sizeof(buffer));
 	if (cwd == NULL)
 		errexit("error:", "getcwd", NULL, sh);
@@ -224,19 +231,20 @@ static int	exec_node(t_cmdn *node, t_shell *sh, t_intvec *commands)
 		if (pid == -1)
 		{
 			sh->status = wait_for(commands);
-			free_intvec(commands);
+			//free_intvec(commands);
 			errexit("Error:", "fork failure", NULL, sh);
 		}
 		else if (pid == 0)
 			exec_cmd(node, sh, cwd);
 		else
 		{
+			waitpid(-1, 0, 0);
 			// if read(sh->efd[0] > 0)
 			// write new line to sh->ms_envp
 			if (!ft_strncmp("export", node->cargs[0], ft_strlen(node->cargs[0])))
 				modify_env(sh, 0, cwd);
 			else if (!ft_strncmp("unset", node->cargs[0], ft_strlen(node->cargs[0])))
-					sh->ms_envp = remove_array(sh);
+					sh->ms_envp = remove_array(sh, sh->ms_envp);
 			else if (!ft_strncmp("cd", node->cargs[0], ft_strlen(node->cargs[0])))
 					modify_env(sh, 1, cwd);
 			else if (!ft_strncmp("exit", node->cargs[0], ft_strlen(node->cargs[0])))
