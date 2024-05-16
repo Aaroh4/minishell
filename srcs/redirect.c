@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 16:20:12 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/10 09:44:24 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/15 13:06:57 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,8 @@ static void	trim_inputs(char *c)
 	}
 }
 
+// Gets the spaces away from between rediir symbols < > >>
+// for easier manipulation later on.
 char	*trim_rdirspace(char *cmd)
 {
 	char	*c;
@@ -125,7 +127,6 @@ static void	omit_redirs_from_param(t_cmdn *node)
 	node->cargs[i] = 0;
 }
 
-// Errors do not correspond to bash errors yet
 // 1 = input <
 // 2 = output >
 // 3 = output append >>
@@ -184,19 +185,21 @@ int	open_redirects(t_cmdn *node, t_shell *sh)
 		}
 		i++;
 	}
-	if (inrdrs == 0)
+	if (sh->cmdcount > 1)
 	{
-		if (dup2(sh->pfd[0], STDIN_FILENO) == -1)
-			errexit("error:", "dup2 stdin", NULL, sh);
+		if (inrdrs == 0 && sh->cmdcount > 1)
+		{
+			if (dup2(sh->pfd[0], STDIN_FILENO) == -1)
+				errexit("error:", "dup2 stdin", NULL, sh);
+		}
+		// close(sh->pfd[0]);
+		// close(sh->efd[0]);
+		if (outrdrs == 0 && sh->cmdcount > 1 && node->last == FALSE)
+		{
+			if (dup2(sh->pfd[1], STDOUT_FILENO) == -1)
+				errexit("error:", "dup2 stdout", NULL, sh);
+		}
 	}
-	close(sh->pfd[0]);
-	close(sh->efd[0]);
-	if (outrdrs == 0 && node->last == FALSE)
-	{
-		if (dup2(sh->pfd[1], STDOUT_FILENO) == -1)
-			errexit("error:", "dup2 stdout", NULL, sh);
-	}
-	i = 0;
 	if (inrdrs > 0 || outrdrs > 0)
 	{
 		omit_redirs_from_param(node);

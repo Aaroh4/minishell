@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 16:07:48 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/14 14:45:40 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/15 18:01:22 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,34 +17,39 @@
 	return (malloc(size));
  }
 
-char	*get_exec_path(char **path, char *cmd)
+// This needs work! ~ should go to home, / should go to root
+char	*get_exec_path(char **path, char *cmd, t_shell *sh)
 {
 	char	*slashpath;
 	char	*execpath;
 
 	execpath = NULL;
 	slashpath = NULL;
-	if (access(cmd, X_OK) == 0) //  && (cmd[0] == '/' || cmd[0] == '.'))
-		// dprintf(2, "%s :Access X ok\n", cmd);
-		return (cmd);
-	// else
-	// 	dprintf(2, "%s :Access X not ok\n", cmd);
-	while (*path)
+	if (cmd[0] == '.' || cmd[0] == '/')
 	{
-		slashpath = ft_strjoin(*path, "/");
-		execpath = ft_strjoin(slashpath, cmd);
-		if (access(execpath, X_OK) != -1)
-			return (execpath);
-		else
-		{
-			if (execpath)
-				free(execpath);
-			execpath = NULL;
-		}
-		path++;
+		if (access(cmd, X_OK) != -1)
+			return (cmd);
 	}
-	if (!path)
-		return (cmd);
+	else if (cmd[0] == '~')
+	{
+		slashpath = get_env_val_by_name("HOME", sh);
+		execpath = ft_strjoin(slashpath, &cmd[1]);
+		return (execpath);
+	}
+	else
+	{
+
+		while (*path)
+		{
+			slashpath = ft_strjoin(*path, "/");
+			execpath = ft_strjoin(slashpath, cmd);
+			free(slashpath);
+			slashpath = NULL;
+			if (access(execpath, X_OK) != -1)
+				return (execpath);
+			path++;
+		}
+	}		
 	return (NULL);
 }
 
@@ -54,14 +59,13 @@ int	wait_for(t_intvec *commands)
 	int	nc;
 
 	nc = 0;
-	while (commands->array[nc])
+
+	while (commands->array[nc + 1])
 	{
-		// ft_putstr_fd("Waited for :", 2);
-		// ft_putnbr_fd(waitpid(commands->array[nc], &status, 0), 2);
-		// ft_putchar_fd('\n', 2);
 		waitpid(commands->array[nc], &status, 0);
 		nc++;
 	}
+	waitpid(commands->array[nc], &status, 0);
 	return (WEXITSTATUS(status));
 }
 
@@ -120,12 +124,25 @@ char	**ft_remove_quotes(char **cmd)
 //	are other characters necessary?
 char	*trim_string(char *str)
 {
+	int		i;
 	char	*end;
+	char 	*curs;
 
-	while ((unsigned char)*str == 32)
-		str++;
-	if (*str == '\0')
+	i = 0;
+	while ((unsigned char)str[i] == 32)
+		i++;
+	curs = &str[i];
+	i = 0;
+	if (*curs == '\0')
+	{
+		str[i] = *curs;
 		return (str);
+	}
+	while (*curs != '\0')
+	{
+		str[i++] = *curs;
+		curs++;
+	}
 	end = str + ft_strlen(str) - 1;
 	while (end > str && (unsigned char)*end == 32)
 		end--;

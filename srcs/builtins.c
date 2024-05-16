@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:15:11 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/14 12:03:05 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/15 12:56:57 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int	cd_builtin(t_cmdn *node, t_shell *sh, char	*cwd)
 	if (node->cargs[1] == NULL)
 	{
 		if (home == NULL)
-			write(1, "No home\n", 8);
+			write(1, "cd: HOME not set\n", 17);
 		else
 			ft_putstr_fd(home, sh->efd[1]);
 		return (1);
@@ -134,13 +134,16 @@ int	echo_builtin(char **arg)
 	int	i;
 
 	i = 1;
+	if (arg == NULL || arg[i] == NULL)
+		return (1);
 	if (ft_strncmp(arg[i], "-n", 3))
 	{
 		while (arg[i] != NULL)
 		{
-			printf("%s", arg[i++]);
-			if (arg[i] != NULL)
-				printf("%s", " ");
+			printf("%s", arg[i]);
+			if (arg[i + 1] != NULL)
+				printf(" ");
+			i++;
 		}
 		printf("\n");
 	}
@@ -149,8 +152,8 @@ int	echo_builtin(char **arg)
 		i++;
 		while (arg[i] != NULL)
 		{
-			printf("%s", arg[i++]);
-			if (arg[i] != NULL)
+			printf("%s", arg[i]);
+			if (arg[++i] != NULL)
 				printf("%s", " ");
 		}
 	}
@@ -168,7 +171,7 @@ int	export_builtin(t_cmdn *node, t_shell *sh)
 		return (1);
 	}
 	j = 0;
-	while (node->cargs[++j] != '\0')
+	while (node->cargs[++j] != NULL)
 	{
 		i = 0;
 		if ((ft_isalpha(node->cargs[j][0])) || (node->cargs[j][0] == '_'))

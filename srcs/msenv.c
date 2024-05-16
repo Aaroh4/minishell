@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 16:54:02 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/08 18:59:23 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/15 13:08:39 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ char	**copy_env_vals(int len, char **envp, char **ms_envp, t_shell *sh)
 	return (ms_envp);
 }
 
+
+
 char	**copy_envp(char **envp, t_shell *sh)
 {
 	int		len;
@@ -58,6 +60,7 @@ char	**copy_envp(char **envp, t_shell *sh)
 	return (ms_envp);
 }
 
+// Change all env variable names $ENV from input to their values
 void	populate_env_vars(t_cmdn *node, t_shell *sh)
 {
 	int	i;

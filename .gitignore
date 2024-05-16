@@ -54,6 +54,12 @@ dkms.conf
 # VSCode
 .vscode
 
+# OSX
+.DS_Store
+
 # Tester folders
 tester/
 test/
+
+# Valgrind
+valgrind-out.txt
