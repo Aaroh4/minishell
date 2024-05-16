@@ -87,7 +87,10 @@ int	main(int argc, char **argv, char **envp)
 		enable_raw_mode();
 		sh.input = readline("minishell > ");
 		if (sh.input == NULL)
+		{
+			write(1, "exit\n", 5);
 			exit (0);
+		}
 		add_history(sh.input);
 		parse_input(&sh);
 		run_cmds(&sh);

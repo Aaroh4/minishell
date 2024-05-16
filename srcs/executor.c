@@ -179,6 +179,7 @@ char	**make_temp(t_shell *sh, char *str)
 		temp[i] = sh->ms_envp[i];
 		i++;
 	}
+	free(sh->ms_envp);
 	temp[i] = ft_subbstr(str, 0, ft_strlen(str) - 1);
 	temp[i + 1] = NULL;
 	return (temp);
@@ -224,8 +225,10 @@ void	modify_env(t_shell *sh, int a, char *cwd)
 			sh->ms_envp[i] = ft_subbstr(str, 0, ft_strlen(str) - 1);
 		else
 			sh->ms_envp = make_temp(sh, str);
+		free(str);
 		str = get_next_line(sh->efd[0]);
 	}
+	free(str);
 	close(sh->efd[0]);
 }
 
@@ -234,7 +237,12 @@ static int	exec_node(t_cmdn *node, t_shell *sh, t_intvec *commands)
 	int		pid;
 	char	buffer[1024];
 	char	*cwd;
+	char	**temp;
 
+	temp = NULL;
+	cwd = getcwd(buffer, sizeof(buffer));
+	if (cwd == NULL)
+		errexit("error:", "getcwd", NULL, sh);
 	if (node == NULL)
 		return (0);
 	pid = 0;
