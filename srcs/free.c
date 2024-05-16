@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 11:06:04 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/15 13:14:53 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/16 13:58:16 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,15 @@ void	free_cmdn(t_cmdn *node)
 		free_cmdn(node->right);
 	if (node->cargs)
 		free_args(node->cargs);
-	free(node->hdocs);
+	if (node->hdocs)
+		free(node->hdocs);
+	if (node->redirs)
+		free(node->redirs);
+	node->left = NULL;
+	node->right = NULL;
 	node->cargs = NULL;
 	node->hdocs = NULL;
 	node->redirs = NULL;
-	node->left = NULL;
-	node->right = NULL;
 	free(node);
 	node = NULL;
 }
@@ -61,8 +64,12 @@ void	free_new_prompt(t_shell *sh)
 		close_all_pipes(sh);
 	free_args(sh->cmdarr);
 	free_args(sh->cmd);
-	free(sh->hdocs);
-	free(sh->redirs);
+	/*
+	if (sh->hdocs)
+		free(sh->hdocs);
+	if (sh->redirs)
+		free(sh->redirs);
+	*/
 	sh->input = NULL;
 	sh->root = NULL;
 	sh->cmdarr = NULL;
