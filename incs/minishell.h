@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/09 15:13:25 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/13 15:41:18 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ int			echo_builtin(char **arg);
 int			env_builtin(t_shell *sh, t_bool export);
 int			export_builtin(t_cmdn *node, t_shell *sh);
 int			unset_builtin(t_cmdn *node, t_shell *sh);
-char		**remove_array(t_shell *sh);
+char		**remove_array(t_shell *sh, char **temp_ms);
 // Environment variables:
 char 		*replace_envp(char* input, t_shell *sh);
 char		**copy_envp(char **envp, t_shell *sh);
