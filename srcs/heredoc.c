@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 12:09:30 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/14 14:48:43 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/19 22:40:56 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ char	*make_breakchar(char *breakchar, int *i, int *j, int hdocs)
 void	ft_handler_heredoc(int signum)
 {
 	signum = 1;
+	while (signum)
+		signum--;
 	write(1, "\n> ", 3);
 }
 

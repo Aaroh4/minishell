@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:15:11 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/15 12:56:57 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/19 22:39:42 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -271,7 +271,7 @@ int	unset_builtin(t_cmdn *node, t_shell *sh)
 
 	i = 0;
 	k = 0;
-	while (node->cargs[++k] != '\0')
+	while (node->cargs[++k] != NULL)
 	{
 		i = 0;
 		while (sh->ms_envp[i] != 0)

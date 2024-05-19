@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/19 22:32:21 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/19 22:40:19 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -236,9 +236,9 @@ static int	exec_node(t_cmdn *node, t_shell *sh, t_intvec *commands)
 	int		pid;
 	char	buffer[1024];
 	char	*cwd;
-	char	**temp;
+	// char	**temp;
 
-	temp = NULL;
+	// temp = NULL;
 	cwd = getcwd(buffer, sizeof(buffer));
 	if (cwd == NULL)
 		errexit("error:", "getcwd", NULL, sh);
@@ -271,7 +271,7 @@ static int	exec_node(t_cmdn *node, t_shell *sh, t_intvec *commands)
 			if (!ft_strncmp("export", node->cargs[0], ft_strlen(node->cargs[0])))
 				modify_env(sh, 0, cwd);
 			else if (!ft_strncmp("unset", node->cargs[0], ft_strlen(node->cargs[0])))
-				sh->ms_envp = remove_array(sh);
+				sh->ms_envp = remove_array(sh, sh->ms_envp);
 			else if (!ft_strncmp("cd", node->cargs[0], ft_strlen(node->cargs[0])))
 				modify_env(sh, 1, cwd);
 			else if (!ft_strncmp("exit", node->cargs[0], ft_strlen(node->cargs[0])))
