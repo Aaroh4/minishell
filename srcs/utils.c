@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 16:07:48 by mburakow          #+#    #+#             */
 /*   Updated: 2024/05/20 15:11:09 by ahamalai         ###   ########.fr       */
@@ -108,6 +108,35 @@ void	print_cmdn(t_cmdn *node)
 
 char	**ft_remove_quotes(char **cmd)
 {
+	char	**cmdi;
+	char	*cur;
+	int		i;
+
+	cmdi = cmd;
+	while (*cmdi != NULL)
+	{
+		cur = *cmdi;
+		// dprintf(2, "cur is: %s\n", cur);
+		while (*cur != '\0')
+		{
+			if (*cur == '\"')
+			{
+				i = 0;
+				while (cur[i + 1] != '\0')
+				{
+					cur[i] = cur[i + 1];
+					i++;
+				}
+				cur[i] = '\0';
+			}
+			cur++;
+		}
+		cmdi++;
+	}
+	return (cmd);
+}
+
+/*
 	int	i;
 	int	j;
 
@@ -129,21 +158,23 @@ char	**ft_remove_quotes(char **cmd)
 			else
 				j++;
 		}
+		cmd[i][j] = '\0';
 	}
 	return (cmd);
 }
+*/
 
 // At the moment accounts only for space characters,
 //	are other characters necessary?
 char	*trim_string(char *str)
 {
-    int        i;
-    char    *end;
-    char     *curs;
+	int		i;
+	char	*end;
+	char 	*curs;
 
-    i = 0;
-    if (str[0] == '\0')
-        return (str);
+	i = 0;
+	if (!str || str[0] == '\0' || str[0] == 0)
+		return (str);
 	while ((unsigned char)str[i] == 32)
 		i++;
 	curs = &str[i];
@@ -163,4 +194,13 @@ char	*trim_string(char *str)
 		end--;
 	end[1] = '\0';
 	return (str);
+}
+
+void	print_array(char **arr)
+{
+	int i;
+	i = 0;
+	while (arr[i])
+		dprintf(2, "%s\n", arr[i++]);
+
 }

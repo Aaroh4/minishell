@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split_time_space.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/03 12:03:00 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/10 12:06:50 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/20 18:00:21 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include <stdio.h>
 
 void	ft_wording(char *dest, int *i, int *j, char const *s)
 {
@@ -55,6 +56,8 @@ static int	do_split(char **arr, char const *s, char c, int i)
 	int	word;
 
 	word = 0;
+	jcheck[0] = 0;
+	jcheck[1] = 0;
 	while (s[i] != '\0')
 	{
 		jcheck[0] = ft_checker(s, i, jcheck[0]);
@@ -110,7 +113,7 @@ char	**ft_split_time_space(char const *s, char c)
 	arr = (char **)malloc(sizeof(char *) * (count + 1));
 	if (!arr)
 		return (NULL);
-	arr[count] = 0;
+	arr[count] = NULL;
 	if (do_split(arr, s, c, i) == -1)
 		return (NULL);
 	return (arr);

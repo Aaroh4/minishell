@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 11:06:04 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/20 13:16:26 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/20 15:08:16 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,13 +51,8 @@ void	free_cmdn(t_cmdn *node)
 
 void	free_new_prompt(t_shell *sh)
 {
-	int len;
-	
 	free_cmdn(sh->root);
-	len = 0;
-	while (sh->cmdarr[len])
-		len++;
-	if (len > 1)
+	if (sh->cmdcount > 1 || sh->hdoc)
 		close_all_pipes(sh);
 	free_args(sh->cmdarr);
 	free_args(sh->cmd);
@@ -83,7 +78,7 @@ void	free_child(t_shell *sh)
 	free_cmdn(sh->root);
 	free_args(sh->cmdarr);
 	free_args(sh->ms_envp);
-	if (sh->cmdcount > 1)
+	if (sh->cmdcount > 1 || sh->hdoc)
 		close_all_pipes(sh);
 	free_args(sh->cmd);
 	free(sh->hdocs);

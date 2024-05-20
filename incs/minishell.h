@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/20 18:25:13 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/20 17:26:17 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,7 @@ int			wait_for(t_intvec *children);
 void		print_cmdn(t_cmdn *root);
 char		*trim_string(char *str);
 void		create_pipes(t_shell *sh);
+void		print_array(char **arr);
 // Buildins:
 int			pwd_builtin(t_shell *sh);
 int			cd_builtin(t_cmdn *node, t_shell *sh, char	*cwd);

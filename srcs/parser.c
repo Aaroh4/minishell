@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/20 15:19:25 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/20 17:27:24 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,10 @@ static void	trim_quote_alloc_hdoc_rdir(t_shell *sh)
 	int		i;
 
 	i = 0;
-	i = 0;
 	while (sh->cmd[i] != NULL)
 	{
-		sh->cmd[i] = trim_string(sh->cmd[i]);
+		if (sh->cmd[i][0] != '\0')
+			sh->cmd[i] = trim_string(sh->cmd[i]);
 		i++;
 	}
 	sh->cmd = ft_remove_quotes(sh->cmd);
@@ -101,6 +101,7 @@ static t_cmdn	*create_node(t_cmdn *current, t_shell *sh, int index)
 	get_heredocs(sh);
 	create_pipes(sh);
 	get_redirects(sh);
+	dprintf(2, "Redirs gotten.\n");
 	if (index < len - 2)
 	{
 		current->left = init_cmd_node(COMMAND, sh, FALSE);
@@ -125,7 +126,6 @@ void	parse_input(t_shell *sh)
 	if (!(sh->root))
 		errexit("error: ", "root malloc", NULL, sh);
 	sh->cmdarr = ft_split(sh->input, "|");
-	// dprintf(2, "Exited with sh->cmdarr[0]: %s", sh->cmdarr[0]);
 	if (!(sh->cmdarr))
 		errexit("error: ", "cmdarr malloc", NULL, sh);
 	free(sh->input);

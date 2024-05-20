@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:43 by mburakow          #+#    #+#             */
 /*   Updated: 2024/05/20 15:18:33 by ahamalai         ###   ########.fr       */
@@ -96,6 +96,13 @@ int	main(int argc, char **argv, char **envp)
 			write(1, "exit\n", 5);
 			exit (0);
 		}
+		/*
+		if (!ft_strncmp("", sh.input, ft_strlen(sh.input)))
+		{
+			dprintf(2, "Inside if\n");
+			sh.input[0] = '\0';
+		}
+		*/
 		add_history(sh.input);
 		parse_input(&sh);
 		run_cmds(&sh);

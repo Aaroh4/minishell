@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
 /*   Updated: 2024/05/20 18:33:14 by ahamalai         ###   ########.fr       */
@@ -137,6 +137,7 @@ int	check_hdocs(t_cmdn *node)
 	return (0);
 }
 
+
 static void	exec_cmd(t_cmdn *node, t_shell *sh, char *cwd)
 {
 	char	**path_array;
@@ -242,9 +243,7 @@ static int	exec_node(t_cmdn *node, t_shell *sh, t_intvec *commands)
 	int		pid;
 	char	buffer[1024];
 	char	*cwd;
-	// char	**temp;
 
-	// temp = NULL;
 	cwd = getcwd(buffer, sizeof(buffer));
 	if (cwd == NULL)
 		errexit("error:", "getcwd", NULL, sh);
@@ -276,6 +275,7 @@ static int	exec_node(t_cmdn *node, t_shell *sh, t_intvec *commands)
 		{
 			if (!ft_strncmp("export", node->cargs[0], ft_strlen(node->cargs[0])))
 				modify_env(sh, 0, cwd);
+			// Unset just one var or?
 			else if (!ft_strncmp("unset", node->cargs[0], ft_strlen(node->cargs[0])))
 				sh->ms_envp = remove_array(sh, sh->ms_envp);
 			else if (!ft_strncmp("cd", node->cargs[0], ft_strlen(node->cargs[0])))
@@ -288,6 +288,7 @@ static int	exec_node(t_cmdn *node, t_shell *sh, t_intvec *commands)
 	}
 	if (node->right != NULL)
 		exec_node(node->right, sh, commands);
+	// close_all_pipes(sh);
 	return (0);
 }
 
@@ -299,8 +300,6 @@ int	run_cmds(t_shell *sh)
 		return (1);
 	commands = create_intvec(sh);
 	exec_node(sh->root, sh, commands);
-	close(sh->pfd[0]);
-	close(sh->pfd[1]);
 	sh->status = wait_for(commands);
 	free_intvec(commands);
 	return (0);

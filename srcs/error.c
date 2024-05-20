@@ -24,7 +24,7 @@ void	errexit(char *msg1, char *msg2, char *msg3, t_shell *sh)
 		ft_putendl_fd("", 2);
 	free_cmdn(sh->root);
 	free_args(sh->cmdarr);
-	if (sh->cmdcount > 1)
+	if (sh->cmdcount > 1 || sh->hdoc)
 	{
 		close(sh->pfd[0]);
 		close(sh->pfd[1]);
@@ -45,7 +45,7 @@ void	errexitcode(char *msg1, char *msg2, int status, t_shell *sh)
 	ft_putendl_fd(msg2, 2);
 	free_cmdn(sh->root);
 	free_args(sh->cmdarr);
-	if (sh->cmdcount > 1)
+	if (sh->cmdcount > 1 || sh->hdoc)
 	{
 		close(sh->pfd[0]);
 		close(sh->pfd[1]);
