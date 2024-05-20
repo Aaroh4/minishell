@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/20 13:38:36 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/20 15:39:49 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,10 @@ static void	trim_quote_alloc_hdoc_rdir(t_shell *sh)
 	int		i;
 
 	i = 0;
-	i = 0;
 	while (sh->cmd[i] != NULL)
 	{
-		sh->cmd[i] = trim_string(sh->cmd[i]);
+		if (sh->cmd[i][0] != '\0')
+			sh->cmd[i] = trim_string(sh->cmd[i]);
 		i++;
 	}
 	sh->cmd = ft_remove_quotes(sh->cmd);

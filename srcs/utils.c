@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 16:07:48 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/20 09:03:12 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/20 15:34:05 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,6 +142,8 @@ char	*trim_string(char *str)
 	char 	*curs;
 
 	i = 0;
+	if (!str || str[0] == '\0' || str[0] == 0)
+		return (str);
 	while ((unsigned char)str[i] == 32)
 		i++;
 	curs = &str[i];

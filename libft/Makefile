@@ -6,7 +6,7 @@
 #    By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/19 12:03:42 by ahamalai          #+#    #+#              #
-#    Updated: 2024/05/14 08:11:54 by mburakow         ###   ########.fr        #
+#    Updated: 2024/05/20 15:24:00 by mburakow         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,7 @@ SRCS 			=   ft_isalpha.c ft_isdigit.c ft_isalnum.c ft_isascii.c \
 	            	ft_split.c ft_striteri.c ft_strmapi.c get_next_line.c \
 	            	get_next_line_utils.c ft_printf.c ft_printhex.c \
 	            	ft_split_time_space_utils.c ft_split_time_space.c \
-	            	ft_strcpos.c
+	            	ft_strcpos.c ft_isspace.c
 SRC_DIR			= 	./srcs
 OBJ_DIR			=	./objs
 INCLUDE			=  	./incs

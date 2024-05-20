@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/20 14:32:17 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/20 15:25:29 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,19 +138,17 @@ static void	exec_cmd(t_cmdn *node, t_shell *sh, char *cwd)
 	char	*cmdp;
 
 	sh->status = open_redirects(node, sh);
-	if (sh->hdoc == TRUE)
+	if (sh->hdoc)
     {
         if (dup2(sh->pfd[0], STDIN_FILENO) == -1)
-			errexitcode("heredoc:", "bad error", 126, sh);
-        close(sh->pfd[0]);
+			errexitcode("heredoc :", "bad error", 126, sh);
     }
 	handle_heredocs(node, sh);
 	dprintf(2, "Heredocs handled\n");
 	if (sh->cmdcount > 1 || sh->hdoc)
 	{
-		close(sh->pfd[1]);
-		close(sh->efd[0]);
-		close(sh->efd[1]);
+		dprintf(2, "Closing fds\n");
+		close_all_pipes(sh);
 	}
 	path_array = NULL;
 	cmdp = NULL;
@@ -167,15 +165,6 @@ static void	exec_cmd(t_cmdn *node, t_shell *sh, char *cwd)
 		if (execve(cmdp, node->cargs, sh->ms_envp) == -1)
 			errexitcode(node->cargs[0], ": command execution failed", 127, sh);
 	}
-	dprintf(2, "Closing fds\n");
-	/*
-	if (sh->cmdcount > 1 || sh->hdoc)
-	{
-		close(sh->pfd[0]);
-		close(sh->efd[0]);
-		close(sh->efd[1]);
-	}
-	*/
 	// free_child(sh);
 	// wait_for_leaks();
 	dprintf(2, "Exiting node.\n");
@@ -255,9 +244,7 @@ static int	exec_node(t_cmdn *node, t_shell *sh, t_intvec *commands)
 	int		pid;
 	char	buffer[1024];
 	char	*cwd;
-	// char	**temp;
 
-	// temp = NULL;
 	cwd = getcwd(buffer, sizeof(buffer));
 	if (cwd == NULL)
 		errexit("error:", "getcwd", NULL, sh);
@@ -289,6 +276,7 @@ static int	exec_node(t_cmdn *node, t_shell *sh, t_intvec *commands)
 		{
 			if (!ft_strncmp("export", node->cargs[0], ft_strlen(node->cargs[0])))
 				modify_env(sh, 0, cwd);
+			// Unset just one var or?
 			else if (!ft_strncmp("unset", node->cargs[0], ft_strlen(node->cargs[0])))
 				sh->ms_envp = remove_array(sh, sh->ms_envp);
 			else if (!ft_strncmp("cd", node->cargs[0], ft_strlen(node->cargs[0])))
@@ -301,6 +289,7 @@ static int	exec_node(t_cmdn *node, t_shell *sh, t_intvec *commands)
 	}
 	if (node->right != NULL)
 		exec_node(node->right, sh, commands);
+	close_all_pipes(sh);
 	return (0);
 }
 
