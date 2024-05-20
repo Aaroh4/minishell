@@ -69,8 +69,8 @@ void	close_all_pipes(t_shell *sh)
 {
 	close(sh->pfd[0]);
 	close(sh->pfd[1]);
-	close(sh->efd[0]);
-	close(sh->efd[1]);
+	//close(sh->efd[0]);
+	//close(sh->efd[1]);
 }
 
 void	free_child(t_shell *sh)

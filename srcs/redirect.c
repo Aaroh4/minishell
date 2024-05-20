@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 16:20:12 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/20 17:25:10 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/20 13:02:06 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,20 @@ void	get_redirects(t_shell *sh)
 	}
 }
 
+/*
+void 	print_array_redirs(t_cmdn *node)
+{
+	int	i;
+
+	i = 0;
+	while (node->cargs[i])
+	{
+		dprintf(2, "%d : %s\n", node->redirs[i], node->cargs[i]);
+		i++;
+	}
+	return ;
+}
+*/
 // Reconstruct cargs omitting redirs
 static void	omit_redirs_from_param(t_cmdn *node)
 {

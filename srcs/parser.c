@@ -78,11 +78,9 @@ void	create_pipes(t_shell *sh)
 	}
 	if (cmdcount > 1 || sh->hdoc)
 	{
-		dprintf(2, "Hdoc found.\n");
-		if (pipe(sh->pfd) == -1 || pipe(sh->efd) == -1) //  || pipe(sh.sfd) == -1)
+		if (pipe(sh->pfd) == -1 ) //|| pipe(sh->efd) == -1) //  || pipe(sh.sfd) == -1)
 			errexit("error :", "pipe initialization", NULL, sh);
 	}
-	dprintf(2, "Pipes created.\n");
 	sh->cmdcount = cmdcount;
 }
 
@@ -94,9 +92,11 @@ static t_cmdn	*create_node(t_cmdn *current, t_shell *sh, int index)
 	while (sh->cmdarr[len] != NULL)
 		len++;
 	sh->cmdarr[index] = trim_rdirspace(sh->cmdarr[index]);
+	// dprintf(2, "Splitting 2: %s\n", sh->cmdarr[index]);
 	sh->cmd = ft_split_time_space(sh->cmdarr[index], ' ');
 	if (!(sh->cmd))
 		errexit("error: ", "root malloc", NULL, sh);
+	// dprintf(2, "Split to [0]: %s\n", sh->cmd[0]);
 	trim_quote_alloc_hdoc_rdir(sh);
 	get_heredocs(sh);
 	create_pipes(sh);

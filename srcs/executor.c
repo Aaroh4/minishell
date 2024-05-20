@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/20 15:25:29 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/20 18:33:14 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,14 +123,20 @@ static char *get_msenv(char *name, t_shell *sh)
 	}
 	return (NULL);
 }
-
-/*
-static void wait_for_leaks()
+int	check_hdocs(t_cmdn *node)
 {
-	while (1)
-		usleep(10);
+	int	i;
+
+	i = 0;
+	while (node->hdocs[i] != -1)
+	{
+		if (node->hdocs[i] > 0)
+			return (1);
+		i++;
+	}
+	return (0);
 }
-*/
+
 
 static void	exec_cmd(t_cmdn *node, t_shell *sh, char *cwd)
 {
@@ -138,36 +144,29 @@ static void	exec_cmd(t_cmdn *node, t_shell *sh, char *cwd)
 	char	*cmdp;
 
 	sh->status = open_redirects(node, sh);
-	if (sh->hdoc)
-    {
-        if (dup2(sh->pfd[0], STDIN_FILENO) == -1)
-			errexitcode("heredoc :", "bad error", 126, sh);
-    }
-	handle_heredocs(node, sh);
-	dprintf(2, "Heredocs handled\n");
-	if (sh->cmdcount > 1 || sh->hdoc)
+	if (check_hdocs(node))
 	{
-		dprintf(2, "Closing fds\n");
-		close_all_pipes(sh);
+		if (dup2(sh->pfd[0], STDIN_FILENO) == -1)
+			write(1, "hell1\n", 6); // PROPER ERROR CHECK HERE
 	}
+	//if (sh->cmdcount > 1 || sh->hdoc == TRUE)
+	close(sh->pfd[0]);
+	handle_heredocs(node, sh);
+	close(sh->pfd[1]);
+	//if (sh->cmdcount > 1 || sh->hdoc == TRUE)
 	path_array = NULL;
 	cmdp = NULL;
 	if (!(exec_builtin(node, sh, cwd)))
 	{
 		path_array = ft_split(get_msenv("PATH", sh), ":");
-		if (!path_array) 
-            errexitcode(node->cargs[0], ": failed to allocate memory for PATH", 1, sh);
 		cmdp = get_exec_path(path_array, node->cargs[0], sh);
-		dprintf(2, "Exec path tested: %s\n", cmdp);
 		free_args(path_array);
-		if (!node->cargs[0] || !*node->cargs || !cmdp)
+		if (!node->cargs[0] || !*node->cargs || !cmdp || execve(cmdp,
+				node->cargs, sh->ms_envp) == -1)
 			errexitcode(node->cargs[0], ": command not found", 127, sh);
-		if (execve(cmdp, node->cargs, sh->ms_envp) == -1)
-			errexitcode(node->cargs[0], ": command execution failed", 127, sh);
 	}
 	// free_child(sh);
 	// wait_for_leaks();
-	dprintf(2, "Exiting node.\n");
 	exit(EXIT_SUCCESS);
 }
 
@@ -289,7 +288,7 @@ static int	exec_node(t_cmdn *node, t_shell *sh, t_intvec *commands)
 	}
 	if (node->right != NULL)
 		exec_node(node->right, sh, commands);
-	close_all_pipes(sh);
+	// close_all_pipes(sh);
 	return (0);
 }
 
