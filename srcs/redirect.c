@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 16:20:12 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/15 13:06:57 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/20 12:10:24 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,14 +77,14 @@ void	get_redirects(t_shell *sh)
 	int	i;
 	int j;
 
-	i = 0;
+	i = -1;
 	while (sh->cmd[++i] != NULL)
 	{
 		j = -1;
 		while (sh->cmd[i][++j] != '\0')
 		{
 			if ((j == 0 || sh->cmd[i][j - 1] != '<') && sh->cmd[i][j] == '<' &&
-					sh->cmd[i][j + 1] != '<') 
+					sh->cmd[i][j + 1] != '<')
 				sh->redirs[i] = 1;
 			else if ((j == 0 || sh->cmd[i][j - 1] != '>') && 
 					sh->cmd[i][j] == '>' && sh->cmd[i][j + 1] != '>')
@@ -97,6 +97,20 @@ void	get_redirects(t_shell *sh)
 	}
 }
 
+/*
+void 	print_array_redirs(t_cmdn *node)
+{
+	int	i;
+
+	i = 0;
+	while (node->cargs[i])
+	{
+		dprintf(2, "%d : %s\n", node->redirs[i], node->cargs[i]);
+		i++;
+	}
+	return ;
+}
+*/
 // Reconstruct cargs omitting redirs
 static void	omit_redirs_from_param(t_cmdn *node)
 {
