@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 16:07:48 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/19 22:28:03 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/20 09:03:12 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,13 @@ char	*get_exec_path(char **path, char *cmd, t_shell *sh)
 
 	execpath = NULL;
 	slashpath = NULL;
+	if (!cmd || cmd[0] == '\0')
+		return (NULL);
 	if (cmd[0] == '.' || cmd[0] == '/')
 	{
 		if (access(cmd, X_OK) != -1)
 			return (cmd);
-		else 
+		else
 			return (NULL);
 	}
 	else if (cmd[0] == '~')

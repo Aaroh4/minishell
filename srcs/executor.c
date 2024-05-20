@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/20 07:54:59 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/20 09:01:55 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,7 @@ static void	exec_cmd(t_cmdn *node, t_shell *sh, char *cwd)
 	cmdp = NULL;
 	if (!(exec_builtin(node, sh, cwd)))
 	{
-		path_array = ft_split(get_msenv("PATH", sh), ":"); 
+		path_array = ft_split(get_msenv("PATH", sh), ":");
 		cmdp = get_exec_path(path_array, node->cargs[0], sh);
 		free_args(path_array);
 		if (!node->cargs[0] || !*node->cargs || !cmdp || execve(cmdp,
