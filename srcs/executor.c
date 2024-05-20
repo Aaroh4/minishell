@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/20 13:16:17 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/20 14:32:17 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,28 +138,47 @@ static void	exec_cmd(t_cmdn *node, t_shell *sh, char *cwd)
 	char	*cmdp;
 
 	sh->status = open_redirects(node, sh);
+	if (sh->hdoc == TRUE)
+    {
+        if (dup2(sh->pfd[0], STDIN_FILENO) == -1)
+			errexitcode("heredoc:", "bad error", 126, sh);
+        close(sh->pfd[0]);
+    }
 	handle_heredocs(node, sh);
-	if (sh->cmdcount > 1 || )
+	dprintf(2, "Heredocs handled\n");
+	if (sh->cmdcount > 1 || sh->hdoc)
+	{
 		close(sh->pfd[1]);
+		close(sh->efd[0]);
+		close(sh->efd[1]);
+	}
 	path_array = NULL;
 	cmdp = NULL;
 	if (!(exec_builtin(node, sh, cwd)))
 	{
 		path_array = ft_split(get_msenv("PATH", sh), ":");
+		if (!path_array) 
+            errexitcode(node->cargs[0], ": failed to allocate memory for PATH", 1, sh);
 		cmdp = get_exec_path(path_array, node->cargs[0], sh);
+		dprintf(2, "Exec path tested: %s\n", cmdp);
 		free_args(path_array);
-		if (!node->cargs[0] || !*node->cargs || !cmdp || execve(cmdp,
-			node->cargs, sh->ms_envp) == -1)
+		if (!node->cargs[0] || !*node->cargs || !cmdp)
 			errexitcode(node->cargs[0], ": command not found", 127, sh);
+		if (execve(cmdp, node->cargs, sh->ms_envp) == -1)
+			errexitcode(node->cargs[0], ": command execution failed", 127, sh);
 	}
-	if (sh->cmdcount > 1)
+	dprintf(2, "Closing fds\n");
+	/*
+	if (sh->cmdcount > 1 || sh->hdoc)
 	{
 		close(sh->pfd[0]);
-		//close(sh->efd[0]);
-		//close(sh->efd[1]);
+		close(sh->efd[0]);
+		close(sh->efd[1]);
 	}
+	*/
 	// free_child(sh);
 	// wait_for_leaks();
+	dprintf(2, "Exiting node.\n");
 	exit(EXIT_SUCCESS);
 }
 
