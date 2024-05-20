@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/15 13:18:52 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/20 08:08:16 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,10 +65,12 @@ static t_cmdn	*create_node(t_cmdn *current, t_shell *sh, int index)
 	len = 0;
 	while (sh->cmdarr[len] != NULL)
 		len++;
-	sh->cmdarr[index] = trim_rdirspace(sh->cmdarr[index]);
+	// sh->cmdarr[index] = trim_rdirspace(sh->cmdarr[index]);
+	// dprintf(2, "Splitting 2: %s\n", sh->cmdarr[index]);
 	sh->cmd = ft_split_time_space(sh->cmdarr[index], ' ');
 	if (!(sh->cmd))
 		errexit("error: ", "root malloc", NULL, sh);
+	// dprintf(2, "Split to [0]: %s\n", sh->cmd[0]);
 	trim_quote_alloc_hdoc_rdir(sh);
 	get_heredocs(sh);
 	get_redirects(sh);
@@ -113,7 +115,8 @@ void	parse_input(t_shell *sh)
 	if (!(sh->root))
 		errexit("error: ", "root malloc", NULL, sh);
 	sh->cmdarr = ft_split(sh->input, "|");
-	if	(!(sh->cmdarr))
+	// dprintf(2, "Exited with sh->cmdarr[0]: %s", sh->cmdarr[0]);
+	if (!(sh->cmdarr))
 		errexit("error: ", "cmdarr malloc", NULL, sh);
 	create_pipes(sh);
 	free(sh->input);

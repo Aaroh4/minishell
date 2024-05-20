@@ -6,12 +6,15 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/19 12:04:33 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/19 16:22:24 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/20 07:57:03 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include <unistd.h>
+// remove:
+#include <stdio.h>
+#include "libft.h"
 
 int	is_separator(char c, char *charset)
 {
@@ -89,6 +92,17 @@ char	**ft_split(char *str, char *charset)
 	int		count;	
 	char	**arr;
 
+	// dprintf(2, "str to split: #%s#, length: %d\n", str, ft_strlen(str));
+	if (str == NULL || str[0] == '\0')
+	{
+		arr = (char **)malloc(sizeof(char *) * 2);
+		arr[0] = (char *)malloc(sizeof(char));
+		arr[0][0] = '\0';
+		arr[1] = NULL;
+		// dprintf(2, "returning...\n");
+		return (arr);
+	}
+	// dprintf(2, "not returning...\n");
 	count = word_count(str, charset);
 	arr = (char **)malloc(sizeof(char *) * (count + 1));
 	arr[count] = NULL;
