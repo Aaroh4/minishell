@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirect.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 16:20:12 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/20 12:26:52 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/20 13:02:06 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,8 +206,6 @@ int	open_redirects(t_cmdn *node, t_shell *sh)
 			if (dup2(sh->pfd[0], STDIN_FILENO) == -1)
 				errexit("error:", "dup2 stdin", NULL, sh);
 		}
-		// close(sh->pfd[0]);
-		// close(sh->efd[0]);
 		if (outrdrs == 0 && sh->cmdcount > 1 && node->last == FALSE)
 		{
 			if (dup2(sh->pfd[1], STDOUT_FILENO) == -1)

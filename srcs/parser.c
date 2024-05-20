@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/20 12:22:49 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/20 13:01:16 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,32 @@ static void	get_heredocs(t_shell *sh)
 	}
 }
 
+// Right now this creates both pipes if there are more than one command.
+// How pipes should work is create only pfd for multiple, efd for single builtin.
+void	create_pipes(t_shell *sh)
+{
+	int 	cmdcount;
+	int		i;
+
+	cmdcount = 1;
+	sh->hdoc = FALSE;
+	i = 0;
+	while (sh->cmdarr[cmdcount] != NULL)
+		cmdcount++;
+	while (sh->hdocs[i] != -1)
+	{
+		if (sh->hdocs[i] > 0)
+			sh->hdoc = TRUE;
+	}
+	if (cmdcount > 1 || sh->hdoc)
+	{
+		dprintf(2, "Hdoc found.\n");
+		if (pipe(sh->pfd) == -1 || pipe(sh->efd) == -1) //  || pipe(sh.sfd) == -1)
+			errexit("error :", "pipe initialization", NULL, sh);
+	}
+	sh->cmdcount = cmdcount;
+}
+
 static t_cmdn	*create_node(t_cmdn *current, t_shell *sh, int index)
 {
 	int	len;
@@ -73,6 +99,7 @@ static t_cmdn	*create_node(t_cmdn *current, t_shell *sh, int index)
 	// dprintf(2, "Split to [0]: %s\n", sh->cmd[0]);
 	trim_quote_alloc_hdoc_rdir(sh);
 	get_heredocs(sh);
+	create_pipes(sh);
 	get_redirects(sh);
 	if (index < len - 2)
 	{
@@ -85,23 +112,6 @@ static t_cmdn	*create_node(t_cmdn *current, t_shell *sh, int index)
 	else
 		current->right = init_cmd_node(COMMAND, sh, TRUE);
 	return (current);
-}
-
-// Right now this creates both pipes if there are more than one command.
-// How pipes should work is create only pfd for multiple, efd for single builtin.
-void	create_pipes(t_shell *sh)
-{
-	int cmdcount;
-
-	cmdcount = 1;
-	while (sh->cmdarr[cmdcount] != NULL)
-		cmdcount++;
-	if (cmdcount > 1)
-	{
-		if (pipe(sh->pfd) == -1 || pipe(sh->efd) == -1) //  || pipe(sh.sfd) == -1)
-			errexit("error :", "pipe initialization", NULL, sh);
-	}
-	sh->cmdcount = cmdcount;
 }
 
 // Creates root node, splits the input along pipes and
@@ -118,7 +128,6 @@ void	parse_input(t_shell *sh)
 	// dprintf(2, "Exited with sh->cmdarr[0]: %s", sh->cmdarr[0]);
 	if (!(sh->cmdarr))
 		errexit("error: ", "cmdarr malloc", NULL, sh);
-	create_pipes(sh);
 	free(sh->input);
 	sh->input = NULL;
 	current = sh->root;

@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 11:06:04 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/15 13:14:53 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/20 13:16:26 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,8 @@ void	close_all_pipes(t_shell *sh)
 {
 	close(sh->pfd[0]);
 	close(sh->pfd[1]);
-	close(sh->efd[0]);
-	close(sh->efd[1]);
+	//close(sh->efd[0]);
+	//close(sh->efd[1]);
 }
 
 void	free_child(t_shell *sh)

@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/20 08:03:49 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/20 12:50:36 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,9 +68,10 @@ typedef struct s_shell
 	char	**cmdarr; // Array of commands, for easy freeing
 	int		pfd[2]; // Pipe file descriptors
 	int		efd[2]; // Pipe for env export returns
-	int		sfd[2]; // Pipe for status code returns
+	// int		sfd[2]; // Pipe for status code returns
 	char	**cmd; // Most recent expanded cmdarr member
 	int		*hdocs;	// Heredoc array for above most recent cmd
+	t_bool	hdoc;
 	int		*redirs; // Redirect array for all redirects of most recent cmd
 	int 	status; // Exit code of the most recent pipe, implement!
 	int		cmdcount;

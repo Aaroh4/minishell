@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/20 09:01:55 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/20 13:16:17 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,7 +139,7 @@ static void	exec_cmd(t_cmdn *node, t_shell *sh, char *cwd)
 
 	sh->status = open_redirects(node, sh);
 	handle_heredocs(node, sh);
-	if (sh->cmdcount > 1)
+	if (sh->cmdcount > 1 || )
 		close(sh->pfd[1]);
 	path_array = NULL;
 	cmdp = NULL;
@@ -155,8 +155,8 @@ static void	exec_cmd(t_cmdn *node, t_shell *sh, char *cwd)
 	if (sh->cmdcount > 1)
 	{
 		close(sh->pfd[0]);
-		close(sh->efd[0]);
-		close(sh->efd[1]);
+		//close(sh->efd[0]);
+		//close(sh->efd[1]);
 	}
 	// free_child(sh);
 	// wait_for_leaks();
