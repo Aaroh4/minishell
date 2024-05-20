@@ -6,14 +6,12 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/15 12:42:40 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/20 18:33:14 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// Path is checked every time from ms_envp since it could have been changed
-// in previous pipe.
 int	*ft_remove_hdocs(int i, t_cmdn *node)
 {
 	int	j;
@@ -39,7 +37,7 @@ int	*ft_remove_hdocs(int i, t_cmdn *node)
 	return (temp);
 }
 
-char	**ft_remove_array(char **str, int i, t_cmdn *node)
+static char	**remove_from_array(char **str, int i, t_cmdn *node)
 {
 	char	**temp;
 	int		j;
@@ -85,7 +83,7 @@ static void	handle_heredocs(t_cmdn *node, t_shell *sh)
 	{
 		if (node->hdocs[i] > 0)
 		{
-			node->cargs = ft_remove_array(node->cargs, i, node);
+			node->cargs = remove_from_array(node->cargs, i, node);
 			i = 0;
 		}
 		else
@@ -112,31 +110,62 @@ static int	exec_builtin(t_cmdn *node, t_shell *sh, char *cwd)
 	return (0);
 }
 
+static char *get_msenv(char *name, t_shell *sh)
+{
+	int	i;
+
+	i = 0;
+	while (sh->ms_envp[i] != NULL)
+	{
+		if (!ft_strncmp(sh->ms_envp[i], name, ft_strlen(name)))
+			return (&sh->ms_envp[i][5]);
+		i++;
+	}
+	return (NULL);
+}
+int	check_hdocs(t_cmdn *node)
+{
+	int	i;
+
+	i = 0;
+	while (node->hdocs[i] != -1)
+	{
+		if (node->hdocs[i] > 0)
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
 static void	exec_cmd(t_cmdn *node, t_shell *sh, char *cwd)
 {
 	char	**path_array;
 	char	*cmdp;
 
 	sh->status = open_redirects(node, sh);
+	if (check_hdocs(node))
+	{
+		if (dup2(sh->pfd[0], STDIN_FILENO) == -1)
+			write(1, "hell1\n", 6); // PROPER ERROR CHECK HERE
+	}
+	//if (sh->cmdcount > 1 || sh->hdoc == TRUE)
+	close(sh->pfd[0]);
 	handle_heredocs(node, sh);
 	close(sh->pfd[1]);
-	if (!exec_builtin(node, sh, cwd))
+	//if (sh->cmdcount > 1 || sh->hdoc == TRUE)
+	path_array = NULL;
+	cmdp = NULL;
+	if (!(exec_builtin(node, sh, cwd)))
 	{
-		path_array = ft_split(getenv("PATH"), ":");
-		cmdp = get_exec_path(path_array, node->cargs[0]);
-		free(path_array);
-		if ((node->cargs[0] && !ft_strncmp(node->cargs[0], "bash", 4)))
-			sh->ms_envp[20] = "SHLVL=2";
+		path_array = ft_split(get_msenv("PATH", sh), ":");
+		cmdp = get_exec_path(path_array, node->cargs[0], sh);
+		free_args(path_array);
 		if (!node->cargs[0] || !*node->cargs || !cmdp || execve(cmdp,
-			node->cargs, sh->ms_envp) == -1)
-		{
-			perror("Execve says ");
-			//errexitcode(node->cargs[0], ": command not found", 127, sh);
-		}
+				node->cargs, sh->ms_envp) == -1)
+			errexitcode(node->cargs[0], ": command not found", 127, sh);
 	}
-	close(sh->efd[1]);
-	if (node->last)
-		sh->status = 0;
+	// free_child(sh);
+	// wait_for_leaks();
 	exit(EXIT_SUCCESS);
 }
 
@@ -208,51 +237,57 @@ void	modify_env(t_shell *sh, int a, char *cwd)
 	close(sh->efd[0]);
 }
 
-// If node->right type command it's last so rockit
-// Might not work with bonuses though
 static int	exec_node(t_cmdn *node, t_shell *sh, t_intvec *commands)
 {
 	int		pid;
 	char	buffer[1024];
 	char	*cwd;
-	char	**temp;
+	// char	**temp;
 
-	temp = NULL;
+	// temp = NULL;
 	cwd = getcwd(buffer, sizeof(buffer));
 	if (cwd == NULL)
 		errexit("error:", "getcwd", NULL, sh);
 	if (node == NULL)
 		return (0);
-	exec_node(node->left, sh, commands);
+	pid = 0;
+	cwd = NULL;
+	if (node->left!= NULL)
+		exec_node(node->left, sh, commands);
 	if (node->ntype == COMMAND)
 	{
+		cwd = getcwd(buffer, sizeof(buffer));
+		if (cwd == NULL)
+			errexit("error:", "getcwd", NULL, sh);
 		populate_env_vars(node, sh);
 		pid = fork();
 		if (pid == -1)
 		{
 			sh->status = wait_for(commands);
-			//free_intvec(commands);
+			free_intvec(commands);
 			errexit("Error:", "fork failure", NULL, sh);
 		}
 		else if (pid == 0)
+		{
+			free_intvec(commands);
 			exec_cmd(node, sh, cwd);
+		}
 		else
 		{
-			waitpid(-1, 0, 0);
-			// if read(sh->efd[0] > 0)
-			// write new line to sh->ms_envp
 			if (!ft_strncmp("export", node->cargs[0], ft_strlen(node->cargs[0])))
 				modify_env(sh, 0, cwd);
 			else if (!ft_strncmp("unset", node->cargs[0], ft_strlen(node->cargs[0])))
-					sh->ms_envp = remove_array(sh, sh->ms_envp);
+				sh->ms_envp = remove_array(sh, sh->ms_envp);
 			else if (!ft_strncmp("cd", node->cargs[0], ft_strlen(node->cargs[0])))
-					modify_env(sh, 1, cwd);
+				modify_env(sh, 1, cwd);
 			else if (!ft_strncmp("exit", node->cargs[0], ft_strlen(node->cargs[0])))
-					exit_in_main(node, sh);
-			add_to_intvec(commands, pid);
+				exit_in_main(node, sh);
+			if (commands != NULL)
+				add_to_intvec(commands, pid, sh);
 		}
 	}
-	exec_node(node->right, sh, commands);
+	if (node->right != NULL)
+		exec_node(node->right, sh, commands);
 	return (0);
 }
 
@@ -262,7 +297,7 @@ int	run_cmds(t_shell *sh)
 
 	if (sh->root == NULL)
 		return (1);
-	commands = create_intvec();
+	commands = create_intvec(sh);
 	exec_node(sh->root, sh, commands);
 	close(sh->pfd[0]);
 	close(sh->pfd[1]);

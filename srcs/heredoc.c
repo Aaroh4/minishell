@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 12:09:30 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/16 09:56:34 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/19 22:40:56 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ char	*make_breakchar(char *breakchar, int *i, int *j, int hdocs)
 void	ft_handler_heredoc(int signum)
 {
 	signum = 1;
+	while (signum)
+		signum--;
 	write(1, "\n> ", 3);
 }
 

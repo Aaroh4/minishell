@@ -3,18 +3,18 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+         #
+#    By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/19 12:03:42 by ahamalai          #+#    #+#              #
-#    Updated: 2024/05/09 16:59:32 by mburakow         ###   ########.fr        #
+#    Updated: 2024/05/14 08:11:54 by mburakow         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME 			=	libft.a
 CC 				=	cc 
-CFLAGS 			=	-Wall -Wextra -Werror -I
+CFLAGS 			=	-Wall -Wextra -Werror -g -O0 -I
 DEBUG_FLAGS 	=	-g -O0
-# -fsanitize=address
+# -O0 -fsanitize=address
 SRCS 			=   ft_isalpha.c ft_isdigit.c ft_isalnum.c ft_isascii.c \
 	        		ft_isprint.c ft_strlen.c ft_memset.c ft_bzero.c \
 	            	ft_memcpy.c ft_memmove.c ft_strlcpy.c ft_strlcat.c \
