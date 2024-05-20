@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/20 08:08:16 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/20 12:22:49 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ static t_cmdn	*create_node(t_cmdn *current, t_shell *sh, int index)
 	len = 0;
 	while (sh->cmdarr[len] != NULL)
 		len++;
-	// sh->cmdarr[index] = trim_rdirspace(sh->cmdarr[index]);
+	sh->cmdarr[index] = trim_rdirspace(sh->cmdarr[index]);
 	// dprintf(2, "Splitting 2: %s\n", sh->cmdarr[index]);
 	sh->cmd = ft_split_time_space(sh->cmdarr[index], ' ');
 	if (!(sh->cmd))
