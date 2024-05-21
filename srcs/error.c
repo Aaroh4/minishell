@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 17:27:19 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/15 12:57:17 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/21 13:19:50 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 void	errexit(char *msg1, char *msg2, char *msg3, t_shell *sh)
 {
+	disable_raw_mode(sh->oterm);
 	ft_putstr_fd("minishell: ", 2);
 	ft_putstr_fd(msg1, 2);
 	ft_putstr_fd(msg2, 2);
@@ -38,6 +39,7 @@ void	errexit(char *msg1, char *msg2, char *msg3, t_shell *sh)
 
 void	errexitcode(char *msg1, char *msg2, int status, t_shell *sh)
 {
+	disable_raw_mode(sh->oterm);
 	ft_putstr_fd("minishell: ", 2);
 	ft_putstr_fd(msg1, 2);
 	ft_putendl_fd(msg2, 2);

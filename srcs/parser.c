@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/16 13:27:34 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/21 12:33:32 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ void	create_pipes(t_shell *sh)
 		cmdcount++;
 	if (cmdcount > 1)
 	{
-		if (pipe(sh->pfd) == -1 || pipe(sh->efd) == -1) //  || pipe(sh.sfd) == -1)
+		if (pipe(sh->pfd) == -1 ) //|| pipe(sh->efd) == -1) //  || pipe(sh.sfd) == -1)
 			errexit("error :", "pipe initialization", NULL, sh);
 	}
 	sh->cmdcount = cmdcount;
@@ -115,7 +115,7 @@ void	parse_input(t_shell *sh)
 	if (!(sh->root))
 		errexit("error: ", "root malloc", NULL, sh);
 	sh->cmdarr = ft_split(sh->input, "|");
-	if	(!(sh->cmdarr))
+	if (!(sh->cmdarr))
 		errexit("error: ", "cmdarr malloc", NULL, sh);
 	create_pipes(sh);
 	free(sh->input);

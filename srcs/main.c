@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:43 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/15 13:00:14 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/20 15:18:33 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,12 @@ int	main(int argc, char **argv, char **envp)
 
 	init_shell_struct(&sh);
 	if (tcgetattr(STDIN_FILENO, &oterm) == -1)
-		perror("tcgetattr");
+	{
+		dprintf(2, "tcsetattr() failed:\n");
+		return (1);
+		// perror("tcgetattr");
+	}
+	sh.oterm = oterm;
 	signal(SIGQUIT, SIG_IGN);
 	rl_clear_history();
 	sh.ms_envp = copy_envp(envp, &sh);
@@ -91,6 +96,13 @@ int	main(int argc, char **argv, char **envp)
 			write(1, "exit\n", 5);
 			exit (0);
 		}
+		/*
+		if (!ft_strncmp("", sh.input, ft_strlen(sh.input)))
+		{
+			dprintf(2, "Inside if\n");
+			sh.input[0] = '\0';
+		}
+		*/
 		add_history(sh.input);
 		parse_input(&sh);
 		run_cmds(&sh);

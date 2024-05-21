@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 16:07:48 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/15 18:01:22 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/20 15:11:09 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,26 @@
 	return (malloc(size));
  }
 
-// This needs work! ~ should go to home, / should go to root
+static char	*get_exec_path_env(char **path, char *cmd)
+{
+	char	*slashpath;
+	char	*execpath;
+
+	while (*path)
+	{
+		slashpath = ft_strjoin(*path, "/");
+		execpath = ft_strjoin(slashpath, cmd);
+		free(slashpath);
+		slashpath = NULL;
+		if (access(execpath, X_OK) != -1)
+			return (execpath);
+		free(execpath);
+		execpath = NULL;
+		path++;
+	}
+	return (NULL);
+}
+
 char	*get_exec_path(char **path, char *cmd, t_shell *sh)
 {
 	char	*slashpath;
@@ -25,32 +44,26 @@ char	*get_exec_path(char **path, char *cmd, t_shell *sh)
 
 	execpath = NULL;
 	slashpath = NULL;
+	if (!cmd || cmd[0] == '\0')
+		return (NULL);
 	if (cmd[0] == '.' || cmd[0] == '/')
 	{
 		if (access(cmd, X_OK) != -1)
 			return (cmd);
+		else
+			return (NULL);
 	}
 	else if (cmd[0] == '~')
 	{
 		slashpath = get_env_val_by_name("HOME", sh);
 		execpath = ft_strjoin(slashpath, &cmd[1]);
+		free(slashpath);
+		slashpath = NULL;
 		return (execpath);
 	}
 	else
-	{
-
-		while (*path)
-		{
-			slashpath = ft_strjoin(*path, "/");
-			execpath = ft_strjoin(slashpath, cmd);
-			free(slashpath);
-			slashpath = NULL;
-			if (access(execpath, X_OK) != -1)
-				return (execpath);
-			path++;
-		}
-	}		
-	return (NULL);
+		return (get_exec_path_env(path, cmd));
+	return(NULL);
 }
 
 int	wait_for(t_intvec *commands)
@@ -95,6 +108,35 @@ void	print_cmdn(t_cmdn *node)
 
 char	**ft_remove_quotes(char **cmd)
 {
+	char	**cmdi;
+	char	*cur;
+	int		i;
+
+	cmdi = cmd;
+	while (*cmdi != NULL)
+	{
+		cur = *cmdi;
+		// dprintf(2, "cur is: %s\n", cur);
+		while (*cur != '\0')
+		{
+			if (*cur == '\"')
+			{
+				i = 0;
+				while (cur[i + 1] != '\0')
+				{
+					cur[i] = cur[i + 1];
+					i++;
+				}
+				cur[i] = '\0';
+			}
+			cur++;
+		}
+		cmdi++;
+	}
+	return (cmd);
+}
+
+/*
 	int	i;
 	int	j;
 
@@ -116,9 +158,11 @@ char	**ft_remove_quotes(char **cmd)
 			else
 				j++;
 		}
+		cmd[i][j] = '\0';
 	}
 	return (cmd);
 }
+*/
 
 // At the moment accounts only for space characters,
 //	are other characters necessary?
@@ -129,6 +173,8 @@ char	*trim_string(char *str)
 	char 	*curs;
 
 	i = 0;
+	if (!str || str[0] == '\0' || str[0] == 0)
+		return (str);
 	while ((unsigned char)str[i] == 32)
 		i++;
 	curs = &str[i];
@@ -148,4 +194,13 @@ char	*trim_string(char *str)
 		end--;
 	end[1] = '\0';
 	return (str);
+}
+
+void	print_array(char **arr)
+{
+	int i;
+	i = 0;
+	while (arr[i])
+		dprintf(2, "%s\n", arr[i++]);
+
 }

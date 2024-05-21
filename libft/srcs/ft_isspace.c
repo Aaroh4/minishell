@@ -1,25 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   ft_isspace.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/30 16:03:07 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/20 07:12:50 by mburakow         ###   ########.fr       */
+/*   Created: 2024/05/20 15:19:06 by mburakow          #+#    #+#             */
+/*   Updated: 2024/05/20 15:23:45 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-
-int	ft_strlen(const char *str)
+int	ft_isspace(int i)
 {
-	int	i;
-
-	if (str == NULL)
-		return (0);
-	i = 0;
-	while (str[i] != '\0')
-		i++;
-	return (i);
+	if (i == ' ' || i == '\n' || i == '\r'
+		|| i == '\v' || i == '\f' || i == '\t')
+		return (1);
+	return (0); 
 }

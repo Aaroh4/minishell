@@ -26,7 +26,7 @@ SRCS 			=   ft_isalpha.c ft_isdigit.c ft_isalnum.c ft_isascii.c \
 	            	ft_split.c ft_striteri.c ft_strmapi.c get_next_line.c \
 	            	get_next_line_utils.c ft_printf.c ft_printhex.c \
 	            	ft_split_time_space_utils.c ft_split_time_space.c \
-	            	ft_strcpos.c
+	            	ft_strcpos.c ft_isspace.c
 SRC_DIR			= 	./srcs
 OBJ_DIR			=	./objs
 INCLUDE			=  	./incs
