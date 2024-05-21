@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/21 13:05:20 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/21 13:45:25 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,42 +199,45 @@ void	modify_env(t_shell *sh, int a, char *cwd)
 
 	i = 0;
 	close(sh->efd[1]);
-	str = get_next_line(sh->efd[0]);
-	if (str == NULL)
-		return ;
-	while (str != NULL)
+	if (sh->cmdcount == 1)
 	{
-		if (a == 1)
-		{
-			if (chdir(str) == -1)
-			{
-				printf("cd: %s: No such file or directory\n", str);
-				return ;
-			}
-			str = ft_strjoin("PWD=", str);
-			modify_env(sh, 2, cwd);
-		}
-		if (a == 2)
-			str = ft_strjoin("OLDPWD", cwd);
-		if (str == 0)
-			return ;
-		while (sh->ms_envp[i] != 0)
-		{
-			j = 0;
-			while (sh->ms_envp[i][j] == str[j] && sh->ms_envp[i][j] != '=')
-				j++;
-			if (str[j] == '=')
-				break ;
-			i++;
-		}
-		if (str[j] == '=')
-			sh->ms_envp[i] = ft_subbstr(str, 0, ft_strlen(str) - 1);
-		else
-			sh->ms_envp = make_temp(sh, str);
-		free(str);
 		str = get_next_line(sh->efd[0]);
+		if (str == NULL)
+			return ;
+		while (str != NULL)
+		{
+			if (a == 1)
+			{
+				if (chdir(str) == -1)
+				{
+					printf("cd: %s: No such file or directory\n", str);
+					return ;
+				}
+				str = ft_strjoin("PWD=", str);
+				modify_env(sh, 2, cwd);
+			}
+			if (a == 2)
+				str = ft_strjoin("OLDPWD", cwd);
+			if (str == 0)
+				return ;
+			while (sh->ms_envp[i] != 0)
+			{
+				j = 0;
+				while (sh->ms_envp[i][j] == str[j] && sh->ms_envp[i][j] != '=')
+					j++;
+				if (str[j] == '=')
+					break ;
+				i++;
+			}
+			if (str[j] == '=')
+				sh->ms_envp[i] = ft_subbstr(str, 0, ft_strlen(str) - 1);
+			else
+				sh->ms_envp = make_temp(sh, str);
+			free(str);
+			str = get_next_line(sh->efd[0]);
+		}
+		free(str);
 	}
-	free(str);
 	close(sh->efd[0]);
 }
 
@@ -301,9 +304,13 @@ int	run_cmds(t_shell *sh)
 	if (sh->root == NULL)
 		return (1);
 	commands = create_intvec(sh);
+	if (pipe(sh->efd) == -1 )
+			errexit("error :", "pipe initialization", NULL, sh);
 	exec_node(sh->root, sh, commands);
 	close (sh->pfd[0]);
 	close (sh->pfd[1]);
+	close (sh->efd[0]);
+	close (sh->efd[1]);
 	sh->status = wait_for(commands);
 	free_intvec(commands);
 	return (0);
