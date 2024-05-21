@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/20 17:26:17 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/21 13:05:45 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,10 +68,10 @@ typedef struct s_shell
 	char	**cmdarr; // Array of commands, for easy freeing
 	int		pfd[2]; // Pipe file descriptors
 	int		efd[2]; // Pipe for env export returns
+	int		hfd[2];
 	// int		sfd[2]; // Pipe for status code returns
 	char	**cmd; // Most recent expanded cmdarr member
 	int		*hdocs;	// Heredoc array for above most recent cmd
-	t_bool	hdoc;
 	int		*redirs; // Redirect array for all redirects of most recent cmd
 	int 	status; // Exit code of the most recent pipe, implement!
 	int		cmdcount;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/20 18:33:14 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/21 13:05:20 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ static void	handle_heredocs(t_cmdn *node, t_shell *sh)
 	if (node->hdocs[i] > 0)
 	{
 		node->cargs[i] = replace_envp(node->cargs[i], sh);
-		ft_putstr_fd(node->cargs[i], sh->pfd[1]);
+		ft_putstr_fd(node->cargs[i], sh->hfd[1]);
 	}
 	i = 0;
 	while (node->cargs[i] != 0)
@@ -145,15 +145,15 @@ static void	exec_cmd(t_cmdn *node, t_shell *sh, char *cwd)
 
 	sh->status = open_redirects(node, sh);
 	if (check_hdocs(node))
-	{
-		if (dup2(sh->pfd[0], STDIN_FILENO) == -1)
+		if (dup2(sh->hfd[0], STDIN_FILENO) == -1)
 			write(1, "hell1\n", 6); // PROPER ERROR CHECK HERE
-	}
-	//if (sh->cmdcount > 1 || sh->hdoc == TRUE)
-	close(sh->pfd[0]);
+	close (sh->hfd[0]);
+	if (sh->cmdcount > 1)
+		close(sh->pfd[0]);
 	handle_heredocs(node, sh);
-	close(sh->pfd[1]);
-	//if (sh->cmdcount > 1 || sh->hdoc == TRUE)
+	close (sh->hfd[1]);
+	if (sh->cmdcount > 1)
+		close(sh->pfd[1]);
 	path_array = NULL;
 	cmdp = NULL;
 	if (!(exec_builtin(node, sh, cwd)))
@@ -268,6 +268,8 @@ static int	exec_node(t_cmdn *node, t_shell *sh, t_intvec *commands)
 		}
 		else if (pid == 0)
 		{
+			if (pipe(sh->hfd) == -1 )
+				errexit("error :", "pipe initialization", NULL, sh);
 			free_intvec(commands);
 			exec_cmd(node, sh, cwd);
 		}
@@ -300,6 +302,8 @@ int	run_cmds(t_shell *sh)
 		return (1);
 	commands = create_intvec(sh);
 	exec_node(sh->root, sh, commands);
+	close (sh->pfd[0]);
+	close (sh->pfd[1]);
 	sh->status = wait_for(commands);
 	free_intvec(commands);
 	return (0);

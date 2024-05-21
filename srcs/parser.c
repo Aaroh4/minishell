@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/20 20:56:49 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/21 12:33:32 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ void	create_pipes(t_shell *sh)
 		cmdcount++;
 	if (cmdcount > 1)
 	{
-		if (pipe(sh->pfd) == -1 || pipe(sh->efd) == -1) //  || pipe(sh.sfd) == -1)
+		if (pipe(sh->pfd) == -1 ) //|| pipe(sh->efd) == -1) //  || pipe(sh.sfd) == -1)
 			errexit("error :", "pipe initialization", NULL, sh);
 	}
 	sh->cmdcount = cmdcount;
