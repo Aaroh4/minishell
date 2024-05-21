@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 11:06:04 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/21 13:20:10 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/21 16:24:11 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,8 @@ void	close_all_pipes(t_shell *sh)
 {
 	close(sh->pfd[0]);
 	close(sh->pfd[1]);
-	//close(sh->efd[0]);
-	//close(sh->efd[1]);
+	close(sh->efd[0]);
+	close(sh->efd[1]);
 }
 
 void	free_child(t_shell *sh)

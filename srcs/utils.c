@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 16:07:48 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/20 15:11:09 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/21 15:39:51 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,34 +135,6 @@ char	**ft_remove_quotes(char **cmd)
 	}
 	return (cmd);
 }
-
-/*
-	int	i;
-	int	j;
-
-	i = -1;
-	while (cmd[++i] != NULL)
-	{
-		j = 0;
-		while (cmd[i][j] != '\0')
-		{
-			if (cmd[i][j] == '\"')
-			{
-				while (cmd[i][j] != '\0')
-				{
-					cmd[i][j] = cmd[i][j + 1];
-					j++;
-				}
-				j = 0;
-			}
-			else
-				j++;
-		}
-		cmd[i][j] = '\0';
-	}
-	return (cmd);
-}
-*/
 
 // At the moment accounts only for space characters,
 //	are other characters necessary?

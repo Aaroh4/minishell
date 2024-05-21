@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:15:11 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/21 14:46:07 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/21 15:08:28 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int	cd_builtin(t_cmdn *node, t_shell *sh, char	*cwd)
 	if (node->cargs[1] == NULL)
 	{
 		if (home == NULL)
-			write(1, "cd: HOME not set\n", 17);
+			errexit("cd: ", "HOME not set", NULL, sh);
 		else
 			ft_putstr_fd(home, sh->efd[1]);
 		return (1);
@@ -284,7 +284,6 @@ int	unset_builtin(t_cmdn *node, t_shell *sh)
 				j++;
 			if (node->cargs[k][j] == '\0' && sh->ms_envp[i][j] == '=')
 			{
-			//	printf("%s\n", node->cargs[k]);
 				temp = sh->ms_envp[i];
 				ft_putstr_fd(temp, sh->efd[1]);
 				ft_putstr_fd("\n", sh->efd[1]);
@@ -293,7 +292,5 @@ int	unset_builtin(t_cmdn *node, t_shell *sh)
 			i++;
 		}
 	}
-	//if (j == 0)
-	//	ft_putstr_fd("-1", sh->efd[1]);
 	return (1);
 }

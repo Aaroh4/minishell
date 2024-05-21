@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/21 14:43:33 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/21 18:05:09 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,10 +148,12 @@ static void	exec_cmd(t_cmdn *node, t_shell *sh, char *cwd)
 		if (dup2(sh->hfd[0], STDIN_FILENO) == -1)
 			errexit("error :", "dup2 failed", NULL, sh);
 	close (sh->hfd[0]);
+	close (sh->efd[0]);
 	if (sh->cmdcount > 1)
 		close(sh->pfd[0]);
 	handle_heredocs(node, sh);
 	close (sh->hfd[1]);
+	close (sh->efd[1]);
 	if (sh->cmdcount > 1)
 		close(sh->pfd[1]);
 	path_array = NULL;

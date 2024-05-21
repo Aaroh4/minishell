@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/21 12:33:32 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/21 18:03:23 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,8 @@ static void	get_heredocs(t_shell *sh)
 
 static t_cmdn	*create_node(t_cmdn *current, t_shell *sh, int index)
 {
-	int	len;
+	int		len;
+	t_bool	first;
 
 	len = 0;
 	while (sh->cmdarr[len] != NULL)
@@ -72,21 +73,26 @@ static t_cmdn	*create_node(t_cmdn *current, t_shell *sh, int index)
 	trim_quote_alloc_hdoc_rdir(sh);
 	get_heredocs(sh);
 	get_redirects(sh);
+	first = FALSE;
+	if (index == 0)
+		first = TRUE;
 	if (index < len - 2)
 	{
-		current->left = init_cmd_node(COMMAND, sh, FALSE);
-		current->right = init_cmd_node(PIPELINE, sh, FALSE);
+		current->left = init_cmd_node(COMMAND, sh, FALSE, first);
+		current->right = init_cmd_node(PIPELINE, sh, FALSE, first);
 		current = current->right;
 	}
 	else if (index == len - 2)
-		current->left = init_cmd_node(COMMAND, sh, FALSE);
+		current->left = init_cmd_node(COMMAND, sh, FALSE, first);
 	else
-		current->right = init_cmd_node(COMMAND, sh, TRUE);
+		current->right = init_cmd_node(COMMAND, sh, TRUE, first);
 	return (current);
 }
 
 // Right now this creates both pipes if there are more than one command.
 // How pipes should work is create only pfd for multiple, efd for single builtin.
+// Strategy: Back up fds(ints) from previous cmd, call pipe again
+
 void	create_pipes(t_shell *sh)
 {
 	int cmdcount;
@@ -109,7 +115,7 @@ void	parse_input(t_shell *sh)
 	t_cmdn	*current;
 	int		i;
 
-	sh->root = init_cmd_node(PIPELINE, sh, FALSE);
+	sh->root = init_cmd_node(PIPELINE, sh, FALSE, FALSE);
 	if (!(sh->root))
 		errexit("error: ", "root malloc", NULL, sh);
 	sh->cmdarr = ft_split(sh->input, "|");

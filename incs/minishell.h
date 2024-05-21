@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/21 13:05:45 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/21 17:35:50 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ typedef struct s_cmdn
 	int				*hdocs;
 	int				*redirs;
 	t_bool			last;
+	t_bool			first;
 }	t_cmdn;	
 
 typedef struct s_intvec
@@ -66,9 +67,9 @@ typedef struct s_shell
 	char	*input;	// User input line
 	t_cmdn	*root; // Root node of command tree, for freeing
 	char	**cmdarr; // Array of commands, for easy freeing
-	int		pfd[2]; // Pipe file descriptors
+	int		pfd[2]; // Pipe for the external pipes
 	int		efd[2]; // Pipe for env export returns
-	int		hfd[2];
+	int		hfd[2]; // Pipe for the heredocs
 	// int		sfd[2]; // Pipe for status code returns
 	char	**cmd; // Most recent expanded cmdarr member
 	int		*hdocs;	// Heredoc array for above most recent cmd
@@ -123,7 +124,7 @@ void		errexit(char *msg1, char *msg2, char *msg3, t_shell *sh);
 void		errexitcode(char *msg1, char *msg2, int status, t_shell *sh);
 // Initialization
 void		init_shell_struct(t_shell *sh);
-t_cmdn		*init_cmd_node(t_ntype type, t_shell *sh, t_bool last);
+t_cmdn		*init_cmd_node(t_ntype type, t_shell *sh, t_bool last, t_bool first);
 // Freeing
 void 		free(void* p);
 void		free_args(char **args);

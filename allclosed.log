@@ -1,0 +1,13 @@
+COMMAND   PID     USER   FD   TYPE             DEVICE SIZE/OFF     NODE NAME
+cat     24189 mburakow  cwd    DIR               1,11      612  2064806 /Users/mburakow/Hive_home/minishell
+cat     24189 mburakow  txt    REG                1,7    23648   703283 /bin/cat
+cat     24189 mburakow  txt    REG                1,7   973872 11585785 /usr/lib/dyld
+cat     24189 mburakow    0   PIPE 0x655c9f622edf7bfb    16384          ->0x655c9f622edf597b
+cat     24189 mburakow    1   PIPE 0x655c9f622edf597b    16384          ->0x655c9f622edf7bfb
+cat     24189 mburakow    2u   CHR               16,1  0t73514      715 /dev/ttys001
+cat     24190 mburakow  cwd    DIR               1,11      612  2064806 /Users/mburakow/Hive_home/minishell
+cat     24190 mburakow  txt    REG                1,7    23648   703283 /bin/cat
+cat     24190 mburakow  txt    REG                1,7   973872 11585785 /usr/lib/dyld
+cat     24190 mburakow    0   PIPE 0x655c9f622edf7bfb    16384          ->0x655c9f622edf597b
+cat     24190 mburakow    1   PIPE 0x655c9f622edf597b    16384          ->0x655c9f622edf7bfb
+cat     24190 mburakow    2u   CHR               16,1  0t73514      715 /dev/ttys001
