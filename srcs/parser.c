@@ -26,10 +26,8 @@ static void	trim_quote_alloc_hdoc_rdir(t_shell *sh)
 	sh->cmd = ft_remove_quotes(sh->cmd);
 	sh->hdocs = ft_calloc((i + 1), sizeof(int));
 	sh->redirs = ft_calloc((i + 1), sizeof(int));
-	if (sh->hdocs == NULL)
-		errexit("hdocs malloc error", NULL, NULL, sh);
-	if (sh->redirs  == NULL)
-		errexit("redirs malloc error", NULL, NULL, sh);
+	if (sh->hdocs == NULL || sh->redirs  == NULL)
+		errexit("hdocs or redirs malloc error", NULL, NULL, sh);
 	sh->hdocs[i] = -1;
 	sh->redirs[i] = -1;
 }

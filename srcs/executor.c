@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/21 13:45:25 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/21 14:43:33 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,7 +146,7 @@ static void	exec_cmd(t_cmdn *node, t_shell *sh, char *cwd)
 	sh->status = open_redirects(node, sh);
 	if (check_hdocs(node))
 		if (dup2(sh->hfd[0], STDIN_FILENO) == -1)
-			write(1, "hell1\n", 6); // PROPER ERROR CHECK HERE
+			errexit("error :", "dup2 failed", NULL, sh);
 	close (sh->hfd[0]);
 	if (sh->cmdcount > 1)
 		close(sh->pfd[0]);
@@ -254,7 +254,7 @@ static int	exec_node(t_cmdn *node, t_shell *sh, t_intvec *commands)
 		return (0);
 	pid = 0;
 	cwd = NULL;
-	if (node->left!= NULL)
+	if (node->left != NULL)
 		exec_node(node->left, sh, commands);
 	if (node->ntype == COMMAND)
 	{
@@ -304,8 +304,8 @@ int	run_cmds(t_shell *sh)
 	if (sh->root == NULL)
 		return (1);
 	commands = create_intvec(sh);
-	if (pipe(sh->efd) == -1 )
-			errexit("error :", "pipe initialization", NULL, sh);
+	if (pipe(sh->efd) == -1)
+		errexit("error :", "pipe initialization", NULL, sh);
 	exec_node(sh->root, sh, commands);
 	close (sh->pfd[0]);
 	close (sh->pfd[1]);
