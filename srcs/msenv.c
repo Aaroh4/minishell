@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 16:54:02 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/15 13:08:39 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/21 21:07:48 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ char	**copy_env_vals(int len, char **envp, char **ms_envp, t_shell *sh)
 		ms_envp[i] = (char *)malloc((slen + 1) * sizeof(char));
 		if (ms_envp[i] == NULL)
 			errexit("minishell: ", "envp malloc 2 error", NULL, sh);
-		ft_memcpy(ms_envp[i], envp[i], slen * sizeof(char));
+		ft_memcpy(ms_envp[i], envp[i], (slen + 1) * sizeof(char));
 		ms_envp[i][slen] = '\0';
 		i++;
 	}

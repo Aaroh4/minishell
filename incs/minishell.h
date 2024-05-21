@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/21 17:35:50 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/21 21:48:28 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,7 @@ int			export_builtin(t_cmdn *node, t_shell *sh);
 int			unset_builtin(t_cmdn *node, t_shell *sh);
 char		**remove_array(t_shell *sh, char **temp_ms);
 // Environment variables:
+void		increase_shell_level(t_shell *sh);
 char 		*replace_envp(char* input, t_shell *sh);
 char		**copy_envp(char **envp, t_shell *sh);
 char		*move_ucase(char *start);
