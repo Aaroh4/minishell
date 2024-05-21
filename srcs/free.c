@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 11:06:04 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/20 15:08:16 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/21 13:20:10 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	free_cmdn(t_cmdn *node)
 void	free_new_prompt(t_shell *sh)
 {
 	free_cmdn(sh->root);
-	if (sh->cmdcount > 1 || sh->hdoc)
+	if (sh->cmdcount > 1)
 		close_all_pipes(sh);
 	free_args(sh->cmdarr);
 	free_args(sh->cmd);
@@ -78,7 +78,7 @@ void	free_child(t_shell *sh)
 	free_cmdn(sh->root);
 	free_args(sh->cmdarr);
 	free_args(sh->ms_envp);
-	if (sh->cmdcount > 1 || sh->hdoc)
+	if (sh->cmdcount > 1)
 		close_all_pipes(sh);
 	free_args(sh->cmd);
 	free(sh->hdocs);
