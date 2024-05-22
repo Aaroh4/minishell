@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/20 17:26:17 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/22 12:09:47 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ typedef struct s_cmdn
 	int				*hdocs;
 	int				*redirs;
 	t_bool			last;
+	t_bool			first;
 }	t_cmdn;	
 
 typedef struct s_intvec
@@ -66,12 +67,12 @@ typedef struct s_shell
 	char	*input;	// User input line
 	t_cmdn	*root; // Root node of command tree, for freeing
 	char	**cmdarr; // Array of commands, for easy freeing
-	int		pfd[2]; // Pipe file descriptors
+	int		pfd[2][2]; // Pipes for the external pipes
 	int		efd[2]; // Pipe for env export returns
+	int		hfd[2]; // Pipe for the heredocs
 	// int		sfd[2]; // Pipe for status code returns
 	char	**cmd; // Most recent expanded cmdarr member
 	int		*hdocs;	// Heredoc array for above most recent cmd
-	t_bool	hdoc;
 	int		*redirs; // Redirect array for all redirects of most recent cmd
 	int 	status; // Exit code of the most recent pipe, implement!
 	int		cmdcount;
@@ -105,7 +106,14 @@ int			env_builtin(t_shell *sh, t_bool export);
 int			export_builtin(t_cmdn *node, t_shell *sh);
 int			unset_builtin(t_cmdn *node, t_shell *sh);
 char		**remove_array(t_shell *sh, char **temp_ms);
+int			get_cargs_count(t_cmdn *node);
+char		*check_for_home(t_shell *sh);
+int			find_amount(char *str, char c);
+int			count_array(char **arr);
+char		**remove_array(t_shell *sh, char **temp_ms);
+
 // Environment variables:
+void		increase_shell_level(t_shell *sh);
 char 		*replace_envp(char* input, t_shell *sh);
 char		**copy_envp(char **envp, t_shell *sh);
 char		*move_ucase(char *start);
@@ -123,14 +131,14 @@ void		errexit(char *msg1, char *msg2, char *msg3, t_shell *sh);
 void		errexitcode(char *msg1, char *msg2, int status, t_shell *sh);
 // Initialization
 void		init_shell_struct(t_shell *sh);
-t_cmdn		*init_cmd_node(t_ntype type, t_shell *sh, t_bool last);
+t_cmdn		*init_cmd_node(t_ntype type, t_shell *sh, t_bool last, t_bool first);
 // Freeing
 void 		free(void* p);
 void		free_args(char **args);
 void		free_cmdn(t_cmdn *node);
 void		free_child(t_shell *sh);
 void		free_new_prompt(t_shell *sh);
-void		close_all_pipes(t_shell *sh);
+void		close_ext_pipes(t_shell *sh);
 // Signals
 void		disable_raw_mode(struct termios oterm);
 void		enable_raw_mode(void);

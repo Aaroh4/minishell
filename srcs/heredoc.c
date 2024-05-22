@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 12:09:30 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/19 22:40:56 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/22 14:33:14 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 char	*make_breakchar(char *breakchar, int *i, int *j, int hdocs)
 {
-	int	k;
+	int		k;
 	char	*temp;
 
 	while (breakchar[*i] != '\0')
@@ -56,7 +56,6 @@ int	heredoc_loop(char **astr, char *breakchar, int j, int hdocs)
 	{
 		write(1, "> ", 2);
 		buf = get_next_line(0);
-			// if (!buf) // ERROR CHECK HERE DO NOT MISS THIS ONE BEFORE SENDING BACK THIS PROJECT!!!#!!#:LKJHGC
 		if (buf == NULL)
 			return (0);
 		if (!ft_strncmp(breakchar, buf, ft_strlen(breakchar)))
