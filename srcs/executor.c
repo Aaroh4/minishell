@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/22 10:29:55 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/22 11:40:51 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,8 @@ static int	exec_builtin(t_cmdn *node, t_shell *sh, char *cwd)
 		return (unset_builtin(node, sh));
 	else if (node->cargs[0] && !ft_strncmp(node->cargs[0], "env", 4))
 		return (env_builtin(sh, FALSE));
+	close (sh->efd[0]);
+	close (sh->efd[1]);
 	return (0);
 }
 
@@ -140,7 +142,6 @@ int	check_hdocs(t_cmdn *node)
 static void close_input_pipes(t_shell *sh)
 {
 	close (sh->hfd[0]);
-	close (sh->efd[0]);
 	//if (sh->cmdcount > 1)
 		close(sh->pfd[0][0]);
 		close(sh->pfd[1][0]);
@@ -149,7 +150,6 @@ static void close_input_pipes(t_shell *sh)
 static void close_output_pipes(t_shell *sh)
 {
 	close (sh->hfd[1]);
-	close (sh->efd[1]);
 	//if (sh->cmdcount > 1)
 		close(sh->pfd[0][1]);
 		close(sh->pfd[1][1]);
@@ -171,6 +171,8 @@ static void	exec_cmd(t_cmdn *node, t_shell *sh, char *cwd)
 	cmdp = NULL;
 	if (!(exec_builtin(node, sh, cwd)))
 	{
+		close (sh->efd[0]);
+		close (sh->efd[1]);
 		path_array = ft_split(get_msenv("PATH", sh), ":");
 		cmdp = get_exec_path(path_array, node->cargs[0], sh);
 		free_args(path_array);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:15:11 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/21 15:08:28 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/22 11:42:09 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -241,28 +241,33 @@ char	**remove_array(t_shell *sh, char **temp_ms)
 	char	**temp;
 
 	close (sh->efd[1]);
-	tempstr = get_next_line(sh->efd[0]);
-	if (tempstr == NULL)
-		return (temp_ms);
-	str = ft_substr(tempstr, 0, ft_strlen(tempstr) - 1);
-	free(tempstr);
-	j = count_array(temp_ms);
-	temp = malloc(sizeof(char *) * (j + 1));
-	j = 0;
-	k = 0;
-	while (temp_ms[j] != 0)
+	if (sh->cmdcount == 1)
 	{
-		if (ft_strncmp(str, temp_ms[j], ft_strlen(str)))
-			temp[k++] = temp_ms[j];
-		else
-			free(temp_ms[j]);
-		j++;
+		tempstr = get_next_line(sh->efd[0]);
+		if (tempstr == NULL)
+			return (temp_ms);
+		str = ft_substr(tempstr, 0, ft_strlen(tempstr) - 1);
+		free(tempstr);
+		j = count_array(temp_ms);
+		temp = malloc(sizeof(char *) * (j + 1));
+		j = 0;
+		k = 0;
+		while (temp_ms[j] != 0)
+		{
+			if (ft_strncmp(str, temp_ms[j], ft_strlen(str)))
+				temp[k++] = temp_ms[j];
+			else
+				free(temp_ms[j]);
+			j++;
+		}
+		temp[j] = NULL;
+		temp = remove_array(sh, temp);
+		free(temp_ms);
+		free(str);
+		return (temp);
 	}
-	temp[j] = NULL;
-	temp = remove_array(sh, temp);
-	free(temp_ms);
-	free(str);
-	return (temp);
+	else
+		return (temp_ms);
 }
 
 int	unset_builtin(t_cmdn *node, t_shell *sh)
