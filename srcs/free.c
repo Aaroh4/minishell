@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 11:06:04 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/21 16:24:11 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/22 10:04:59 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	free_new_prompt(t_shell *sh)
 {
 	free_cmdn(sh->root);
 	if (sh->cmdcount > 1)
-		close_all_pipes(sh);
+		close_ext_pipes(sh);
 	free_args(sh->cmdarr);
 	free_args(sh->cmd);
 	free(sh->hdocs);
@@ -65,10 +65,12 @@ void	free_new_prompt(t_shell *sh)
 	sh->hdocs = NULL;
 }
 
-void	close_all_pipes(t_shell *sh)
+void	close_ext_pipes(t_shell *sh)
 {
-	close(sh->pfd[0]);
-	close(sh->pfd[1]);
+	close(sh->pfd[0][0]);
+	close(sh->pfd[0][1]);
+	close(sh->pfd[1][0]);
+	close(sh->pfd[1][1]);
 	close(sh->efd[0]);
 	close(sh->efd[1]);
 }
@@ -79,7 +81,7 @@ void	free_child(t_shell *sh)
 	free_args(sh->cmdarr);
 	free_args(sh->ms_envp);
 	if (sh->cmdcount > 1)
-		close_all_pipes(sh);
+		close_ext_pipes(sh);
 	free_args(sh->cmd);
 	free(sh->hdocs);
 	sh->root = NULL;

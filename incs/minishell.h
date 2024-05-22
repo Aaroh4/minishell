@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/21 21:48:28 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/22 09:58:04 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ typedef struct s_shell
 	char	*input;	// User input line
 	t_cmdn	*root; // Root node of command tree, for freeing
 	char	**cmdarr; // Array of commands, for easy freeing
-	int		pfd[2]; // Pipe for the external pipes
+	int		pfd[2][2]; // Pipes for the external pipes
 	int		efd[2]; // Pipe for env export returns
 	int		hfd[2]; // Pipe for the heredocs
 	// int		sfd[2]; // Pipe for status code returns
@@ -132,7 +132,7 @@ void		free_args(char **args);
 void		free_cmdn(t_cmdn *node);
 void		free_child(t_shell *sh);
 void		free_new_prompt(t_shell *sh);
-void		close_all_pipes(t_shell *sh);
+void		close_ext_pipes(t_shell *sh);
 // Signals
 void		disable_raw_mode(struct termios oterm);
 void		enable_raw_mode(void);

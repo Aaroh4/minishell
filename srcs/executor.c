@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/21 18:05:09 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/22 10:29:55 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,6 +137,23 @@ int	check_hdocs(t_cmdn *node)
 	return (0);
 }
 
+static void close_input_pipes(t_shell *sh)
+{
+	close (sh->hfd[0]);
+	close (sh->efd[0]);
+	//if (sh->cmdcount > 1)
+		close(sh->pfd[0][0]);
+		close(sh->pfd[1][0]);
+}
+
+static void close_output_pipes(t_shell *sh)
+{
+	close (sh->hfd[1]);
+	close (sh->efd[1]);
+	//if (sh->cmdcount > 1)
+		close(sh->pfd[0][1]);
+		close(sh->pfd[1][1]);
+}
 
 static void	exec_cmd(t_cmdn *node, t_shell *sh, char *cwd)
 {
@@ -147,15 +164,9 @@ static void	exec_cmd(t_cmdn *node, t_shell *sh, char *cwd)
 	if (check_hdocs(node))
 		if (dup2(sh->hfd[0], STDIN_FILENO) == -1)
 			errexit("error :", "dup2 failed", NULL, sh);
-	close (sh->hfd[0]);
-	close (sh->efd[0]);
-	if (sh->cmdcount > 1)
-		close(sh->pfd[0]);
+	close_input_pipes(sh);
 	handle_heredocs(node, sh);
-	close (sh->hfd[1]);
-	close (sh->efd[1]);
-	if (sh->cmdcount > 1)
-		close(sh->pfd[1]);
+	close_output_pipes(sh);
 	path_array = NULL;
 	cmdp = NULL;
 	if (!(exec_builtin(node, sh, cwd)))
@@ -243,15 +254,22 @@ void	modify_env(t_shell *sh, int a, char *cwd)
 	close(sh->efd[0]);
 }
 
+static void switch_pipe_fds(t_shell *sh)
+{
+	close(sh->pfd[0][0]);
+	close(sh->pfd[0][1]);
+	sh->pfd[0][0] = sh->pfd[1][0];
+	sh->pfd[0][1] = sh->pfd[1][1];
+	if (pipe(sh->pfd[1]) == -1)
+		errexit("error :", "pipe initialization", NULL, sh);
+}
+
 static int	exec_node(t_cmdn *node, t_shell *sh, t_intvec *commands)
 {
 	int		pid;
 	char	buffer[1024];
 	char	*cwd;
 
-	cwd = getcwd(buffer, sizeof(buffer));
-	if (cwd == NULL)
-		errexit("error:", "getcwd", NULL, sh);
 	if (node == NULL)
 		return (0);
 	pid = 0;
@@ -282,13 +300,14 @@ static int	exec_node(t_cmdn *node, t_shell *sh, t_intvec *commands)
 		{
 			if (!ft_strncmp("export", node->cargs[0], ft_strlen(node->cargs[0])))
 				modify_env(sh, 0, cwd);
-			// Unset just one var or?
 			else if (!ft_strncmp("unset", node->cargs[0], ft_strlen(node->cargs[0])))
 				sh->ms_envp = remove_array(sh, sh->ms_envp);
 			else if (!ft_strncmp("cd", node->cargs[0], ft_strlen(node->cargs[0])))
 				modify_env(sh, 1, cwd);
 			else if (!ft_strncmp("exit", node->cargs[0], ft_strlen(node->cargs[0])))
 				exit_in_main(node, sh);
+			if (sh->cmdcount > 1)
+				switch_pipe_fds(sh);
 			if (commands != NULL)
 				add_to_intvec(commands, pid, sh);
 		}
@@ -306,13 +325,9 @@ int	run_cmds(t_shell *sh)
 	if (sh->root == NULL)
 		return (1);
 	commands = create_intvec(sh);
-	if (pipe(sh->efd) == -1)
-		errexit("error :", "pipe initialization", NULL, sh);
+	create_pipes(sh);
 	exec_node(sh->root, sh, commands);
-	close (sh->pfd[0]);
-	close (sh->pfd[1]);
-	close (sh->efd[0]);
-	close (sh->efd[1]);
+	close_ext_pipes(sh);
 	sh->status = wait_for(commands);
 	free_intvec(commands);
 	return (0);
