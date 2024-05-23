@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/23 13:12:53 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/23 15:14:24 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,17 +116,16 @@ int			echo_builtin(char **arg);
 int			env_builtin(t_shell *sh, t_bool export);
 int			export_builtin(t_cmdn *node, t_shell *sh);
 int			unset_builtin(t_cmdn *node, t_shell *sh);
-char		**remove_array(t_shell *sh, char **temp_ms);
 int			get_cargs_count(t_cmdn *node);
 char		*check_for_home(t_shell *sh);
 int			find_amount(char *str, char c);
 int			count_array(char **arr);
-char		**remove_array(t_shell *sh, char **temp_ms);
+char		**unset_remove_from_array(t_shell *sh, char **temp_ms);
 char		**removing_loop(char *tempstr, char **temp_ms, int *j);
 
 // Environment variables:
 void		increase_shell_level(t_shell *sh);
-char 		*replace_envp(char* input, t_shell *sh);
+char 		*replace_envp_tags(char* input, t_shell *sh);
 char		**copy_envp(char **envp, t_shell *sh);
 char		*move_ucase(char *start);
 void		populate_env_vars(t_cmdn *node, t_shell *sh);

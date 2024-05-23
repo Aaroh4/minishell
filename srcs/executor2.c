@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 15:29:16 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/23 13:46:42 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/23 15:14:52 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	handle_heredocs(t_cmdn *node, t_shell *sh)
 		i--;
 	if (node->hdocs[i] > 0)
 	{
-		node->cargs[i] = replace_envp(node->cargs[i], sh);
+		node->cargs[i] = replace_envp_tags(node->cargs[i], sh);
 		ft_putstr_fd(node->cargs[i], sh->hfd[1]);
 	}
 	i = 0;

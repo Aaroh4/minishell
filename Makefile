@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+         #
+#    By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/22 12:36:32 by ahamalai          #+#    #+#              #
-#    Updated: 2024/05/23 04:29:07 by mburakow         ###   ########.fr        #
+#    Updated: 2024/05/23 15:16:36 by mburakow         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,6 +23,7 @@ SRCS 			=	main.c builtins.c parser.c executor.c utils.c intvec.c \
                     msenv.c msenv_replace.c msenv_modify.c heredoc.c error.c \
 					free.c redirect.c init.c builtins2.c builtinshelpers.c \
 					executor2.c executor3.c executorhelpers.c utils2.c utils3.c \
+					export.c
 
 OBJ_DIR			=	./objs
 OBJS			=	$(SRCS:%.c=$(OBJ_DIR)/%.o)
