@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/22 12:09:47 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/23 13:39:50 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,15 @@ void		parse_input(t_shell *sh);
 // Executor:
 int			run_cmds(t_shell *sh);
 void		modify_status(t_shell *sh);
+void		close_input_pipes(t_shell *sh);
+void		close_output_pipes(t_shell *sh);
+void		switch_pipe_fds(t_shell *sh);
+int			*ft_remove_hdocs(int i, t_cmdn *node);
+void		handle_heredocs(t_cmdn *node, t_shell *sh);
+int			check_hdocs(t_cmdn *node);
+char		*get_msenv(char *name, t_shell *sh);
+char		**remove_from_array(char **str, int i, t_cmdn *node);
+int			exec_builtin(t_cmdn *node, t_shell *sh, char *cwd);
 // Dynamic Integer Array:
 t_intvec*	create_intvec(t_shell *sh);
 void		expand_intvec(t_intvec *dynarr, t_shell *sh);
@@ -111,6 +120,7 @@ char		*check_for_home(t_shell *sh);
 int			find_amount(char *str, char c);
 int			count_array(char **arr);
 char		**remove_array(t_shell *sh, char **temp_ms);
+char		**removing_loop(char *tempstr, char **temp_ms, int *j);
 
 // Environment variables:
 void		increase_shell_level(t_shell *sh);
@@ -120,6 +130,7 @@ char		*move_ucase(char *start);
 void		populate_env_vars(t_cmdn *node, t_shell *sh);
 void		modify_env_internal(char *name, char *value, t_shell *sh);
 char		*get_env_val_by_name(char *name, t_shell *sh);
+void		modify_env(t_shell *sh, int a, char *cwd);
 // Heredoc:
 char		*ft_heredoc(char *breakchar, int hdocs);
 // Redirects:

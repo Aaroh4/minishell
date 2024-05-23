@@ -6,11 +6,34 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 12:10:13 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/22 13:27:23 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/23 12:50:47 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+char	*check_for_home(t_shell *sh)
+{
+	int	i;
+
+	i = 0;
+	while (sh->ms_envp[i] != 0)
+	{
+		if (!ft_strncmp(sh->ms_envp[i], "HOME=", 5))
+			return (sh->ms_envp[i] + 5);
+		i++;
+	}
+	return (NULL);
+}
+
+void	put_cwd_fd(char *cwd, t_cmdn *node, t_shell *sh)
+{
+	cwd = ft_strjoin(cwd, node->cargs[1]);
+	if (access(cwd, R_OK) == 0)
+		ft_putstr_fd(cwd, sh->efd[1]);
+	else
+		ft_putstr_fd(node->cargs[1], sh->efd[1]);
+}
 
 int	cd_builtin(t_cmdn *node, t_shell *sh, char	*cwd)
 {
@@ -36,11 +59,7 @@ int	cd_builtin(t_cmdn *node, t_shell *sh, char	*cwd)
 	}
 	if (node->cargs[1][0] != '/' && access(ft_strjoin(cwd, "/"), R_OK) == 0)
 		cwd = ft_strjoin(cwd, "/");
-	cwd = ft_strjoin(cwd, node->cargs[1]);
-	if (access(cwd, R_OK) == 0)
-		ft_putstr_fd(cwd, sh->efd[1]);
-	else
-		ft_putstr_fd(node->cargs[1], sh->efd[1]);
+	put_cwd_fd(cwd, node, sh);
 	return (1);
 }
 

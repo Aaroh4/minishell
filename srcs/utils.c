@@ -6,16 +6,16 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 16:07:48 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/22 12:21:17 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/22 15:18:06 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 void	*db_malloc(size_t size)
- {
+{
 	return (malloc(size));
- }
+}
 
 static char	*get_exec_path_env(char **path, char *cmd)
 {
@@ -63,7 +63,7 @@ char	*get_exec_path(char **path, char *cmd, t_shell *sh)
 	}
 	else
 		return (get_exec_path_env(path, cmd));
-	return(NULL);
+	return (NULL);
 }
 
 int	wait_for(t_intvec *commands)
@@ -167,9 +167,9 @@ char	*trim_string(char *str)
 
 void	print_array(char **arr)
 {
-	int i;
+	int	i;
+
 	i = 0;
 	while (arr[i])
 		dprintf(2, "%s\n", arr[i++]);
-
 }
