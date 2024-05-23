@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   msenv.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 16:54:02 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/21 21:07:48 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/23 13:55:38 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,6 @@ char	**copy_env_vals(int len, char **envp, char **ms_envp, t_shell *sh)
 	return (ms_envp);
 }
 
-
-
 char	**copy_envp(char **envp, t_shell *sh)
 {
 	int		len;
@@ -60,7 +58,6 @@ char	**copy_envp(char **envp, t_shell *sh)
 	return (ms_envp);
 }
 
-// Change all env variable names $ENV from input to their values
 void	populate_env_vars(t_cmdn *node, t_shell *sh)
 {
 	int	i;

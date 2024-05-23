@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   msenv_replace.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 13:16:33 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/15 13:17:39 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/23 13:56:00 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static void	init_env_struct(t_env_tdata *envd)
 	envd->end = NULL;
 	envd->env_val = NULL;
 	envd->temp = NULL;
-	envd->total_len = 0;	
+	envd->total_len = 0;
 }
 
 // If question mark, ignore caps after, else check from ms_envp for the value
