@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 08:34:10 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/21 13:20:21 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/21 17:36:22 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	init_shell_struct(t_shell *sh)
 }
 
 
-t_cmdn	*init_cmd_node(t_ntype type, t_shell *sh, t_bool last)
+t_cmdn	*init_cmd_node(t_ntype type, t_shell *sh, t_bool last, t_bool first)
 {
 	t_cmdn	*new_cmdn;
 
@@ -44,6 +44,7 @@ t_cmdn	*init_cmd_node(t_ntype type, t_shell *sh, t_bool last)
 			new_cmdn->redirs = sh->redirs;
 		}
 		new_cmdn->last = last;
+		new_cmdn->first = first;
 		sh->cmd = NULL;
 		sh->hdocs = NULL;
 	}
