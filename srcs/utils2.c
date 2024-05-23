@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 13:50:59 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/23 13:51:26 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/23 14:31:33 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,11 +65,12 @@ char	**ft_remove_quotes(char **cmd)
 
 // At the moment accounts only for space characters,
 //	are other characters necessary?
+
 char	*trim_string(char *str)
 {
 	int		i;
 	char	*end;
-	char 	*curs;
+	char	*curs;
 
 	i = 0;
 	if (!str || str[0] == '\0' || str[0] == 0)
