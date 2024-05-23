@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 16:54:02 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/23 13:55:38 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/23 12:39:00 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void	populate_env_vars(t_cmdn *node, t_shell *sh)
 	i = 0;
 	while (node->cargs[i] != NULL)
 	{
-		node->cargs[i] = replace_envp(node->cargs[i], sh);
+		node->cargs[i] = replace_envp_tags(node->cargs[i], sh);
 		i++;
 	}
 	return ;

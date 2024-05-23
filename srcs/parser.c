@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/23 13:54:36 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/23 14:43:10 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,6 @@ void	parse_input(t_shell *sh)
 	sh->cmdarr = ft_split(sh->input, "|");
 	if (!(sh->cmdarr))
 		errexit("error: ", "cmdarr malloc", NULL, sh);
-	create_pipes(sh);
 	free(sh->input);
 	sh->input = NULL;
 	current = sh->root;

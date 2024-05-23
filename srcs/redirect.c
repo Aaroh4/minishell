@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 16:20:12 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/22 10:12:57 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/23 06:53:15 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ void	get_redirects(t_shell *sh)
 }
 
 /*
-void 	print_array_redirs(t_cmdn *node)
+void 	ay_redirs(t_cmdn *node)
 {
 	int	i;
 
