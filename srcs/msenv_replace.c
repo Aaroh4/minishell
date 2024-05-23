@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 13:16:33 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/15 13:17:39 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/23 05:31:19 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ void	write_new_arr(char *new_arr, t_env_tdata *envd)
 	new_arr[ft_strlen(new_arr)] = '\0';
 }
 
-char	*replace_envp(char *input, t_shell *sh)
+char	*replace_envp_tags(char *input, t_shell *sh)
 {
 	t_env_tdata	envd;
 	char		*new_arr;

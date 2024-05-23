@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/22 09:58:04 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/23 05:50:50 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ int			wait_for(t_intvec *children);
 void		print_cmdn(t_cmdn *root);
 char		*trim_string(char *str);
 void		create_pipes(t_shell *sh);
-void		print_array(char **arr);
+void		print_char_array(char **arr);
 // Buildins:
 int			pwd_builtin(t_shell *sh);
 int			cd_builtin(t_cmdn *node, t_shell *sh, char	*cwd);
@@ -105,10 +105,10 @@ int			echo_builtin(char **arg);
 int			env_builtin(t_shell *sh, t_bool export);
 int			export_builtin(t_cmdn *node, t_shell *sh);
 int			unset_builtin(t_cmdn *node, t_shell *sh);
-char		**remove_array(t_shell *sh, char **temp_ms);
+char		**unset_remove_from_array(t_shell *sh, char **temp_ms);
 // Environment variables:
 void		increase_shell_level(t_shell *sh);
-char 		*replace_envp(char* input, t_shell *sh);
+char 		*replace_envp_tags(char* input, t_shell *sh);
 char		**copy_envp(char **envp, t_shell *sh);
 char		*move_ucase(char *start);
 void		populate_env_vars(t_cmdn *node, t_shell *sh);

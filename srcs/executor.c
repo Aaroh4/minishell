@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/22 11:40:51 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/23 07:11:32 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+// These two...
 int	*ft_remove_hdocs(int i, t_cmdn *node)
 {
 	int	j;
@@ -37,7 +38,8 @@ int	*ft_remove_hdocs(int i, t_cmdn *node)
 	return (temp);
 }
 
-static char	**remove_from_array(char **str, int i, t_cmdn *node)
+// ... are almost identical?
+static char	**remove_from_cargs(char **str, int i, t_cmdn *node)
 {
 	char	**temp;
 	int		j;
@@ -75,7 +77,8 @@ static void	handle_heredocs(t_cmdn *node, t_shell *sh)
 		i--;
 	if (node->hdocs[i] > 0)
 	{
-		node->cargs[i] = replace_envp(node->cargs[i], sh);
+		// Needed?
+		node->cargs[i] = replace_envp_tags(node->cargs[i], sh);
 		ft_putstr_fd(node->cargs[i], sh->hfd[1]);
 	}
 	i = 0;
@@ -83,7 +86,7 @@ static void	handle_heredocs(t_cmdn *node, t_shell *sh)
 	{
 		if (node->hdocs[i] > 0)
 		{
-			node->cargs = remove_from_array(node->cargs, i, node);
+			node->cargs = remove_from_cargs(node->cargs, i, node);
 			i = 0;
 		}
 		else
@@ -206,7 +209,7 @@ char	**make_temp(t_shell *sh, char *str)
 	return (temp);
 }
 
-void	modify_env(t_shell *sh, int a, char *cwd)
+void	modify_env(t_shell *sh, int pwd, char *cwd)
 {
 	int		i;
 	int		j;
@@ -214,14 +217,18 @@ void	modify_env(t_shell *sh, int a, char *cwd)
 
 	i = 0;
 	close(sh->efd[1]);
+	// dprintf(2, "Starting modify.\n");
 	if (sh->cmdcount == 1)
 	{
 		str = get_next_line(sh->efd[0]);
 		if (str == NULL)
+		{
+			// dprintf(2, "Found nothing.\n");
 			return ;
+		}
 		while (str != NULL)
 		{
-			if (a == 1)
+			if (pwd == 1)
 			{
 				if (chdir(str) == -1)
 				{
@@ -231,10 +238,15 @@ void	modify_env(t_shell *sh, int a, char *cwd)
 				str = ft_strjoin("PWD=", str);
 				modify_env(sh, 2, cwd);
 			}
-			if (a == 2)
+			if (pwd == 2)
 				str = ft_strjoin("OLDPWD", cwd);
 			if (str == 0)
+			{
+				// dprintf(2, "Found nothing, empty string.\n");
 				return ;
+			}
+			//else
+			//	dprintf(2, "Str at parent: %s\n", str);
 			while (sh->ms_envp[i] != 0)
 			{
 				j = 0;
@@ -264,6 +276,49 @@ static void switch_pipe_fds(t_shell *sh)
 	sh->pfd[0][1] = sh->pfd[1][1];
 	if (pipe(sh->pfd[1]) == -1)
 		errexit("error :", "pipe initialization", NULL, sh);
+}
+
+// All the hdoc and redir are removed from parent node->cargs
+static void clean_cargs_hdrd(t_cmdn *node)
+{
+	int	i;
+	int j;
+	int	size;
+
+	i = 0;
+	size = 0;
+	while (node->cargs[size] != NULL)
+		size++;
+	while (i < size)
+	{
+		if (node->hdocs[i] > 0 || node->redirs[i] > 0)
+		{
+			free(node->cargs[i]);
+			j = i;
+			while (j < size - 1)
+			{
+				node->cargs[j] = node->cargs[j + 1];
+				j++;
+			}
+			size--;
+			node->cargs[size] = NULL;
+			i--;
+		}
+		i++;
+	}
+}
+
+static void	parent_side_operations(t_cmdn *node, char *cwd, t_shell *sh)
+{
+	clean_cargs_hdrd(node);
+	if (!ft_strncmp("export", node->cargs[0], ft_strlen(node->cargs[0])))
+		modify_env(sh, 0, cwd);
+	else if (!ft_strncmp("unset", node->cargs[0], ft_strlen(node->cargs[0])))
+		sh->ms_envp = unset_remove_from_array(sh, sh->ms_envp);
+	else if (!ft_strncmp("cd", node->cargs[0], ft_strlen(node->cargs[0])))
+		modify_env(sh, 1, cwd);
+	else if (!ft_strncmp("exit", node->cargs[0], ft_strlen(node->cargs[0])))
+		exit_in_main(node, sh);
 }
 
 static int	exec_node(t_cmdn *node, t_shell *sh, t_intvec *commands)
@@ -300,14 +355,7 @@ static int	exec_node(t_cmdn *node, t_shell *sh, t_intvec *commands)
 		}
 		else
 		{
-			if (!ft_strncmp("export", node->cargs[0], ft_strlen(node->cargs[0])))
-				modify_env(sh, 0, cwd);
-			else if (!ft_strncmp("unset", node->cargs[0], ft_strlen(node->cargs[0])))
-				sh->ms_envp = remove_array(sh, sh->ms_envp);
-			else if (!ft_strncmp("cd", node->cargs[0], ft_strlen(node->cargs[0])))
-				modify_env(sh, 1, cwd);
-			else if (!ft_strncmp("exit", node->cargs[0], ft_strlen(node->cargs[0])))
-				exit_in_main(node, sh);
+			parent_side_operations(node, cwd, sh);
 			if (sh->cmdcount > 1)
 				switch_pipe_fds(sh);
 			if (commands != NULL)

@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 16:07:48 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/21 15:39:51 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/23 05:46:28 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,8 @@ void	print_cmdn(t_cmdn *node)
 	print_cmdn(node->right);
 }
 
+// Breaks export, we need to handle export ABC="a b c"
+// So that env: ABC=a b c 
 char	**ft_remove_quotes(char **cmd)
 {
 	char	**cmdi;
@@ -168,11 +170,13 @@ char	*trim_string(char *str)
 	return (str);
 }
 
-void	print_array(char **arr)
+void	print_char_array(char **arr)
 {
 	int i;
 	i = 0;
 	while (arr[i])
-		dprintf(2, "%s\n", arr[i++]);
-
+	{
+		dprintf(2, "[%d]: %s\n", i, arr[i]);
+		i++;
+	}
 }
