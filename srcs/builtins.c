@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:15:11 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/23 05:50:50 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/23 15:56:58 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ void	exit_in_main(t_cmdn *node, t_shell *sh)
 		}
 		free_new_prompt(sh);
 		free_args(sh->ms_envp);
+		exit(j);
 	}
 }
 
