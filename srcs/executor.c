@@ -12,6 +12,7 @@
 
 #include "minishell.h"
 
+
 static void	exec_cmd(t_cmdn *node, t_shell *sh, char *cwd)
 {
 	char	**path_array;

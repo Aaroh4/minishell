@@ -117,6 +117,7 @@ void	parse_input(t_shell *sh)
 	sh->cmdarr = ft_split(sh->input, "|");
 	if (!(sh->cmdarr))
 		errexit("error: ", "cmdarr malloc", NULL, sh);
+	create_pipes(sh);
 	free(sh->input);
 	sh->input = NULL;
 	current = sh->root;
