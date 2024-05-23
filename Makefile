@@ -6,7 +6,7 @@
 #    By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/22 12:36:32 by ahamalai          #+#    #+#              #
-#    Updated: 2024/05/23 12:11:49 by ahamalai         ###   ########.fr        #
+#    Updated: 2024/05/23 13:48:11 by ahamalai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ MAKE 			=	make
 SRCS 			=	main.c builtins.c parser.c executor.c utils.c intvec.c \
                     msenv.c msenv_replace.c msenv_modify.c heredoc.c error.c \
 					free.c redirect.c init.c builtins2.c builtinshelpers.c \
-					executor2.c executorhelpers.c \
+					executor2.c executor3.c executorhelpers.c \
 					
 OBJ_DIR			=	./objs
 OBJS			=	$(SRCS:%.c=$(OBJ_DIR)/%.o)
