@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
 /*   Updated: 2024/05/23 13:12:53 by mburakow         ###   ########.fr       */
@@ -84,6 +84,15 @@ void		parse_input(t_shell *sh);
 // Executor:
 int			run_cmds(t_shell *sh);
 void		modify_status(t_shell *sh);
+void		close_input_pipes(t_shell *sh);
+void		close_output_pipes(t_shell *sh);
+void		switch_pipe_fds(t_shell *sh);
+int			*ft_remove_hdocs(int i, t_cmdn *node);
+void		handle_heredocs(t_cmdn *node, t_shell *sh);
+int			check_hdocs(t_cmdn *node);
+char		*get_msenv(char *name, t_shell *sh);
+char		**remove_from_array(char **str, int i, t_cmdn *node);
+int			exec_builtin(t_cmdn *node, t_shell *sh, char *cwd);
 // Dynamic Integer Array:
 t_intvec*	create_intvec(t_shell *sh);
 void		expand_intvec(t_intvec *dynarr, t_shell *sh);
@@ -96,7 +105,9 @@ int			wait_for(t_intvec *children);
 void		print_cmdn(t_cmdn *root);
 char		*trim_string(char *str);
 void		create_pipes(t_shell *sh);
-void		print_char_array(char **arr);
+void		print_array(char **arr);
+void		exit_function(void);
+void		input_start(t_shell *sh, struct termios oterm);
 // Buildins:
 int			pwd_builtin(t_shell *sh);
 int			cd_builtin(t_cmdn *node, t_shell *sh, char	*cwd);
@@ -105,15 +116,23 @@ int			echo_builtin(char **arg);
 int			env_builtin(t_shell *sh, t_bool export);
 int			export_builtin(t_cmdn *node, t_shell *sh);
 int			unset_builtin(t_cmdn *node, t_shell *sh);
-char		**unset_remove_from_array(t_shell *sh, char **temp_ms);
+char		**remove_array(t_shell *sh, char **temp_ms);
+int			get_cargs_count(t_cmdn *node);
+char		*check_for_home(t_shell *sh);
+int			find_amount(char *str, char c);
+int			count_array(char **arr);
+char		**remove_array(t_shell *sh, char **temp_ms);
+char		**removing_loop(char *tempstr, char **temp_ms, int *j);
+
 // Environment variables:
 void		increase_shell_level(t_shell *sh);
-char 		*replace_envp_tags(char* input, t_shell *sh);
+char 		*replace_envp(char* input, t_shell *sh);
 char		**copy_envp(char **envp, t_shell *sh);
 char		*move_ucase(char *start);
 void		populate_env_vars(t_cmdn *node, t_shell *sh);
 void		modify_env_internal(char *name, char *value, t_shell *sh);
 char		*get_env_val_by_name(char *name, t_shell *sh);
+void		modify_env(t_shell *sh, int a, char *cwd);
 // Heredoc:
 char		*ft_heredoc(char *breakchar, int hdocs);
 // Redirects:

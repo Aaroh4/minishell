@@ -12,28 +12,6 @@
 
 #include "minishell.h"
 
-static void	trim_alloc_hdoc_rdir(t_shell *sh)
-{
-	int		i;
-
-	i = 0;
-	i = 0;
-	while (sh->cmd[i] != NULL)	
-	{
-		sh->cmd[i] = trim_string(sh->cmd[i]);
-		i++;
-	}
-	// print_char_array(sh->cmd);
-	sh->cmd = remove_quotes_ex_export(sh->cmd);
-	// print_char_array(sh->cmd);
-	sh->hdocs = ft_calloc((i + 1), sizeof(int));
-	sh->redirs = ft_calloc((i + 1), sizeof(int));
-	if (sh->hdocs == NULL || sh->redirs  == NULL)
-		errexit("hdocs or redirs malloc error", NULL, NULL, sh);
-	sh->hdocs[i] = -1;
-	sh->redirs[i] = -1;
-}
-
 static void	get_heredocs(t_shell *sh)
 {
 	int		i;
@@ -60,6 +38,28 @@ static void	get_heredocs(t_shell *sh)
 	}
 }
 
+static void	trim_quote_alloc_hdoc_rdir(t_shell *sh)
+{
+	int		i;
+
+	i = 0;
+	i = 0;
+	while (sh->cmd[i] != NULL)
+	{
+		sh->cmd[i] = trim_string(sh->cmd[i]);
+		i++;
+	}
+	sh->cmd = ft_remove_quotes(sh->cmd);
+	sh->hdocs = ft_calloc((i + 1), sizeof(int));
+	sh->redirs = ft_calloc((i + 1), sizeof(int));
+	if (sh->hdocs == NULL || sh->redirs == NULL)
+		errexit("hdocs or redirs malloc error", NULL, NULL, sh);
+	sh->hdocs[i] = -1;
+	sh->redirs[i] = -1;
+	get_heredocs(sh);
+	get_redirects(sh);
+}
+
 static t_cmdn	*create_node(t_cmdn *current, t_shell *sh, int index)
 {
 	int		len;
@@ -72,9 +72,7 @@ static t_cmdn	*create_node(t_cmdn *current, t_shell *sh, int index)
 	sh->cmd = ft_split_time_space(sh->cmdarr[index], ' ');
 	if (!(sh->cmd))
 		errexit("error: ", "root malloc", NULL, sh);
-	trim_alloc_hdoc_rdir(sh);
-	get_heredocs(sh);
-	get_redirects(sh);
+	trim_quote_alloc_hdoc_rdir(sh);
 	first = FALSE;
 	if (index == 0)
 		first = TRUE;
@@ -93,14 +91,14 @@ static t_cmdn	*create_node(t_cmdn *current, t_shell *sh, int index)
 
 void	create_pipes(t_shell *sh)
 {
-	int cmdcount;
+	int	cmdcount;
 
 	cmdcount = 1;
 	while (sh->cmdarr[cmdcount] != NULL)
 		cmdcount++;
 	if (cmdcount > 1)
 	{
-		if (pipe(sh->pfd[0]) == -1 || pipe(sh->pfd[1]) == -1) //|| pipe(sh->efd) == -1) //  || pipe(sh.sfd) == -1)
+		if (pipe(sh->pfd[0]) == -1 || pipe(sh->pfd[1]) == -1)
 			errexit("error :", "pipe initialization", NULL, sh);
 	}
 	sh->cmdcount = cmdcount;
@@ -108,8 +106,6 @@ void	create_pipes(t_shell *sh)
 		errexit("error :", "pipe initialization", NULL, sh);
 }
 
-// Creates root node, splits the input along pipes and
-// creates the nodes in a tree structure.
 void	parse_input(t_shell *sh)
 {
 	t_cmdn	*current;

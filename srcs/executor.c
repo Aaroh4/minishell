@@ -12,151 +12,6 @@
 
 #include "minishell.h"
 
-// These two...
-int	*ft_remove_hdocs(int i, t_cmdn *node)
-{
-	int	j;
-	int	k;
-	int	*temp;
-
-	j = 0;
-	while (node->hdocs[j] != -1)
-		j++;
-	temp = malloc(sizeof(int *) * j);
-	j = 0;
-	k = 0;
-	while (node->hdocs[j] != -1)
-	{
-		if (i != j)
-			temp[k] = node->hdocs[j];
-		else
-			k--;
-		j++;
-		k++;
-	}
-	temp[k] = -1;
-	return (temp);
-}
-
-// ... are almost identical?
-static char	**remove_from_cargs(char **str, int i, t_cmdn *node)
-{
-	char	**temp;
-	int		j;
-	int		k;
-
-	j = 0;
-	while (str[j] != 0)
-		j++;
-	temp = malloc(sizeof(char *) * j);
-	j = 0;
-	k = 0;
-	while (str[j] != 0)
-	{
-		if (i != j)
-			temp[k] = str[j];
-		else
-			k--;
-		j++;
-		k++;
-	}
-	temp[k] = NULL;
-	node->hdocs = ft_remove_hdocs(i, node);
-	return (temp);
-}
-
-static void	handle_heredocs(t_cmdn *node, t_shell *sh)
-{
-	int	i;
-
-	i = 0;
-	while (node->hdocs[i] != -1)
-		i++;
-	i--;
-	while (node->hdocs[i] == 0 && i > 0)
-		i--;
-	if (node->hdocs[i] > 0)
-	{
-		// Needed?
-		node->cargs[i] = replace_envp_tags(node->cargs[i], sh);
-		ft_putstr_fd(node->cargs[i], sh->hfd[1]);
-	}
-	i = 0;
-	while (node->cargs[i] != 0)
-	{
-		if (node->hdocs[i] > 0)
-		{
-			node->cargs = remove_from_cargs(node->cargs, i, node);
-			i = 0;
-		}
-		else
-			i++;
-	}
-}
-
-static int	exec_builtin(t_cmdn *node, t_shell *sh, char *cwd)
-{
-	if (node->cargs[0] && !ft_strncmp(node->cargs[0], "exit", 5))
-		return (1);
-	else if (node->cargs[0] && !ft_strncmp(node->cargs[0], "echo", 5))
-		return (echo_builtin(node->cargs));
-	else if (node->cargs[0] && !ft_strncmp(node->cargs[0], "cd", 3))
-		return (cd_builtin(node, sh, cwd));
-	else if (node->cargs[0] && !ft_strncmp(node->cargs[0], "pwd", 4))
-		return (pwd_builtin(sh));
-	else if (node->cargs[0] && !ft_strncmp(node->cargs[0], "export", 7))
-		return (export_builtin(node, sh));
-	else if (node->cargs[0] && !ft_strncmp(node->cargs[0], "unset", 6))
-		return (unset_builtin(node, sh));
-	else if (node->cargs[0] && !ft_strncmp(node->cargs[0], "env", 4))
-		return (env_builtin(sh, FALSE));
-	close (sh->efd[0]);
-	close (sh->efd[1]);
-	return (0);
-}
-
-static char *get_msenv(char *name, t_shell *sh)
-{
-	int	i;
-
-	i = 0;
-	while (sh->ms_envp[i] != NULL)
-	{
-		if (!ft_strncmp(sh->ms_envp[i], name, ft_strlen(name)))
-			return (&sh->ms_envp[i][5]);
-		i++;
-	}
-	return (NULL);
-}
-int	check_hdocs(t_cmdn *node)
-{
-	int	i;
-
-	i = 0;
-	while (node->hdocs[i] != -1)
-	{
-		if (node->hdocs[i] > 0)
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
-static void close_input_pipes(t_shell *sh)
-{
-	close (sh->hfd[0]);
-	//if (sh->cmdcount > 1)
-		close(sh->pfd[0][0]);
-		close(sh->pfd[1][0]);
-}
-
-static void close_output_pipes(t_shell *sh)
-{
-	close (sh->hfd[1]);
-	//if (sh->cmdcount > 1)
-		close(sh->pfd[0][1]);
-		close(sh->pfd[1][1]);
-}
 
 static void	exec_cmd(t_cmdn *node, t_shell *sh, char *cwd)
 {
@@ -169,8 +24,6 @@ static void	exec_cmd(t_cmdn *node, t_shell *sh, char *cwd)
 		if (dup2(sh->hfd[0], STDIN_FILENO) == -1)
 			errexit("error :", "dup2 failed", NULL, sh);
 	close_input_pipes(sh);
-	// print_char_array(node->cargs);
-	// node->cargs = remove_quotes_ex_export(node->cargs);
 	handle_heredocs(node, sh);
 	close_output_pipes(sh);
 	path_array = NULL;
@@ -186,89 +39,49 @@ static void	exec_cmd(t_cmdn *node, t_shell *sh, char *cwd)
 				node->cargs, sh->ms_envp) == -1)
 			errexitcode(node->cargs[0], ": command not found", 127, sh);
 	}
-	// free_child(sh);
-	// wait_for_leaks();
 	exit(EXIT_SUCCESS);
 }
 
-char	**make_temp(t_shell *sh, char *str)
+void	check_builtin(t_cmdn *node, t_shell *sh, char *cwd)
 {
-	int		i;
-	char	**temp;
-
-	i = 0;
-	while (sh->ms_envp[i] != 0)
-		i++;
-	temp = malloc(sizeof(char *) * (i + 2));
-	i = 0;
-	while (sh->ms_envp[i] != 0)
-	{
-		temp[i] = sh->ms_envp[i];
-		i++;
-	}
-	free(sh->ms_envp);
-	temp[i] = ft_subbstr(str, 0, ft_strlen(str) - 1);
-	temp[i + 1] = NULL;
-	return (temp);
+	if (!ft_strncmp("export", node->cargs[0], ft_strlen(node->cargs[0])))
+		modify_env(sh, 0, cwd);
+	else if (!ft_strncmp("unset", node->cargs[0], ft_strlen(node->cargs[0])))
+		sh->ms_envp = remove_array(sh, sh->ms_envp);
+	else if (!ft_strncmp("cd", node->cargs[0], ft_strlen(node->cargs[0])))
+		modify_env(sh, 1, cwd);
+	else if (!ft_strncmp("exit", node->cargs[0], ft_strlen(node->cargs[0])))
+		exit_in_main(node, sh);
+	if (sh->cmdcount > 1)
+		switch_pipe_fds(sh);
 }
 
-void	modify_env(t_shell *sh, int pwd, char *cwd)
+void	make_child(t_cmdn *node, t_shell *sh, t_intvec *commands, char *cwd)
 {
-	int		i;
-	int		j;
-	char	*str;
+	int		pid;
 
-	i = 0;
-	close(sh->efd[1]);
-	// dprintf(2, "Starting modify.\n");
-	if (sh->cmdcount == 1)
+	pid = 0;
+	populate_env_vars(node, sh);
+	pid = fork();
+	if (pid == -1)
 	{
-		str = get_next_line(sh->efd[0]);
-		if (str == NULL)
-		{
-			// dprintf(2, "Found nothing.\n");
-			return ;
-		}
-		while (str != NULL)
-		{
-			if (pwd == 1)
-			{
-				if (chdir(str) == -1)
-				{
-					printf("cd: %s: No such file or directory\n", str);
-					return ;
-				}
-				str = ft_strjoin("PWD=", str);
-				modify_env(sh, 2, cwd);
-			}
-			if (pwd == 2)
-				str = ft_strjoin("OLDPWD", cwd);
-			if (str == 0)
-			{
-				// dprintf(2, "Found nothing, empty string.\n");
-				return ;
-			}
-			//else
-			//dprintf(2, "Str at parent: %s\n", str);
-			while (sh->ms_envp[i] != 0)
-			{
-				j = 0;
-				while (sh->ms_envp[i][j] == str[j] && sh->ms_envp[i][j] != '=')
-					j++;
-				if (str[j] == '=')
-					break ;
-				i++;
-			}
-			if (str[j] == '=')
-				sh->ms_envp[i] = ft_subbstr(str, 0, ft_strlen(str) - 1);
-			else
-				sh->ms_envp = make_temp(sh, str);
-			free(str);
-			str = get_next_line(sh->efd[0]);
-		}
-		free(str);
+		sh->status = wait_for(commands);
+		free_intvec(commands);
+		errexit("Error:", "fork failure", NULL, sh);
 	}
-	close(sh->efd[0]);
+	else if (pid == 0)
+	{
+		if (pipe(sh->hfd) == -1)
+			errexit("error :", "pipe initialization", NULL, sh);
+		free_intvec(commands);
+		exec_cmd(node, sh, cwd);
+	}
+	else
+	{
+		check_builtin(node, sh, cwd);
+		if (commands != NULL)
+			add_to_intvec(commands, pid, sh);
+	}
 }
 
 static void switch_pipe_fds(t_shell *sh)
@@ -326,48 +139,17 @@ static void	parent_side_operations(t_cmdn *node, char *cwd, t_shell *sh)
 
 static int	exec_node(t_cmdn *node, t_shell *sh, t_intvec *commands)
 {
-	int		pid;
 	char	buffer[1024];
 	char	*cwd;
 
 	if (node == NULL)
 		return (0);
-	pid = 0;
-	cwd = NULL;
 	if (node->left != NULL)
 		exec_node(node->left, sh, commands);
 	if (node->ntype == COMMAND)
-	{
-		cwd = getcwd(buffer, sizeof(buffer));
-		if (cwd == NULL)
-			errexit("error:", "getcwd", NULL, sh);
-		populate_env_vars(node, sh);
-		pid = fork();
-		if (pid == -1)
-		{
-			sh->status = wait_for(commands);
-			free_intvec(commands);
-			errexit("Error:", "fork failure", NULL, sh);
-		}
-		else if (pid == 0)
-		{
-			if (pipe(sh->hfd) == -1 )
-				errexit("error :", "pipe initialization", NULL, sh);
-			free_intvec(commands);
-			exec_cmd(node, sh, cwd);
-		}
-		else
-		{
-			parent_side_operations(node, cwd, sh);
-			if (sh->cmdcount > 1)
-				switch_pipe_fds(sh);
-			if (commands != NULL)
-				add_to_intvec(commands, pid, sh);
-		}
-	}
+		make_child(node, sh, commands, cwd);
 	if (node->right != NULL)
 		exec_node(node->right, sh, commands);
-	// close_all_pipes(sh);
 	return (0);
 }
 

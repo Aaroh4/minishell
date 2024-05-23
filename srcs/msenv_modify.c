@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   msenv_modify.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:42:56 by mburakow          #+#    #+#             */
 /*   Updated: 2024/05/21 21:49:29 by mburakow         ###   ########.fr       */
@@ -28,14 +28,14 @@ void	increase_shell_level(t_shell *sh)
 void	modify_env_internal(char *name, char *value, t_shell *sh)
 {
 	int		i;
-	int 	eqpos;
+	int		eqpos;
 	char	*env_name;
 	char	*new;
-	char 	*temp;
+	char	*temp;
 
-	i = 0;
+	i = -1;
 	eqpos = 0;
-	while (sh->ms_envp[i] != NULL)
+	while (sh->ms_envp[++i] != NULL)
 	{
 		eqpos = ft_strcpos(sh->ms_envp[i], 61);
 		env_name = ft_substr(sh->ms_envp[i], 0, eqpos);
@@ -44,14 +44,12 @@ void	modify_env_internal(char *name, char *value, t_shell *sh)
 			temp = ft_strjoin(name, "=");
 			new = ft_strjoin(temp, value);
 			free(temp);
-			temp = sh->ms_envp[i];
-			free(temp);
+			free(sh->ms_envp[i]);
 			sh->ms_envp[i] = new;
 			free(env_name);
-			break;
+			break ;
 		}
 		free(env_name);
-		i++;
 	}
 	return ;
 }
@@ -73,7 +71,7 @@ char	*get_env_val_by_name(char *name, t_shell *sh)
 		{
 			free(env_name);
 			env_name = NULL;
-			return(&sh->ms_envp[i][eqpos + 1]);
+			return (&sh->ms_envp[i][eqpos + 1]);
 		}
 		free(env_name);
 		env_name = NULL;
