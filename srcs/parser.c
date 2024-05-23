@@ -6,26 +6,26 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/23 07:40:45 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/23 14:43:10 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	trim_quote_alloc_hdoc_rdir(t_shell *sh)
+static void	trim_alloc_hdoc_rdir(t_shell *sh)
 {
 	int		i;
 
 	i = 0;
 	i = 0;
-	while (sh->cmd[i] != NULL)
+	while (sh->cmd[i] != NULL)	
 	{
 		sh->cmd[i] = trim_string(sh->cmd[i]);
 		i++;
 	}
-	print_char_array(sh->cmd);
-	sh->cmd = ft_remove_quotes(sh->cmd);
-	print_char_array(sh->cmd);
+	// print_char_array(sh->cmd);
+	sh->cmd = remove_quotes_ex_export(sh->cmd);
+	// print_char_array(sh->cmd);
 	sh->hdocs = ft_calloc((i + 1), sizeof(int));
 	sh->redirs = ft_calloc((i + 1), sizeof(int));
 	if (sh->hdocs == NULL || sh->redirs  == NULL)
@@ -72,7 +72,7 @@ static t_cmdn	*create_node(t_cmdn *current, t_shell *sh, int index)
 	sh->cmd = ft_split_time_space(sh->cmdarr[index], ' ');
 	if (!(sh->cmd))
 		errexit("error: ", "root malloc", NULL, sh);
-	trim_quote_alloc_hdoc_rdir(sh);
+	trim_alloc_hdoc_rdir(sh);
 	get_heredocs(sh);
 	get_redirects(sh);
 	first = FALSE;
@@ -90,10 +90,6 @@ static t_cmdn	*create_node(t_cmdn *current, t_shell *sh, int index)
 		current->right = init_cmd_node(COMMAND, sh, TRUE, first);
 	return (current);
 }
-
-// Right now this creates both pipes if there are more than one command.
-// How pipes should work is create only pfd for multiple, efd for single builtin.
-// Strategy: Back up fds(ints) from previous cmd, call pipe again
 
 void	create_pipes(t_shell *sh)
 {
@@ -125,7 +121,6 @@ void	parse_input(t_shell *sh)
 	sh->cmdarr = ft_split(sh->input, "|");
 	if (!(sh->cmdarr))
 		errexit("error: ", "cmdarr malloc", NULL, sh);
-	// create_pipes(sh);
 	free(sh->input);
 	sh->input = NULL;
 	current = sh->root;

@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 16:54:02 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/23 05:31:19 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/23 12:39:00 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,6 @@ char	**copy_env_vals(int len, char **envp, char **ms_envp, t_shell *sh)
 	ms_envp[len] = NULL;
 	return (ms_envp);
 }
-
-
 
 char	**copy_envp(char **envp, t_shell *sh)
 {

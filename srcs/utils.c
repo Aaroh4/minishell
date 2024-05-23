@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 16:07:48 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/23 05:46:28 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/23 14:43:41 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,30 +108,39 @@ void	print_cmdn(t_cmdn *node)
 
 // Breaks export, we need to handle export ABC="a b c"
 // So that env: ABC=a b c 
-char	**ft_remove_quotes(char **cmd)
+char	**remove_quotes_ex_export(char **cmd)
 {
 	char	**cmdi;
 	char	*cur;
+	t_bool	export_flag;
 	int		i;
 
 	cmdi = cmd;
+	export_flag = FALSE;
 	while (*cmdi != NULL)
 	{
 		cur = *cmdi;
+		if (!ft_strncmp(cur, "export", ft_strlen(cur)))
+			export_flag = TRUE;
+		if (export_flag && (cur[0] =='<' || cur[0] == '>'))
+			export_flag = FALSE;
 		// dprintf(2, "cur is: %s\n", cur);
-		while (*cur != '\0')
+		if (!export_flag)
 		{
-			if (*cur == '\"')
+			while (*cur != '\0')
 			{
-				i = 0;
-				while (cur[i + 1] != '\0')
+				if (*cur == '\"')
 				{
-					cur[i] = cur[i + 1];
-					i++;
+					i = 0;
+					while (cur[i + 1] != '\0')
+					{
+						cur[i] = cur[i + 1];
+						i++;
+					}
+					cur[i] = '\0';
 				}
-				cur[i] = '\0';
+				cur++;
 			}
-			cur++;
 		}
 		cmdi++;
 	}

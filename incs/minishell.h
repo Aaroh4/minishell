@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/23 05:50:50 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/23 13:12:53 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ void		expand_intvec(t_intvec *dynarr, t_shell *sh);
 int			add_to_intvec(t_intvec *dynarr, int value, t_shell *sh);
 void		free_intvec(t_intvec *intvec);
 // Utilities:
-char		**ft_remove_quotes(char **cmd);
+char		**remove_quotes_ex_export(char **cmd);
 char		*get_exec_path(char **path, char *cmd, t_shell *sh);
 int			wait_for(t_intvec *children);
 void		print_cmdn(t_cmdn *root);

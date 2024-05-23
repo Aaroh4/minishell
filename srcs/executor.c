@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/23 07:11:32 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/23 14:42:41 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,10 +164,13 @@ static void	exec_cmd(t_cmdn *node, t_shell *sh, char *cwd)
 	char	*cmdp;
 
 	sh->status = open_redirects(node, sh);
+
 	if (check_hdocs(node))
 		if (dup2(sh->hfd[0], STDIN_FILENO) == -1)
 			errexit("error :", "dup2 failed", NULL, sh);
 	close_input_pipes(sh);
+	// print_char_array(node->cargs);
+	// node->cargs = remove_quotes_ex_export(node->cargs);
 	handle_heredocs(node, sh);
 	close_output_pipes(sh);
 	path_array = NULL;
@@ -246,7 +249,7 @@ void	modify_env(t_shell *sh, int pwd, char *cwd)
 				return ;
 			}
 			//else
-			//	dprintf(2, "Str at parent: %s\n", str);
+			//dprintf(2, "Str at parent: %s\n", str);
 			while (sh->ms_envp[i] != 0)
 			{
 				j = 0;
