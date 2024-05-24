@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split_time_space.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/03 12:03:00 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/24 12:50:39 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/24 15:22:06 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ void	ft_wording(char *dest, int *i, int *j, char const *s)
 	}
 }
 
+/*
 static void	do_word(char *dest, char const *s, char c, int check)
 {
 	int	i;
@@ -49,50 +50,73 @@ static void	do_word(char *dest, char const *s, char c, int check)
 	}
 	dest[i] = '\0';
 }
+*/
+
+// If a quote has been found, checks for matching quote.
+// If a matching quote is not found, returns original index.
+// Otherwise returns index of matching quote.
+int	quote_check(int i, const char *str, char q)
+{
+	int	orig;
+
+	orig = i;
+	while (str[i] != '\0')
+	{
+		if (str[i] == q && str[i - 1] != '\\')
+			return (i);
+		i++;
+	}
+	return (orig);
+}
+
+static void write_word(const char *src, char *word, int i, int j)
+{
+	int	k;
+
+	k = 0;
+	while (src[i] != '\0' && i != j)
+		word[k++] = src[i++];
+	word[k] = '\0';
+}
 
 static int	do_split(char **arr, char const *s, char c, int i)
 {
-	int	jcheck[2];
+	int	j;
 	int	word;
 
 	word = 0;
-	jcheck[0] = 0;
-	jcheck[1] = 0;
+	j = 0;
 	while (s[i] != '\0')
 	{
-		jcheck[0] = ft_checker(s, i, jcheck[0]);
 		if (s[i] == c)
 			i++;
 		else
 		{
-			jcheck[1] = ft_incrj(i, s, jcheck[0], c);
-			if ((s[i] == '\"' || s[i] == '\'') && jcheck[0] != 1)
-				i += jcheck[1];
-			else
+			j = i;
+			while (s[j] != c && s[j] != '\0')
 			{
-				arr[word] = (char *)malloc(sizeof(char) * (jcheck[1] + 2));
+				if ((s[j] == '\"' || s[j] == '\'') && (j == 0 || s[j - 1] != '\\'))
+				{
+					j++;
+					j = quote_check(j, s, s[j - 1]);
+				}
+				j++;
+			}
+			if (j > i)
+			{	
+				arr[word] = (char *)malloc(sizeof(char) * ((j - i) + 1));
 				if (!arr[word])
 					return (freemem(arr, word));
-				do_word(arr[word++], s + i, c, jcheck[0]);
-				i += jcheck[1];
+				else
+				{
+					write_word(s, arr[word], i, j);
+					word++;
+					i = j + 1;
+				}
 			}
 		}
 	}
 	return (0);
-}
-
-int	dq_check(int i, const char *str)
-{
-	int	i_orig;
-
-	i_orig = i;
-	while (str[i] != '\0')
-	{
-		if (str[i] == '\"' && str[i - 1] != '\\')
-			return (i);
-		i++;
-	}
-	return (i_orig);
 }
 
 int	wordcount(char const *s, char c)
@@ -104,12 +128,18 @@ int	wordcount(char const *s, char c)
 	count = 0;
 	while (s[i] != '\0')
 	{
-		if (s[i] == '\"' && (i == 0 || s[i - 1] != '\\'))
-			i = dq_check(++i, s);
+		while (s[i] == c)
+			i++;
+		if ((s[i] == '\"' || s[i] == '\'') && (i == 0 || s[i - 1] != '\\'))
+		{
+			i++;
+			i = quote_check(i, s, s[i - 1]);
+		}
 		if (s[i] != c && (s[i + 1] == c || (s[i + 1] == '\0')))
 			count++;
 		i++;
 	}
+	dprintf(2, "count was %d\n", count);
 	return (count);
 }
 
