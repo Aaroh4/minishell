@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 13:50:59 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/23 15:17:41 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/24 11:24:17 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ char	*trim_string(char *str)
 	return (str);
 }
 
-void	print_array(char **arr)
+void	print_char_array(char **arr)
 {
 	int	i;
 

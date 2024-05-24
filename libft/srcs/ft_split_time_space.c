@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/03 12:03:00 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/20 18:00:21 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/24 12:50:39 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,20 @@ static int	do_split(char **arr, char const *s, char c, int i)
 	return (0);
 }
 
+int	dq_check(int i, const char *str)
+{
+	int	i_orig;
+
+	i_orig = i;
+	while (str[i] != '\0')
+	{
+		if (str[i] == '\"' && str[i - 1] != '\\')
+			return (i);
+		i++;
+	}
+	return (i_orig);
+}
+
 int	wordcount(char const *s, char c)
 {
 	int	i;
@@ -90,10 +104,9 @@ int	wordcount(char const *s, char c)
 	count = 0;
 	while (s[i] != '\0')
 	{
-		if (s[i] == '\"' && s[i - 1] != '\\')
-			i = ft_check(i, s);
-		if ((s[i] != c && s[i + 1] == c)
-			|| (s[i + 1] == '\0' && s[i] != c))
+		if (s[i] == '\"' && (i == 0 || s[i - 1] != '\\'))
+			i = dq_check(++i, s);
+		if (s[i] != c && (s[i + 1] == c || (s[i + 1] == '\0')))
 			count++;
 		i++;
 	}

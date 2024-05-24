@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/23 15:14:24 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/24 11:23:59 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ int			wait_for(t_intvec *children);
 void		print_cmdn(t_cmdn *root);
 char		*trim_string(char *str);
 void		create_pipes(t_shell *sh);
-void		print_array(char **arr);
+void		print_char_array(char **arr);
 void		exit_function(void);
 void		input_start(t_shell *sh, struct termios oterm);
 // Buildins:
