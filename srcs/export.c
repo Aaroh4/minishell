@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 03:59:37 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/23 14:43:02 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/24 11:23:32 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	export_builtin(t_cmdn *node, t_shell *sh)
 	int		i;
 	int		j;
 
-	// print_char_array(node->cargs);
+	print_char_array(node->cargs);
 	if (node->cargs[1] == 0)
 	{
 		env_builtin(sh, TRUE);
