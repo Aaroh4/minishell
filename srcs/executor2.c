@@ -6,11 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 15:29:16 by ahamalai          #+#    #+#             */
-<<<<<<< Updated upstream
-/*   Updated: 2024/05/23 15:14:52 by mburakow         ###   ########.fr       */
-=======
-/*   Updated: 2024/05/24 13:09:10 by mburakow         ###   ########.fr       */
->>>>>>> Stashed changes
+/*   Updated: 2024/05/24 13:31:33 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

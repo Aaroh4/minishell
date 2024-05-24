@@ -6,11 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 13:50:59 by ahamalai          #+#    #+#             */
-<<<<<<< Updated upstream
-/*   Updated: 2024/05/24 11:24:17 by mburakow         ###   ########.fr       */
-=======
-/*   Updated: 2024/05/24 13:09:17 by mburakow         ###   ########.fr       */
->>>>>>> Stashed changes
+/*   Updated: 2024/05/24 13:28:55 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,5 +113,8 @@ void	print_char_array(char **arr)
 
 	i = 0;
 	while (arr[i])
+	{
+		dprintf(2, "[%d] ", i);
 		dprintf(2, "%s\n", arr[i++]);
+	}
 }
