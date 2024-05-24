@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 13:50:59 by ahamalai          #+#    #+#             */
 /*   Updated: 2024/05/24 11:24:17 by mburakow         ###   ########.fr       */
@@ -40,39 +40,36 @@ void	print_cmdn(t_cmdn *node)
 // So that env: ABC=a b c 
 char	**remove_quotes_ex_export(char **cmd)
 {
-	char	**cmdi;
-	char	*cur;
 	t_bool	export_flag;
 	int		i;
+	int		j;
 
-	cmdi = cmd;
 	export_flag = FALSE;
-	while (*cmdi != NULL)
+	i = -1;
+	while (cmd[++i] != NULL)
 	{
-		cur = *cmdi;
-		if (!ft_strncmp(cur, "export", ft_strlen(cur)))
+		j = 0;
+		if (!ft_strncmp(cmd[i], "export", ft_strlen(cmd[i])))
 			export_flag = TRUE;
-		if (export_flag && (cur[0] =='<' || cur[0] == '>'))
+		if (export_flag && (cmd[i][0] == '<' || cmd[i][0] == '>'))
 			export_flag = FALSE;
-		// dprintf(2, "cur is: %s\n", cur);
 		if (!export_flag)
 		{
-			while (*cur != '\0')
+			while (cmd[i][j] != '\0')
 			{
-				if (*cur == '\"')
+				if (cmd[i][j] == '\"' || cmd[i][j] == '\'')
 				{
-					i = 0;
-					while (cur[i + 1] != '\0')
+					while (cmd[i][j] != '\0')
 					{
-						cur[i] = cur[i + 1];
-						i++;
+						cmd[i][j] = cmd[i][j + 1];
+						j++;
 					}
-					cur[i] = '\0';
+					j = 0;
 				}
-				cur++;
+				else
+					j++;
 			}
 		}
-		cmdi++;
 	}
 	return (cmd);
 }
