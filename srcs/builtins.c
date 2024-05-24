@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:15:11 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/23 15:56:58 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/24 15:36:55 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,18 @@ int	env_builtin(t_shell *sh, t_bool export)
 	return (1);
 }
 
-int	unset_builtin(t_cmdn *node, t_shell *sh)
+int	count_j(t_cmdn *n, t_shell *sh, int i, int k)
+{
+	int	j;
+
+	j = 0;
+	while (sh->ms_envp[i][j] == n->cargs[k][j]
+			&& sh->ms_envp[i][j] != '=')
+		j++;
+	return (j);
+}
+
+int	unset_builtin(t_cmdn *n, t_shell *sh)
 {
 	int		i;
 	int		j;
@@ -106,21 +117,20 @@ int	unset_builtin(t_cmdn *node, t_shell *sh)
 	char	*temp;
 
 	k = 0;
-	while (node->cargs[++k] != NULL)
+	while (n->cargs[++k] != NULL)
 	{
 		i = -1;
-		while (sh->ms_envp[++i] != 0)
+		if (ft_strncmp(n->cargs[k], n->cargs[k - 1], ft_strlen(n->cargs[k])))
 		{
-			j = 0;
-			while (sh->ms_envp[i][j] == node->cargs[k][j]
-				&& sh->ms_envp[i][j] != '=')
-				j++;
-			if (node->cargs[k][j] == '\0' && sh->ms_envp[i][j] == '=')
+			while (sh->ms_envp[++i] != 0)
 			{
-				temp = sh->ms_envp[i];
-				ft_putstr_fd(temp, sh->efd[1]);
-				ft_putstr_fd("\n", sh->efd[1]);
-				free(temp);
+				j = count_j(n, sh, i, k);
+				if (n->cargs[k][j] == '\0' && sh->ms_envp[i][j] == '=')
+				{
+					temp = ft_strjoin(sh->ms_envp[i], "\n");
+					ft_putstr_fd(temp, sh->efd[1]);
+					free(temp);
+				}
 			}
 		}
 	}
