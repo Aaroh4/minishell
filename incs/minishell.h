@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/24 11:23:59 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/24 15:47:37 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,10 @@ int			check_hdocs(t_cmdn *node);
 char		*get_msenv(char *name, t_shell *sh);
 char		**remove_from_array(char **str, int i, t_cmdn *node);
 int			exec_builtin(t_cmdn *node, t_shell *sh, char *cwd);
+void		make_child(t_cmdn *node, t_shell *sh,
+				t_intvec *commands, char *cwd);
+void		exec_cmd(t_cmdn *node, t_shell *sh, char *cwd);
+void		check_builtin(t_cmdn *node, t_shell *sh, char *cwd);
 // Dynamic Integer Array:
 t_intvec*	create_intvec(t_shell *sh);
 void		expand_intvec(t_intvec *dynarr, t_shell *sh);
