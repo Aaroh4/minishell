@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/11 12:41:47 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/04/17 15:07:48 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/23 16:17:01 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 
 int	ft_check(int i, const char *str)
 {
-	if (str[i] == '\"')
+	if (str[i] == '\"' || str[i] == '\'')
 	{
 		i++;
 		while (str[i] != '|' && str[i] != '\0')
 			i++;
-		while (str[i] != '\"')
+		while (str[i] != '\"' && str[i] != '\'')
 			i--;
 	}
 	return (i);
@@ -35,7 +35,7 @@ int	freemem(char **arr, int size)
 
 int	ft_checker(char const *s, int i, int check)
 {
-	if (s[i] == '\"' && !check)
+	if ((s[i] == '\"' || s[i] == '\'') && !check)
 		return (1);
 	return (0);
 }
@@ -45,11 +45,11 @@ int	ft_incrj(int i, char const *s, int check, char c)
 	int	j;
 
 	j = 0;
-	if (s[i] == '\"' && check == 1)
+	if ((s[i] == '\"' || s[i] == '\'') && check == 1)
 	{
 		while (s[i + j + 1] != '|' && s[i + j + 1] != '\0')
 			j++;
-		while (s[i + j] != '\"')
+		while (s[i + j] != '\"' && s[i + j] != '\'')
 			j--;
 		i++;
 	}

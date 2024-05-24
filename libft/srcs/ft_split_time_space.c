@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split_time_space.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/03 12:03:00 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/20 18:00:21 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/23 16:18:33 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,9 @@ static void	do_word(char *dest, char const *s, char c, int check)
 	int	j;
 
 	i = 0;
-	if (check == 0 && s[i] == '\"')
+	if (check == 0 && (s[i] == '\"' || s[i] == '\''))
 		i++;
-	else if (s[i] == '\"')
+	else if (s[i] == '\"' || s[i] == '\'')
 	{
 		ft_wording(dest, &i, &j, s);
 		return ;
@@ -66,7 +66,7 @@ static int	do_split(char **arr, char const *s, char c, int i)
 		else
 		{
 			jcheck[1] = ft_incrj(i, s, jcheck[0], c);
-			if (s[i] == '\"' && jcheck[0] != 1)
+			if ((s[i] == '\"' || s[i] == '\'') && jcheck[0] != 1)
 				i += jcheck[1];
 			else
 			{
@@ -90,7 +90,7 @@ int	wordcount(char const *s, char c)
 	count = 0;
 	while (s[i] != '\0')
 	{
-		if (s[i] == '\"' && s[i - 1] != '\\')
+		if ((s[i] == '\"' || s[i] == '\'') && s[i - 1] != '\\')
 			i = ft_check(i, s);
 		if ((s[i] != c && s[i + 1] == c)
 			|| (s[i + 1] == '\0' && s[i] != c))
