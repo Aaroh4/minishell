@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 13:50:59 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/26 15:07:59 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/26 17:30:27 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,25 +61,33 @@ char	*remove_quote_level(char *str, t_shell *sh)
 	int		i;
 	int		j;
 	int		lj;
+	int		k;
 	char	*s[2];
-	char	*tmp;
+	char	*tmp[2];
 
+	if (test_quote_level(str) == -1)
+		return (str);
 	i = 0;
 	j = 0;
 	lj = 0;
+	k = 0;
 	s[0] = str;
 	s[1] = NULL;
-	tmp = NULL;
+	tmp[0] = NULL;
+	tmp[1] = NULL;
+	dprintf(2, "String handled: %s\n", str);
 	while (s[0][i] != '\0')
 	{
 		if (s[0][i] == '\"' || s[0][i] == '\'')
 		{
 			if (j > 0)
-				// Put here k 1 or 0
-			tmp = replace_envp_tags(ft_substr(s[0], j, i - j), sh);
-			dprintf(2, "TMp is: %s\n", tmp);
-			s[1] = ft_strjoin(s[1], tmp);
-			free(tmp);
+				k = 1;
+			tmp[0] = replace_envp_tags(ft_substr(s[0], j + k, i - (j + k)), sh);
+			dprintf(2, "Tmp is: %s\n", tmp[0]);
+			tmp[1] = ft_strjoin(s[1], tmp[0]);
+			free(s[1]);
+			free(tmp[0]);
+			s[1] = tmp[1];
 			j = i + 1;
 			while (j != '\0')
 			{
@@ -97,9 +105,19 @@ char	*remove_quote_level(char *str, t_shell *sh)
 		i++;
 	}
 	dprintf(2, "Ret wo tail: %s\n", s[1]);
-	tmp = replace_envp_tags(ft_substr(s[0], lj, ft_strlen(s[0]) - lj), sh);
-	s[1] = ft_strjoin(s[1], tmp);
-	free(tmp);
+	dprintf(2, "lj is: %d len: %d\n", lj, ft_strlen(s[0]));
+	dprintf(2, "char at lj: %d c: %c\n", lj, s[0][lj]);
+	dprintf(2, "Whole string: %s\n", s[0]);
+	tmp[0] = ft_substr(s[0], lj + 1, ft_strlen(s[0]) - lj);
+	dprintf(2, "Tmp almost final is: %s\n", tmp[0]);
+	tmp[1] = replace_envp_tags(tmp[0], sh);
+	//free(tmp[0]);
+	dprintf(2, "Tmp final is: %s\n", tmp[1]);
+	tmp[0] = ft_strjoin(s[1], tmp[0]);
+	//free(s[1]);
+	//free(tmp[1]);
+	s[1] = tmp[0];
+	dprintf(2, "Ret with tail: %s\n", s[1]);
 	return (s[1]);
 }
 
@@ -167,7 +185,6 @@ void	print_char_array(char **arr)
 	}
 }
 
-/*
 char	test_quote_level(char *str)
 {
 	int	i;
@@ -189,6 +206,5 @@ char	test_quote_level(char *str)
 		}
 		i++;
 	}
-	return (0);	
+	return (-1);	
 }
-*/

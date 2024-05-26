@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/03 12:03:00 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/26 14:21:04 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/26 16:33:55 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,7 +139,7 @@ int	wordcount(char const *s, char c)
 			count++;
 		i++;
 	}
-	// dprintf(2, "count was %d\n", count);
+	dprintf(2, "count was %d\n", count);
 	return (count);
 }
 
@@ -156,8 +156,8 @@ char	**ft_split_time_space(char const *s, char c)
 	arr = (char **)malloc(sizeof(char *) * (count + 1));
 	if (!arr)
 		return (NULL);
-	arr[count] = NULL;
 	if (do_split(arr, s, c, i) == -1)
 		return (NULL);
+	arr[count] = NULL;
 	return (arr);
 }
