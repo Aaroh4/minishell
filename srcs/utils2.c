@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 13:50:59 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/26 17:30:27 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/26 17:56:01 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,13 +110,13 @@ char	*remove_quote_level(char *str, t_shell *sh)
 	dprintf(2, "Whole string: %s\n", s[0]);
 	tmp[0] = ft_substr(s[0], lj + 1, ft_strlen(s[0]) - lj);
 	dprintf(2, "Tmp almost final is: %s\n", tmp[0]);
-	tmp[1] = replace_envp_tags(tmp[0], sh);
-	//free(tmp[0]);
-	dprintf(2, "Tmp final is: %s\n", tmp[1]);
-	tmp[0] = ft_strjoin(s[1], tmp[0]);
-	//free(s[1]);
-	//free(tmp[1]);
-	s[1] = tmp[0];
+	tmp[0] = replace_envp_tags(tmp[0], sh);
+	dprintf(2, "Tmp final is: %s\n", tmp[0]);
+	tmp[1] = ft_strjoin(s[1], tmp[0]);
+	free(tmp[0]);
+	free(s[1]);
+	free(str);
+	s[1] = tmp[1];
 	dprintf(2, "Ret with tail: %s\n", s[1]);
 	return (s[1]);
 }
