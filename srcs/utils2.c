@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 13:50:59 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/26 13:33:19 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/26 14:23:36 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ char	*remove_quote_level(char *str, t_shell *sh)
 		if (s[0][i] == '\"' || s[0][i] == '\'')
 		{
 			j = i + 1;
-			if (s[1] == NULL)
+			if (s[1] == NULL) // This should take into account all cases in the mid
 				s[1] = replace_envp_tags(ft_substr(s[0], 0, i), sh);
 			while (j != '\0')
 			{
@@ -90,7 +90,7 @@ char	*remove_quote_level(char *str, t_shell *sh)
 	}
 	if (s[1] == NULL)
 		return (s[0]);
-	dprintf(2, "Ret wo tail: %s\n", s[1]);
+	// dprintf(2, "Ret wo tail: %s\n", s[1]);
 	s[1] = ft_strjoin(s[1], replace_envp_tags(ft_substr(s[0], lj, ft_strlen(s[0]) - lj), sh));
 	if (s[1] == NULL)
 		return (s[0]);
