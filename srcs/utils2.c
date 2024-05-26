@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 13:50:59 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/26 09:01:30 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/26 13:33:19 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,54 +36,72 @@ void	print_cmdn(t_cmdn *node)
 	print_cmdn(node->right);
 }
 
-char	*loop_remove_quotepair(char *str, int i, int j)
+void	remove_quotepair(char *strret[2], int i, int j, t_shell *sh)
 {
-	while (str[j] != '\0')
-	{
-		str[j] = str[j + 1];
-		j++;
-	}
-	while (str[i] != '\0')
-	{
-		str[i] = str[i + 1];
-		i++;
-	}
-	return (str);
+	char *temp;
+	char *temp2;
+
+	temp = ft_substr(strret[0], i + 1, j - (i + 1));
+	// dprintf(2, "Substr: %s quote: %c\n", temp, strret[0][i]);
+	if (!strret[1])
+		strret[1] = ft_strdup("");
+	if (strret[0][i] == '\"')
+		temp = replace_envp_tags(temp, sh);
+	temp2 = ft_strjoin(strret[1], temp);
+	free(temp);
+	free(strret[1]);
+	strret[1] = temp2;
+	// dprintf(2, "Ret: %s\n", strret[1]);
 }
 
-char	*remove_quote_level(char *str)
+// Strret[0] is the source, strret[1] the final array
+char	*remove_quote_level(char *str, t_shell *sh)
 {
-	int	i;
-	int	j;
+	int		i;
+	int		j;
+	int		lj;
+	char	*s[2];
 
 	i = 0;
 	j = 0;
-	while (str[i] != '\0')
+	lj = 0;
+	s[0] = str;
+	s[1] = NULL;
+	while (s[0][i] != '\0')
 	{
-		if (str[i] == '\"' || str[i] == '\'')
+		if (s[0][i] == '\"' || s[0][i] == '\'')
 		{
-			j = ft_strlen(str) - 1;
-			while (j > i)
+			j = i + 1;
+			if (s[1] == NULL)
+				s[1] = replace_envp_tags(ft_substr(s[0], 0, i), sh);
+			while (j != '\0')
 			{
-				if (str[j] == str[i])
-					return (loop_remove_quotepair(str, i, j));
-				j--;
+				if (s[0][j] == s[0][i])
+				{
+					remove_quotepair(s, i, j, sh);
+					i = j;
+					lj = j + 1;
+					break ;
+				}
+				j++;
 			}
 		}
 		i++;
 	}
-	return (str);
+	if (s[1] == NULL)
+		return (s[0]);
+	dprintf(2, "Ret wo tail: %s\n", s[1]);
+	s[1] = ft_strjoin(s[1], replace_envp_tags(ft_substr(s[0], lj, ft_strlen(s[0]) - lj), sh));
+	if (s[1] == NULL)
+		return (s[0]);
+	return (s[1]);
 }
 
-// This needs to account for quotes
-char	**remove_quotes_ex_export(char **cmd)
+char	**remove_quotes_ex_export(char **cmd, t_shell *sh)
 {
 	t_bool	export_flag;
 	int		i;
-	// int		j;
-	// char	q;
 
-	// QUOTES!!
 	export_flag = FALSE;
 	i = -1;
 	while (cmd[++i] != NULL)
@@ -93,7 +111,7 @@ char	**remove_quotes_ex_export(char **cmd)
 		if (export_flag && (cmd[i][0] == '<' || cmd[i][0] == '>'))
 			export_flag = FALSE;
 		if (!export_flag)
-			remove_quote_level(cmd[i]);
+			remove_quote_level(cmd[i], sh);
 	}
 	return (cmd);
 }
@@ -142,3 +160,29 @@ void	print_char_array(char **arr)
 		dprintf(2, "%s\n", arr[i++]);
 	}
 }
+
+/*
+char	test_quote_level(char *str)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (str[i] != '\0')
+	{
+		if (str[i] == '\"' || str[i] == '\'')
+		{
+			j = ft_strlen(str) - 1;
+			while (j > i)
+			{
+				if (str[j] == str[i])
+					return (str[i]);
+				j--;
+			}
+		}
+		i++;
+	}
+	return (0);	
+}
+*/

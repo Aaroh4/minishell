@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/24 13:30:08 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/26 11:46:39 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ void	make_child(t_cmdn *node, t_shell *sh, t_intvec *commands, char *cwd)
 	int		pid;
 
 	pid = 0;
-	populate_env_vars(node, sh);
+	// populate_env_vars(node, sh);
 	pid = fork();
 	if (pid == -1)
 	{
