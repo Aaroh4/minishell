@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 03:59:37 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/26 14:21:31 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/26 22:27:30 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int export_check_envname(int j, t_cmdn *node, t_shell *sh)
 		if (node->cargs[j][i] == '=')
 		{
 			// export_quote_expand_env(&node->cargs[j][i + 1], node, sh);
-			remove_quote_level(&node->cargs[j][i + 1], sh); 
+			// remove_quote_level(&node->cargs[j][i + 1], sh); 
 			ft_putstr_fd(node->cargs[j], sh->efd[1]);
 			ft_putstr_fd("\n", sh->efd[1]);
 			return (i);

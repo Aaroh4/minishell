@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 13:50:59 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/26 18:03:29 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/26 22:29:54 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ char	*remove_quote_level(char *str, t_shell *sh)
 	s[1] = NULL;
 	tmp[0] = NULL;
 	tmp[1] = NULL;
-	dprintf(2, "String handled: %s\n", str);
+	// dprintf(2, "String handled: %s\n", str);
 	while (s[0][i] != '\0')
 	{
 		if (s[0][i] == '\"' || s[0][i] == '\'')
@@ -83,7 +83,7 @@ char	*remove_quote_level(char *str, t_shell *sh)
 			if (j > 0)
 				k = 1;
 			tmp[0] = replace_envp_tags(ft_substr(s[0], j + k, i - (j + k)), sh);
-			dprintf(2, "Tmp is: %s\n", tmp[0]);
+			// dprintf(2, "Tmp is: %s\n", tmp[0]);
 			if (!s[1])
 				s[1] = ft_strdup("");
 			tmp[1] = ft_strjoin(s[1], tmp[0]);
@@ -96,7 +96,7 @@ char	*remove_quote_level(char *str, t_shell *sh)
 				if (s[0][j] == s[0][i])
 				{
 					remove_quotepair(s, i, j, sh);
-					dprintf(2, "s[1] is: %s\n", s[1]);
+					//dprintf(2, "s[1] is: %s\n", s[1]);
 					i = j;
 					lj = j;
 					break ;
@@ -106,23 +106,24 @@ char	*remove_quote_level(char *str, t_shell *sh)
 		}
 		i++;
 	}
-	dprintf(2, "Ret wo tail: %s\n", s[1]);
-	dprintf(2, "lj is: %d len: %d\n", lj, ft_strlen(s[0]));
-	dprintf(2, "char at lj: %d c: %c\n", lj, s[0][lj]);
-	dprintf(2, "Whole string: %s\n", s[0]);
+	//dprintf(2, "Ret wo tail: %s\n", s[1]);
+	//dprintf(2, "lj is: %d len: %d\n", lj, ft_strlen(s[0]));
+	//dprintf(2, "char at lj: %d c: %c\n", lj, s[0][lj]);
+	//dprintf(2, "Whole string: %s\n", s[0]);
 	tmp[0] = ft_substr(s[0], lj + 1, ft_strlen(s[0]) - lj);
-	dprintf(2, "Tmp almost final is: %s\n", tmp[0]);
+	//dprintf(2, "Tmp almost final is: %s\n", tmp[0]);
 	tmp[0] = replace_envp_tags(tmp[0], sh);
-	dprintf(2, "Tmp final is: %s\n", tmp[0]);
+	//dprintf(2, "Tmp final is: %s\n", tmp[0]);
 	tmp[1] = ft_strjoin(s[1], tmp[0]);
 	free(tmp[0]);
 	free(s[1]);
 	free(str);
 	s[1] = tmp[1];
-	dprintf(2, "Ret with tail: %s\n", s[1]);
+	//dprintf(2, "Ret with tail: %s\n", s[1]);
 	return (s[1]);
 }
 
+/*
 char	**remove_quotes_ex_export(char **cmd, t_shell *sh)
 {
 	t_bool	export_flag;
@@ -141,6 +142,7 @@ char	**remove_quotes_ex_export(char **cmd, t_shell *sh)
 	}
 	return (cmd);
 }
+*/
 
 // At the moment accounts only for space characters,
 //	are other characters necessary?
