@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 13:50:59 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/26 14:23:36 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/26 15:07:59 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,32 +55,40 @@ void	remove_quotepair(char *strret[2], int i, int j, t_shell *sh)
 }
 
 // Strret[0] is the source, strret[1] the final array
+// Need to handle areas between quotes, in the beginning and end that are not inside quotes
 char	*remove_quote_level(char *str, t_shell *sh)
 {
 	int		i;
 	int		j;
 	int		lj;
 	char	*s[2];
+	char	*tmp;
 
 	i = 0;
 	j = 0;
 	lj = 0;
 	s[0] = str;
 	s[1] = NULL;
+	tmp = NULL;
 	while (s[0][i] != '\0')
 	{
 		if (s[0][i] == '\"' || s[0][i] == '\'')
 		{
+			if (j > 0)
+				// Put here k 1 or 0
+			tmp = replace_envp_tags(ft_substr(s[0], j, i - j), sh);
+			dprintf(2, "TMp is: %s\n", tmp);
+			s[1] = ft_strjoin(s[1], tmp);
+			free(tmp);
 			j = i + 1;
-			if (s[1] == NULL) // This should take into account all cases in the mid
-				s[1] = replace_envp_tags(ft_substr(s[0], 0, i), sh);
 			while (j != '\0')
 			{
 				if (s[0][j] == s[0][i])
 				{
 					remove_quotepair(s, i, j, sh);
+					dprintf(2, "s[1] is: %s\n", s[1]);
 					i = j;
-					lj = j + 1;
+					lj = j;
 					break ;
 				}
 				j++;
@@ -88,12 +96,10 @@ char	*remove_quote_level(char *str, t_shell *sh)
 		}
 		i++;
 	}
-	if (s[1] == NULL)
-		return (s[0]);
-	// dprintf(2, "Ret wo tail: %s\n", s[1]);
-	s[1] = ft_strjoin(s[1], replace_envp_tags(ft_substr(s[0], lj, ft_strlen(s[0]) - lj), sh));
-	if (s[1] == NULL)
-		return (s[0]);
+	dprintf(2, "Ret wo tail: %s\n", s[1]);
+	tmp = replace_envp_tags(ft_substr(s[0], lj, ft_strlen(s[0]) - lj), sh);
+	s[1] = ft_strjoin(s[1], tmp);
+	free(tmp);
 	return (s[1]);
 }
 
