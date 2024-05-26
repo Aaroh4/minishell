@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 13:50:59 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/26 17:56:01 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/26 18:03:29 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,8 @@ char	*remove_quote_level(char *str, t_shell *sh)
 				k = 1;
 			tmp[0] = replace_envp_tags(ft_substr(s[0], j + k, i - (j + k)), sh);
 			dprintf(2, "Tmp is: %s\n", tmp[0]);
+			if (!s[1])
+				s[1] = ft_strdup("");
 			tmp[1] = ft_strjoin(s[1], tmp[0]);
 			free(s[1]);
 			free(tmp[0]);
