@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 13:50:59 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/24 13:28:55 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/26 09:01:30 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,40 +36,64 @@ void	print_cmdn(t_cmdn *node)
 	print_cmdn(node->right);
 }
 
-// Breaks export, we need to handle export ABC="a b c"
-// So that env: ABC=a b c 
+char	*loop_remove_quotepair(char *str, int i, int j)
+{
+	while (str[j] != '\0')
+	{
+		str[j] = str[j + 1];
+		j++;
+	}
+	while (str[i] != '\0')
+	{
+		str[i] = str[i + 1];
+		i++;
+	}
+	return (str);
+}
+
+char	*remove_quote_level(char *str)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (str[i] != '\0')
+	{
+		if (str[i] == '\"' || str[i] == '\'')
+		{
+			j = ft_strlen(str) - 1;
+			while (j > i)
+			{
+				if (str[j] == str[i])
+					return (loop_remove_quotepair(str, i, j));
+				j--;
+			}
+		}
+		i++;
+	}
+	return (str);
+}
+
+// This needs to account for quotes
 char	**remove_quotes_ex_export(char **cmd)
 {
 	t_bool	export_flag;
 	int		i;
-	int		j;
+	// int		j;
+	// char	q;
 
+	// QUOTES!!
 	export_flag = FALSE;
 	i = -1;
 	while (cmd[++i] != NULL)
 	{
-		j = 0;
 		if (!ft_strncmp(cmd[i], "export", ft_strlen(cmd[i])))
 			export_flag = TRUE;
 		if (export_flag && (cmd[i][0] == '<' || cmd[i][0] == '>'))
 			export_flag = FALSE;
 		if (!export_flag)
-		{
-			while (cmd[i][j] != '\0')
-			{
-				if (cmd[i][j] == '\"' || cmd[i][j] == '\'')
-				{
-					while (cmd[i][j] != '\0')
-					{
-						cmd[i][j] = cmd[i][j + 1];
-						j++;
-					}
-					j = 0;
-				}
-				else
-					j++;
-			}
-		}
+			remove_quote_level(cmd[i]);
 	}
 	return (cmd);
 }
