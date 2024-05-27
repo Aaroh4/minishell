@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/27 10:50:24 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/27 15:58:56 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ void		clean_cargs_hdrd(t_cmdn *node);
 void		exec_cmd(t_cmdn *node, t_shell *sh, char *cwd);
 void		check_builtin(t_cmdn *node, t_shell *sh, char *cwd);
 // Dynamic Integer Array:
-t_intvec*	create_intvec(t_shell *sh);
+t_intvec	*create_intvec(t_shell *sh);
 void		expand_intvec(t_intvec *dynarr, t_shell *sh);
 int			add_to_intvec(t_intvec *dynarr, int value, t_shell *sh);
 void		free_intvec(t_intvec *intvec);
@@ -131,7 +131,7 @@ char		**removing_loop(char *tempstr, char **temp_ms, int *j);
 
 // Environment variables:
 void		increase_shell_level(t_shell *sh);
-char		*replace_envp_tags(char* input, t_shell *sh);
+char		*replace_envp_tags(char *input, t_shell *sh);
 char		**copy_envp(char **envp, t_shell *sh);
 char		*move_ucase(char *start);
 void		populate_env_vars(t_cmdn *node, t_shell *sh);
@@ -152,7 +152,7 @@ void		init_shell_struct(t_shell *sh);
 t_cmdn		*init_cmd_node(t_ntype type,
 				t_shell *sh, t_bool last, t_bool first);
 // Freeing
-void		free(void* p);
+void		free(void *p);
 void		free_args(char **args);
 void		free_cmdn(t_cmdn *node);
 void		free_child(t_shell *sh);
@@ -161,5 +161,15 @@ void		close_ext_pipes(t_shell *sh);
 // Signals
 void		disable_raw_mode(struct termios oterm);
 void		enable_raw_mode(void);
+
+// Parser
+void		first_redir(t_shell *sh, t_cmdn *node, int i, int *inrdrs);
+int			second_redir(t_shell *sh, t_cmdn *node, int i, int *outrdrs);
+int			third_redir(t_shell *sh, t_cmdn *node, int i, int *outrdrs);
+void		redirects_more_command(t_shell *sh, t_cmdn *node,
+				int inrdrs, int outrdrs);
+void		trim_space(char *c);
+void		trim_outputs(char *c);
+char		*trim_rdirspace(char *cmd);
 
 #endif
