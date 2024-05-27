@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 13:50:59 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/27 17:31:08 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/27 21:55:58 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ static void	remove_and_replace(char *s[2], char *tmp[2], int i[3], t_shell *sh)
 
 static void	finish_and_free(char *s[2], char *tmp[2], int i[3], t_shell *sh)
 {
-	tmp[0] = ft_substr(s[0], i[2], (ft_strlen(s[0]) - i[2]));
+	tmp[0] = ft_substr(s[0], i[2], (ft_strlen(s[0]) - i[2] - 1));
 	tmp[0] = replace_envp_tags(tmp[0], sh);
 	tmp[1] = ft_strjoin(s[1], tmp[0]);
 	free(tmp[0]);
