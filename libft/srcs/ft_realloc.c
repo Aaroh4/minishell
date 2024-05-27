@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_realloc.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 14:16:17 by mburakow          #+#    #+#             */
-/*   Updated: 2024/04/24 14:51:40 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/27 10:51:24 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,4 +25,4 @@ void	*ft_realloc(void *ptr, size_t size)
 		free(ptr);
 	}
 	return (new_ptr);
-}	
+}

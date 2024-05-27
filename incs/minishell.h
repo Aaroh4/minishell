@@ -25,7 +25,7 @@
 # include <readline/history.h>
 # include <termios.h>
 
-#define INITIAL_SIZE 10
+# define INITIAL_SIZE 10
 
 typedef enum s_bool
 {
@@ -162,4 +162,14 @@ void		close_ext_pipes(t_shell *sh);
 void		disable_raw_mode(struct termios oterm);
 void		enable_raw_mode(void);
 
+// Redirects
+void		first_redir(t_shell *sh, t_cmdn *node, int i, int *inrdrs);
+int			second_redir(t_shell *sh, t_cmdn *node, int i, int *outrdrs);
+int			third_redir(t_shell *sh, t_cmdn *node, int i, int *outrdrs);
+void		redirects_more_command(t_shell *sh, t_cmdn *node,
+				int inrdrs, int outrdrs);
+void		trim_space(char *c);
+void		trim_outputs(char *c);
+void		trim_inputs(char *c);
+char		*trim_rdirspace(char *cmd);
 #endif

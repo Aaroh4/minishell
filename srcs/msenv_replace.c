@@ -30,7 +30,6 @@ void print_env_struct(t_env_tdata *envd)
 	dprintf(2, "envd->temp =  %s\n", envd->temp);
 	dprintf(2, "envd->total_len = %d\n", envd->total_len);
 }
-
 static void	determine_env(t_shell *sh, t_env_tdata *envd)
 {
 	int	i;

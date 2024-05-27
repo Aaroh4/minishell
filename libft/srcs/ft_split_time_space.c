@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split_time_space.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/03 12:03:00 by ahamalai          #+#    #+#             */
 /*   Updated: 2024/05/27 14:46:34 by mburakow         ###   ########.fr       */
@@ -13,26 +13,19 @@
 #include "libft.h"
 #include <stdio.h>
 
-void	ft_wording(char *dest, int *i, int *j, char const *s)
+static void	write_word(const char *src, char *word, int i, int j)
 {
-	dest[*i] = s[*i];
-	(*i)++;
-	*j = *i;
-	while (s[*i] != '|' && s[*i] != '\0')
-		(*i)++;
-	dest[*i] = '\0';
-	(*i)--;
-	while (*i >= *j)
-	{
-		dest[*i] = s[*i];
-		(*i)--;
-	}
+	int	k;
+
+	k = 0;
+	while (src[i] != '\0' && i != j)
+		word[k++] = src[i++];
+	word[k] = '\0';
 }
 
 /*
 static void	do_word(char *dest, char const *s, char c, int check)
 {
-	int	i;
 	int	j;
 
 	i = 0;
@@ -45,10 +38,14 @@ static void	do_word(char *dest, char const *s, char c, int check)
 	}
 	while (s[i] != c && s[i] != '\0')
 	{
-		dest[i] = s[i];
-		i++;
+		if ((s[j] == '\"' || s[j] == '\'') && (j == 0 || s[j - 1] != '\\'))
+		{
+			j++;
+			j = quote_check(j, s, s[j - 1]);
+		}
+		j++;
 	}
-	dest[i] = '\0';
+	return (j);
 }
 */
 
@@ -83,6 +80,7 @@ static int	do_split(char **arr, char const *s, char c, int i)
 {
 	int	j;
 	int	word;
+	int	j;
 
 	word = 0;
 	j = 0;

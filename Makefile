@@ -23,7 +23,7 @@ SRCS 			=	main.c builtins.c parser.c executor.c utils.c intvec.c \
                     msenv.c msenv_replace.c msenv_modify.c heredoc.c error.c \
 					free.c redirect.c init.c builtins2.c builtinshelpers.c \
 					executor2.c executor3.c executorhelpers.c utils2.c utils3.c \
-					export.c
+					export.c redirect2.c redirect3.c
 
 OBJ_DIR			=	./objs
 OBJS			=	$(SRCS:%.c=$(OBJ_DIR)/%.o)

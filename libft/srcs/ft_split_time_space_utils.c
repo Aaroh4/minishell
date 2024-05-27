@@ -12,6 +12,22 @@
 
 #include "libft.h"
 
+void	ft_wording(char *dest, int *i, int *j, char const *s)
+{
+	dest[*i] = s[*i];
+	(*i)++;
+	*j = *i;
+	while (s[*i] != '|' && s[*i] != '\0')
+		(*i)++;
+	dest[*i] = '\0';
+	(*i)--;
+	while (*i >= *j)
+	{
+		dest[*i] = s[*i];
+		(*i)--;
+	}
+}
+
 int	ft_check(int i, const char *str)
 {
 	if (str[i] == '\"' || str[i] == '\'')

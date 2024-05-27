@@ -52,13 +52,17 @@ static void	trim_quote_alloc_hdoc_rdir(t_shell *sh)
 		i++;
 	}
 	sh->hdocs = ft_calloc((i + 1), sizeof(int));
+	dprintf(2, "5hello\n");
 	sh->redirs = ft_calloc((i + 1), sizeof(int));
+	dprintf(2, "6hello\n");
 	if (sh->hdocs == NULL || sh->redirs == NULL)
 		errexit("hdocs or redirs malloc error", NULL, NULL, sh);
 	sh->hdocs[i] = -1;
 	sh->redirs[i] = -1;
 	get_heredocs(sh);
+		dprintf(2, "7hello\n");
 	get_redirects(sh);
+		dprintf(2, "8hello\n");
 }
 
 static t_cmdn	*create_node(t_cmdn *current, t_shell *sh, int index)
@@ -77,6 +81,12 @@ static t_cmdn	*create_node(t_cmdn *current, t_shell *sh, int index)
 	if (!(sh->cmd))
 		errexit("error: ", "root malloc", NULL, sh);
 	trim_quote_alloc_hdoc_rdir(sh);
+	int	i = 0;
+	while(sh->cmd[i])
+	{
+		dprintf(2, "%s\n", sh->cmd[i]);
+		i++;
+	}
 	first = FALSE;
 	if (index == 0)
 		first = TRUE;
