@@ -3,73 +3,97 @@
 /*                                                        :::      ::::::::   */
 /*   utils3.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/23 14:32:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/27 16:19:44 by ahamalai         ###   ########.fr       */
+/*   Created: 2024/05/27 17:08:31 by mburakow          #+#    #+#             */
+/*   Updated: 2024/05/27 17:25:55 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	input_start(t_shell *sh, struct termios oterm)
+void	print_cmdn(t_cmdn *node)
 {
-	add_history(sh->input);
-	parse_input(sh);
-	run_cmds(sh);
-	free_new_prompt(sh);
-	disable_raw_mode(oterm);
-}
+	int	i;
 
-void	exit_function(void)
-{
-	write(1, "exit\n", 5);
-	exit (0);
-}
-
-void	unset_loop(int *j, char *str, char **temp, char **temp_ms)
-{
-	int	k;
-
-	k = 0;
-	while (temp_ms[*j] != 0)
+	if (node == NULL)
+		return ;
+	print_cmdn(node->left);
+	i = 0;
+	if (node->ntype == COMMAND)
+		ft_putendl_fd("COMMAND:", 2);
+	if (node->ntype == PIPELINE)
+		ft_putendl_fd("PIPELINE:", 2);
+	while (node->cargs && node->cargs[i] != 0)
 	{
-		if (ft_strncmp(str, temp_ms[*j], ft_strlen(str)))
+		if (i != 0)
+			ft_putchar_fd('\t', 2);
+		ft_putendl_fd(node->cargs[i], 2);
+		i++;
+	}
+	ft_putnbr_fd(node->last, 2);
+	ft_putchar_fd('\n', 2);
+	print_cmdn(node->right);
+}
+
+// ATM accounts only for spaces
+char	*trim_string(char *str)
+{
+	int		i;
+	char	*end;
+	char	*curs;
+
+	i = 0;
+	if (!str || str[0] == '\0' || str[0] == 0)
+		return (str);
+	while ((unsigned char)str[i] == 32)
+		i++;
+	curs = &str[i];
+	i = 0;
+	while (*curs != '\0')
+	{
+		str[i++] = *curs;
+		curs++;
+	}
+	end = str + ft_strlen(str) - 1;
+	while (end > str && (unsigned char)*end == 32)
+		end--;
+	end[1] = '\0';
+	return (str);
+}
+
+void	print_char_array(char **arr)
+{
+	int	i;
+
+	i = 0;
+	while (arr[i])
+	{
+		dprintf(2, "[%d] ", i);
+		dprintf(2, "%s\n", arr[i++]);
+	}
+}
+
+char	test_quote_level(char *str)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (str[i] != '\0')
+	{
+		if (str[i] == '\"' || str[i] == '\'')
 		{
-			temp[k] = temp_ms[*j];
-			k++;
+			j = ft_strlen(str) - 1;
+			while (j > i)
+			{
+				if (str[j] == str[i])
+					return (str[i]);
+				j--;
+			}
 		}
-		else
-			free(temp_ms[*j]);
-		*j += 1;
+		i++;
 	}
-}
-
-char	**unset_remove_from_array(t_shell *sh, char **temp_ms)
-{
-	int		j;
-	char	*str;
-	char	*tempstr;
-	char	**temp;
-
-	close (sh->efd[1]);
-	if (sh->cmdcount == 1)
-	{
-		tempstr = get_next_line(sh->efd[0]);
-		if (tempstr == NULL)
-			return (temp_ms);
-		str = ft_substr(tempstr, 0, ft_strlen(tempstr) - 1);
-		free(tempstr);
-		j = count_array(temp_ms);
-		temp = malloc(sizeof(char *) * (j + 1));
-		j = 0;
-		unset_loop(&j, str, temp, temp_ms);
-		temp[j] = NULL;
-		temp = unset_remove_from_array(sh, temp);
-		free(temp_ms);
-		free(str);
-		return (temp);
-	}
-	else
-		return (temp_ms);
+	return (-1);
 }
