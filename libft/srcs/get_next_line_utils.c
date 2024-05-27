@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:06:43 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/10 10:53:26 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/18 14:20:27 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ char	*ft_strrdup(const char *src)
 		ai++;
 	}
 	ai++;
-	str = db_malloc(sizeof(char) * ai);
+	str = malloc(sizeof(char) * ai);
 	ai--;
 	if (str == 0)
 		return (0);
@@ -64,7 +64,7 @@ char	*ft_strrjoin(char const *s1, char const *s2)
 
 	i = 0;
 	ei = 0;
-	s = db_malloc(ft_strrlen(s1) + ft_strrlen(s2) + 1);
+	s = malloc(ft_strrlen(s1) + ft_strrlen(s2) + 1);
 	if (s == NULL)
 		return (0);
 	while (s1[i])
@@ -88,7 +88,7 @@ char	*ft_subbstr(char const *s, unsigned int start, size_t len)
 
 	while (*s && start--)
 		s++;
-	ret = db_malloc(len + 1);
+	ret = malloc(len + 1);
 	if (!ret)
 		return (0);
 	ret[len] = '\0';

@@ -6,40 +6,63 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 16:07:48 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/10 12:58:30 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/27 10:47:52 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*get_exec_path(char **path, char *cmd)
+void	*db_malloc(size_t size)
+{
+	return (malloc(size));
+}
+
+static char	*get_exec_path_env(char **path, char *cmd)
+{
+	char	*slashpath;
+	char	*execpath;
+
+	while (*path)
+	{
+		slashpath = ft_strjoin(*path, "/");
+		execpath = ft_strjoin(slashpath, cmd);
+		free(slashpath);
+		slashpath = NULL;
+		if (access(execpath, X_OK) != -1)
+			return (execpath);
+		free(execpath);
+		execpath = NULL;
+		path++;
+	}
+	return (NULL);
+}
+
+char	*get_exec_path(char **path, char *cmd, t_shell *sh)
 {
 	char	*slashpath;
 	char	*execpath;
 
 	execpath = NULL;
 	slashpath = NULL;
-	if (access(cmd, X_OK) == 0) //  && (cmd[0] == '/' || cmd[0] == '.'))
-		// dprintf(2, "%s :Access X ok\n", cmd);
-		return (cmd);
-	// else
-	// 	dprintf(2, "%s :Access X not ok\n", cmd);
-	while (*path)
+	if (!cmd || cmd[0] == '\0')
+		return (NULL);
+	if (cmd[0] == '.' || cmd[0] == '/')
 	{
-		slashpath = ft_strjoin(*path, "/");
-		execpath = ft_strjoin(slashpath, cmd);
-		if (access(execpath, X_OK) != -1)
-			return (execpath);
+		if (access(cmd, X_OK) != -1)
+			return (cmd);
 		else
-		{
-			if (execpath)
-				free(execpath);
-			execpath = NULL;
-		}
-		path++;
+			return (NULL);
 	}
-	if (!path)
-		return (cmd);
+	else if (cmd[0] == '~')
+	{
+		slashpath = get_env_val_by_name("HOME", sh);
+		execpath = ft_strjoin(slashpath, &cmd[1]);
+		free(slashpath);
+		slashpath = NULL;
+		return (execpath);
+	}
+	else
+		return (get_exec_path_env(path, cmd));
 	return (NULL);
 }
 
@@ -49,110 +72,11 @@ int	wait_for(t_intvec *commands)
 	int	nc;
 
 	nc = 0;
-	while (commands->array[nc])
+	while (commands->array[nc + 1])
 	{
-		// ft_putstr_fd("Waited for :", 2);
-		// ft_putnbr_fd(waitpid(commands->array[nc], &status, 0), 2);
-		// ft_putchar_fd('\n', 2);
 		waitpid(commands->array[nc], &status, 0);
 		nc++;
 	}
+	waitpid(commands->array[nc], &status, 0);
 	return (WEXITSTATUS(status));
-}
-
-void	print_cmdn(t_cmdn *node)
-{
-	int	i;
-
-	if (node == NULL)
-		return ;
-	print_cmdn(node->left);
-	i = 0;
-	if (node->ntype == COMMAND)
-		ft_putendl_fd("COMMAND:", 2);
-	if (node->ntype == PIPELINE)
-		ft_putendl_fd("PIPELINE:", 2);
-	while (node->cargs && node->cargs[i] != 0)
-	{
-		if (i != 0)
-			ft_putchar_fd('\t', 2);
-		ft_putendl_fd(node->cargs[i], 2);
-		i++;
-	}
-	ft_putnbr_fd(node->last, 2);
-	ft_putchar_fd('\n', 2);
-	print_cmdn(node->right);
-}
-
-char	**ft_remove_slash(char **cmd)
-{
-	int	i;
-	int	j;
-
-	i = 1;
-	while (cmd[i] != NULL)
-	{
-		j = 0;
-		while (cmd[i][j] != '\0')
-		{
-			if (cmd[i][j + 1] == '\"' && cmd[i][j] == '\\')
-			{
-				while (cmd[i][j] != '\0')
-				{
-					cmd[i][j] = cmd[i][j + 1];
-					j++;
-					// printf("%s:%d:%d\n", cmd[i], i, j);
-				}
-				j = 0;
-			}
-			j++;
-		}
-		i++;
-	}
-	return (cmd);
-}
-
-char	**ft_remove_quotes(char **cmd)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	while (cmd[i] != NULL)
-	{
-		j = 0;
-		while (cmd[i][j] != '\0')
-		{
-			if (cmd[i][j] == '\"' && cmd[i][j - 1] != '\\')
-			{
-				while (cmd[i][j] != '\0')
-				{
-					cmd[i][j] = cmd[i][j + 1];
-					j++;
-				}
-				j = 0;
-			}
-			j++;
-		}
-		i++;
-	}
-	cmd = ft_remove_slash(cmd);
-	return (cmd);
-}
-
-// At the moment accounts only for space characters,
-//	are other characters necessary?
-char	*trim_string(char *str)
-{
-	char	*end;
-
-	while ((unsigned char)*str == 32)
-		str++;
-	if (*str == '\0')
-		return (str);
-	end = str + ft_strlen(str) - 1;
-	while (end > str && (unsigned char)*end == 32)
-		end--;
-	end[1] = '\0';
-	return (str);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 11:35:56 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/10 10:55:45 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/04/18 14:20:53 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ char	*get_next_line(int fd)
 		freestr(&str);
 		return (NULL);
 	}
-	buf = db_malloc(BUFFER_SIZE + 1);
+	buf = malloc(BUFFER_SIZE + 1);
 	ret = ft_read(fd, str, buf);
 	freestr(&buf);
 	if (!ret)

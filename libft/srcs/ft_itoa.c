@@ -3,13 +3,12 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/03 13:56:49 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/10 10:58:09 by mburakow         ###   ########.fr       */
+/*   Updated: 2023/11/13 11:04:12 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #include "libft.h"
 
 int	count(int n)
@@ -35,7 +34,7 @@ char	*ft_itoa(int n)
 
 	i = count(n);
 	num = n;
-	str = (char *)db_malloc(i + 1);
+	str = (char *)malloc(i + 1);
 	if (str == 0)
 		return (0);
 	str[i] = '\0';

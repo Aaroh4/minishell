@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strtrim.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 16:00:12 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/10 10:57:14 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/09 14:48:00 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ char	*ft_strtrim(char const *s1, char const *set)
 	end = callend(s1, set);
 	if (start >= end)
 		return (ft_strdup(""));
-	str = (char *)db_malloc(sizeof(char) * (end - start + 1));
+	str = (char *)malloc(sizeof(char) * (end - start + 1));
 	if (str == NULL)
 		return (NULL);
 	ft_strlcpy(str, s1 + start, end - start + 1);

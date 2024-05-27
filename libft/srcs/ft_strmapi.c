@@ -3,13 +3,12 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strmapi.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/07 10:50:25 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/10 10:59:11 by mburakow         ###   ########.fr       */
+/*   Updated: 2023/11/13 11:11:00 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #include "libft.h"
 
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
@@ -20,7 +19,7 @@ char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
 	i = 0;
 	if (!s || !f)
 		return (0);
-	str = (char *)db_malloc(ft_strlen(s) + 1);
+	str = (char *)malloc(ft_strlen(s) + 1);
 	if (str == 0)
 		return (0);
 	while (s[i] != '\0')

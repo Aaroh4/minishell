@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 13:16:33 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/10 10:56:01 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/27 15:23:00 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,22 @@ static void	init_env_struct(t_env_tdata *envd)
 	envd->end = NULL;
 	envd->env_val = NULL;
 	envd->temp = NULL;
-	envd->total_len = 0;	
+	envd->total_len = 0;
 }
 
-// If question mark, ignore caps after, else check from ms_envp for the value
+void print_env_struct(t_env_tdata *envd)
+{
+	static int i = 0;
+
+	i++;
+	dprintf(2, "### logno: %d ###\n", i);
+	dprintf(2, "envd->start = %s\n", envd->start);
+	dprintf(2, "envd->end =  %s\n", envd->end);
+	dprintf(2, "envd->env_val =  %s\n", envd->env_val);
+	dprintf(2, "envd->temp =  %s\n", envd->temp);
+	dprintf(2, "envd->total_len = %d\n", envd->total_len);
+}
+
 static void	determine_env(t_shell *sh, t_env_tdata *envd)
 {
 	int	i;
@@ -53,18 +65,21 @@ char	*alloc_new_arr(char *input, t_shell *sh, t_env_tdata *envd)
 	determine_env(sh, envd);
 	envd->total_len = ft_strlen(input) - ft_strlen(envd->start)
 		+ ft_strlen(envd->env_val) + ft_strlen(envd->end);
-	new_arr = (char *)db_malloc((envd->total_len + 1) * sizeof(char));
+	new_arr = (char *)malloc((envd->total_len + 1) * sizeof(char));
 	if (new_arr == NULL)
-		errexit("ms_envp: ", "db_malloc 3 error", NULL, sh);
+		errexit("ms_envp: ", "malloc 3 error", NULL, sh);
 	envd->temp = input;
 	return (new_arr);
 }
 
+// IT'S HERE SOMEWHERE!!!!
 void	write_new_arr(char *new_arr, t_env_tdata *envd)
 {
 	int	i;
 
 	i = 0;
+	dprintf(2, "NEW ARR START!\n");
+	print_env_struct(envd);
 	while (envd->temp != envd->start)
 	{
 		new_arr[i] = *envd->temp;
@@ -84,25 +99,31 @@ void	write_new_arr(char *new_arr, t_env_tdata *envd)
 		i++;
 		envd->end++;
 	}
-	new_arr[ft_strlen(new_arr)] = '\0';
+	new_arr[i] = '\0';
+	print_env_struct(envd);
+	dprintf(2, "NEW ARR: %s\n", new_arr);
 }
 
-char	*replace_envp(char *input, t_shell *sh)
+char	*replace_envp_tags(char *input, t_shell *sh)
 {
 	t_env_tdata	envd;
 	char		*new_arr;
 
 	init_env_struct(&envd);
 	envd.start = ft_strchr(input, 36);
+	print_env_struct(&envd);
 	while (envd.start != NULL)
 	{
 		envd.end = move_ucase(envd.start + 1);
 		envd.env_val = "";
+		print_env_struct(&envd);
 		new_arr = alloc_new_arr(input, sh, &envd);
 		write_new_arr(new_arr, &envd);
 		free(input);
 		input = new_arr;
+		print_env_struct(&envd);
 		envd.start = ft_strchr((envd.start + 1), 36);
+		print_env_struct(&envd);
 	}
 	return (input);
 }

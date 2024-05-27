@@ -6,12 +6,14 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/19 12:04:33 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/10 12:05:07 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/20 11:48:07 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include <unistd.h>
+// remove:
+#include <stdio.h>
 #include "libft.h"
 
 int	is_separator(char c, char *charset)
@@ -77,7 +79,7 @@ static void	do_split(char **arr, char *str, char *charset)
 			j = 0;
 			while (is_separator(str[i + j], charset) == 0)
 				j++;
-			arr[word] = (char *)db_malloc(sizeof(char) * (j + 1));
+			arr[word] = (char *)malloc(sizeof(char) * (j + 1));
 			do_word(arr[word], str + i, charset);
 			i += j;
 			word++;
@@ -90,8 +92,16 @@ char	**ft_split(char *str, char *charset)
 	int		count;	
 	char	**arr;
 
+	if (str == NULL || str[0] == '\0')
+	{
+		arr = (char **)malloc(sizeof(char *) * 2);
+		arr[0] = (char *)malloc(sizeof(char));
+		arr[0][0] = '\0';
+		arr[1] = NULL;
+		return (arr);
+	}
 	count = word_count(str, charset);
-	arr = (char **)db_malloc(sizeof(char *) * (count + 1));
+	arr = (char **)malloc(sizeof(char *) * (count + 1));
 	arr[count] = NULL;
 	do_split(arr, str, charset);
 	return (arr);

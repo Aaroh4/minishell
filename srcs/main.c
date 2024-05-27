@@ -3,23 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:43 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/09 16:19:21 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/27 10:33:15 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <fcntl.h>
-#include <readline/history.h>
-#include <readline/readline.h>
-#include <signal.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <termios.h>
-#include <unistd.h>
 
 void	enable_raw_mode(void)
 {
@@ -41,15 +32,16 @@ void	disable_raw_mode(struct termios oterm)
 void	ft_handler(int signum)
 {
 	signum = 1;
+	while (signum)
+		signum--;
 	rl_replace_line("", 0);
 	write(1, "\n", 1);
 	rl_on_new_line();
 	rl_redisplay();
 }
 
-// Implementing the bash -c flag to run one command without
-// entering the prompt loop. For use with tester for example.
-static int	check_inline_param(int argc, char **argv, t_shell *sh, struct termios	oterm)
+static int	check_inline_param(int argc, char **argv, t_shell *sh,
+		struct termios oterm)
 {
 	int	i;
 
@@ -58,8 +50,6 @@ static int	check_inline_param(int argc, char **argv, t_shell *sh, struct termios
 	{
 		if (!ft_strncmp(argv[i], "-c", ft_strlen(argv[i])))
 		{
-			if (pipe(sh->pfd) == -1)
-				errexit("Error :", "pipe initialization", NULL, sh);
 			enable_raw_mode();
 			sh->input = ft_strdup(argv[i + 1]);
 			parse_input(sh);
@@ -75,7 +65,6 @@ static int	check_inline_param(int argc, char **argv, t_shell *sh, struct termios
 	return (i);
 }
 
-// Removed free_args(sh->ms_envp); from end
 int	main(int argc, char **argv, char **envp)
 {
 	t_shell			sh;
@@ -83,47 +72,23 @@ int	main(int argc, char **argv, char **envp)
 
 	init_shell_struct(&sh);
 	if (tcgetattr(STDIN_FILENO, &oterm) == -1)
-		perror("tcgetattr");
+	{
+		perror("tcgetattr failed");
+		return (1);
+	}
+	sh.oterm = oterm;
 	signal(SIGQUIT, SIG_IGN);
 	rl_clear_history();
 	sh.ms_envp = copy_envp(envp, &sh);
+	increase_shell_level(&sh);
 	check_inline_param(argc, argv, &sh, oterm);
 	while (1)
 	{
 		signal(SIGINT, ft_handler);
-		if (pipe(sh.pfd) == -1 || pipe(sh.efd) == -1)
-			errexit("error :", "pipe initialization", NULL, &sh);
 		enable_raw_mode();
 		sh.input = readline("minishell > ");
 		if (sh.input == NULL)
-			exit (0);
-		add_history(sh.input);
-		parse_input(&sh);
-		run_cmds(&sh);
-		free_new_prompt(&sh);
-		disable_raw_mode(oterm);
+			exit_function();
+		input_start(&sh, oterm);
 	}
 }
-
-/*
-// ENVP test main:
-int	main(int argc, char **argv, char **envp)
-{
-	char	**ms_envp;
-	char	*input;
-	char	*str;
-
-	if (argc == 2)
-	{
-		handle_arguments(argc, argv);
-		ms_envp = copy_envp(envp);
-		input = "Used: $USER, shell: $SHELL, not working $NOT_WORK end.";
-		str = ft_strdup(input);
-		ft_putendl_fd(str, 2);
-		str = replace_envp(str, ms_envp);
-		ft_putendl_fd(str, 2);
-		free(str);
-	}
-	return (0);
-}
-*/

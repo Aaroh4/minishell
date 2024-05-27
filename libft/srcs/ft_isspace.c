@@ -1,27 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   db_malloc.c                                        :+:      :+:    :+:   */
+/*   ft_isspace.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/10 10:34:48 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/10 12:05:10 by mburakow         ###   ########.fr       */
+/*   Created: 2024/05/20 15:19:06 by mburakow          #+#    #+#             */
+/*   Updated: 2024/05/20 15:23:45 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stddef.h>
-#include "libft.h"
-
-// Just an lldb'able malloc
-void	*db_malloc(size_t size)
+int	ft_isspace(int i)
 {
-	// Hello this is just for debugging.
-	return (malloc(size));
-}
-
-void	*db_free(size_t size)
-{
-	// Hello this is just for debugging.
-	return (malloc(size));
+	if (i == ' ' || i == '\n' || i == '\r'
+		|| i == '\v' || i == '\f' || i == '\t')
+		return (1);
+	return (0); 
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirect.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 16:20:12 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/10 09:44:24 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/27 10:35:27 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,29 +73,28 @@ char	*trim_rdirspace(char *cmd)
 void	get_redirects(t_shell *sh)
 {
 	int	i;
-	int j;
+	int	j;
 
-	i = 0;
+	i = -1;
 	while (sh->cmd[++i] != NULL)
 	{
 		j = -1;
 		while (sh->cmd[i][++j] != '\0')
 		{
-			if ((j == 0 || sh->cmd[i][j - 1] != '<') && sh->cmd[i][j] == '<' &&
-					sh->cmd[i][j + 1] != '<') 
+			if ((j == 0 || sh->cmd[i][j - 1] != '<') && sh->cmd[i][j] == '<'
+				&& sh->cmd[i][j + 1] != '<')
 				sh->redirs[i] = 1;
-			else if ((j == 0 || sh->cmd[i][j - 1] != '>') && 
-					sh->cmd[i][j] == '>' && sh->cmd[i][j + 1] != '>')
+			else if ((j == 0 || sh->cmd[i][j - 1] != '>')
+				&& sh->cmd[i][j] == '>' && sh->cmd[i][j + 1] != '>')
 				sh->redirs[i] = 2;
-			else if ((j == 0 || sh->cmd[i][j - 1] != '>') && 
-					sh->cmd[i][j] == '>' && sh->cmd[i][j + 1] == '>' && 
-					sh->cmd[i][j + 2] != '>')
+			else if ((j == 0 || sh->cmd[i][j - 1] != '>')
+				&& sh->cmd[i][j] == '>' && sh->cmd[i][j + 1] == '>'
+				&& sh->cmd[i][j + 2] != '>')
 				sh->redirs[i] = 3;
 		}
 	}
 }
 
-// Reconstruct cargs omitting redirs
 static void	omit_redirs_from_param(t_cmdn *node)
 {
 	int		i;
@@ -125,10 +124,6 @@ static void	omit_redirs_from_param(t_cmdn *node)
 	node->cargs[i] = 0;
 }
 
-// Errors do not correspond to bash errors yet
-// 1 = input <
-// 2 = output >
-// 3 = output append >>
 int	open_redirects(t_cmdn *node, t_shell *sh)
 {
 	int	i;
@@ -147,7 +142,8 @@ int	open_redirects(t_cmdn *node, t_shell *sh)
 			inrdrs++;
 			in_fd = open(&node->cargs[i][1], O_RDONLY);
 			if (in_fd == -1)
-				errexit(&node->cargs[i][1], "No such file or directory", NULL, sh);
+				errexit(&node->cargs[i][1], "No such file or directory", NULL,
+					sh);
 			else if (dup2(in_fd, STDIN_FILENO) == -1)
 				errexit("error:", "dup2 stdin", NULL, sh);
 			close(in_fd);
@@ -164,7 +160,7 @@ int	open_redirects(t_cmdn *node, t_shell *sh)
 				return (1);
 			}
 			else if (dup2(out_fd, STDOUT_FILENO) == -1)
-				 errexit("error:", "dup2 stdout replace", NULL, sh);
+				errexit("error:", "dup2 stdout replace", NULL, sh);
 			close(out_fd);
 		}
 		else if (node->redirs[i] == 3)
@@ -184,22 +180,24 @@ int	open_redirects(t_cmdn *node, t_shell *sh)
 		}
 		i++;
 	}
-	if (inrdrs == 0)
+	if (sh->cmdcount > 1)
 	{
-		if (dup2(sh->pfd[0], STDIN_FILENO) == -1)
-			errexit("error:", "dup2 stdin", NULL, sh);
+		if (inrdrs == 0 && sh->cmdcount > 1 && node->first == FALSE)
+		{
+			if (dup2(sh->pfd[0][0], STDIN_FILENO) == -1)
+				errexit("error:", "dup2 stdin", NULL, sh);
+		}
+		else
+			close(sh->pfd[0][0]);
+		if (outrdrs == 0 && sh->cmdcount > 1 && node->last == FALSE)
+		{
+			if (dup2(sh->pfd[1][1], STDOUT_FILENO) == -1)
+				errexit("error:", "dup2 stdout", NULL, sh);
+		}
+		else
+			close(sh->pfd[0][1]);
 	}
-	close(sh->pfd[0]);
-	close(sh->efd[0]);
-	if (outrdrs == 0 && node->last == FALSE)
-	{
-		if (dup2(sh->pfd[1], STDOUT_FILENO) == -1)
-			errexit("error:", "dup2 stdout", NULL, sh);
-	}
-	i = 0;
 	if (inrdrs > 0 || outrdrs > 0)
-	{
 		omit_redirs_from_param(node);
-	}
 	return (0);
 }

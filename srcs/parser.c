@@ -6,88 +6,11 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/10 13:34:55 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/27 13:38:05 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-// Should here be more validation for cmd and hdocs?
-// Here they are just passed to the command from sh, then the same pointers
-// are used again for the next cmd.
-static t_cmdn	*init_cmd_node(t_ntype type, t_shell *sh, t_bool last)
-{
-	t_cmdn	*new_cmdn;
-
-	new_cmdn = db_malloc(sizeof(t_cmdn));
-	if (new_cmdn != NULL)
-	{
-		new_cmdn->ntype = type;
-		new_cmdn->left = NULL;
-		new_cmdn->right = NULL;
-		new_cmdn->cargs = NULL;
-		new_cmdn->hdocs = NULL;
-		new_cmdn->redirs = NULL;
-		if (type == COMMAND)
-		{
-			new_cmdn->cargs = sh->cmd;
-			new_cmdn->hdocs = sh->hdocs;
-			new_cmdn->redirs = sh->redirs;
-		}
-		new_cmdn->last = last;
-		sh->cmd = NULL;
-		sh->hdocs = NULL;
-		sh->redirs = NULL;
-	}
-	else
-		errexit("error: ", "cmd node db_malloc", NULL, sh);
-	return (new_cmdn);
-}
-
-/*
-static char	*strtrim_nodb_malloc(char *str, char c)
-{
-	char	*cursor;
-	int		i;
-
-	cursor = str;
-	while (cursor)
-	{
-		if (*cursor == c)
-		{
-			i = 0;
-			while (cursor[i + 1])
-			{
-				cursor[i] = cursor[1 + 1];
-			} 
-		} 
-		else
-		{
-
-		}
-		cursor++;
-	}
-}
-*/
-
-static void	trim_quote_alloc_hdoc_rdir(t_shell *sh)
-{
-	int	i;
-
-	i = 0;
-	while (sh->cmd[i] != NULL)
-	{
-		sh->cmd[i] = trim_string(sh->cmd[i]);
-		i++;
-	}
-	sh->cmd = ft_remove_quotes(sh->cmd);
-	sh->hdocs = ft_calloc((i + 1), sizeof(int));
-	sh->redirs = ft_calloc((i + 1), sizeof(int));
-	if (sh->hdocs == NULL || sh->redirs  == NULL)
-		errexit("hdocs or redirs db_malloc error", NULL, NULL, sh);
-	sh->hdocs[i] = -1;
-	sh->redirs[i] = -1;
-}
 
 static void	get_heredocs(t_shell *sh)
 {
@@ -101,8 +24,8 @@ static void	get_heredocs(t_shell *sh)
 		j = 0;
 		while (sh->cmd[i][j] != '\0')
 		{
-			if (sh->cmd[i][j] == '<' && sh->cmd[i][j + 1] == '<'
-				&& sh->cmd[i][j + 2] != '<' && sh->cmd[i][j + 2] != '\0')
+			if (sh->cmd[i][j] == '<' && sh->cmd[i][j + 1] == '<' && sh->cmd[i][j
+				+ 2] != '<' && sh->cmd[i][j + 2] != '\0')
 			{
 				sh->hdocs[i]++;
 				temp = ft_heredoc(sh->cmd[i], sh->hdocs[i]);
@@ -115,47 +38,91 @@ static void	get_heredocs(t_shell *sh)
 	}
 }
 
+static void	trim_quote_alloc_hdoc_rdir(t_shell *sh)
+{
+	int	i;
+
+	i = 0;
+	i = 0;
+	while (sh->cmd[i] != NULL)
+	{
+		// dprintf(2, "[%d]: %s\n", i, sh->cmd[i]);
+		sh->cmd[i] = trim_string(sh->cmd[i]);
+		sh->cmd[i] = remove_quote_level(sh->cmd[i], sh);
+		i++;
+	}
+	sh->hdocs = ft_calloc((i + 1), sizeof(int));
+	sh->redirs = ft_calloc((i + 1), sizeof(int));
+	if (sh->hdocs == NULL || sh->redirs == NULL)
+		errexit("hdocs or redirs malloc error", NULL, NULL, sh);
+	sh->hdocs[i] = -1;
+	sh->redirs[i] = -1;
+	get_heredocs(sh);
+	get_redirects(sh);
+}
+
 static t_cmdn	*create_node(t_cmdn *current, t_shell *sh, int index)
 {
-	int	len;
+	int		len;
+	t_bool	first;
 
 	len = 0;
 	while (sh->cmdarr[len] != NULL)
 		len++;
-	// sh->cmdarr[index] = ft_make_easy_heredoc(sh->cmdarr[index]);
 	sh->cmdarr[index] = trim_rdirspace(sh->cmdarr[index]);
+	sh->cmdarr[index] = trim_string(sh->cmdarr[index]);
 	sh->cmd = ft_split_time_space(sh->cmdarr[index], ' ');
-	// free(sh->cmdarr[index]);
+	// dprintf(2, "After split:\n");
+	// print_char_array(sh->cmd);
 	if (!(sh->cmd))
-		errexit("error: ", "root db_malloc", NULL, sh);
+		errexit("error: ", "root malloc", NULL, sh);
 	trim_quote_alloc_hdoc_rdir(sh);
-	get_heredocs(sh);
-	get_redirects(sh);
+	first = FALSE;
+	if (index == 0)
+		first = TRUE;
 	if (index < len - 2)
 	{
-		current->left = init_cmd_node(COMMAND, sh, FALSE);
-		current->right = init_cmd_node(PIPELINE, sh, FALSE); // or AND or OR
+		current->left = init_cmd_node(COMMAND, sh, FALSE, first);
+		current->right = init_cmd_node(PIPELINE, sh, FALSE, first);
 		current = current->right;
 	}
 	else if (index == len - 2)
-		current->left = init_cmd_node(COMMAND, sh, FALSE);
+		current->left = init_cmd_node(COMMAND, sh, FALSE, first);
 	else
-		current->right = init_cmd_node(COMMAND, sh, TRUE);
+		current->right = init_cmd_node(COMMAND, sh, TRUE, first);
 	return (current);
 }
 
-// Creates root node, splits the input along pipes and
-// creates the nodes in a tree structure.
+void	create_pipes(t_shell *sh)
+{
+	int	cmdcount;
+
+	cmdcount = 1;
+	while (sh->cmdarr[cmdcount] != NULL)
+		cmdcount++;
+	if (cmdcount > 1)
+	{
+		if (pipe(sh->pfd[0]) == -1 || pipe(sh->pfd[1]) == -1)
+			errexit("error :", "pipe initialization", NULL, sh);
+	}
+	sh->cmdcount = cmdcount;
+	if (pipe(sh->efd) == -1)
+		errexit("error :", "pipe initialization", NULL, sh);
+}
+
 void	parse_input(t_shell *sh)
 {
 	t_cmdn	*current;
 	int		i;
 
-	sh->root = init_cmd_node(PIPELINE, sh, FALSE);
+	sh->root = init_cmd_node(PIPELINE, sh, FALSE, FALSE);
 	if (!(sh->root))
-		errexit("error: ", "root db_malloc", NULL, sh);
+		errexit("error: ", "root malloc", NULL, sh);
 	sh->cmdarr = ft_split(sh->input, "|");
+	if (!(sh->cmdarr))
+		errexit("error: ", "cmdarr malloc", NULL, sh);
 	free(sh->input);
+	sh->input = NULL;
 	current = sh->root;
 	i = 0;
 	while (sh->cmdarr[i] != NULL)
@@ -164,86 +131,3 @@ void	parse_input(t_shell *sh)
 		i++;
 	}
 }
-
-/*
-char	*ft_give_fixed(char *str, int *i, char *temp)
-{
-	char	*temp2;
-	int		j;
-
-	j = 0;
-	temp2 = db_malloc(sizeof(char) * ft_strlen(str) + ft_strlen(temp) + 1);
-	while (temp[j] != '\0')
-	{
-		temp2[j] = temp[j];
-		j++;
-	}
-	while (str[*i] != '\0')
-	{
-		if (str[*i] != '<' && str[*i - 1] == '<' && str[*i - 2] == '<')
-			while (str[*i] == ' ')
-				*i += 1;
-		temp2[j] = str[*i];
-		*i += 1;
-		j += 1;
-	}
-	temp2[j] = '\0';
-	return (temp2);
-}
-
-char	*ft_fix_for_space(char *str)
-{
-	int		i;
-	int		j;
-	int		hdocs;
-	char	*temp;
-
-	i = 0;
-	hdocs = 0;
-	while (str[i++] != '\0')
-		if (str[i - 1] != '<'
-			&& str[i] == '<' && str[i + 1] == '<' && str[i + 2] != '<')
-			hdocs++;
-	i = 0;
-	j = 0;
-	temp = db_malloc(sizeof(char) * ft_strlen(str) + hdocs + 1);
-	while (str[i] != '\0')
-	{
-		if (str[i - 1] != '<' && str[i] == '<' && str[i + 1] == '<' && str[i
-				+ 2] != '<')
-		{
-			temp[j] = ' ';
-			j++;
-		}
-		temp[j++] = str[i++];
-	}
-	temp[j] = '\0';
-	return (temp);
-}
-
-char	*ft_make_easy_heredoc(char *str)
-{
-	int		i;
-	int		j;
-	char	*temp;
-
-	i = 0;
-	j = 0;
-	str = ft_fix_for_space(str);
-	temp = db_malloc(sizeof(char) * ft_strlen(str) + 2);
-	while (str[i] != '\0')
-	{
-		if (str[i - 1] != '<'
-			&& str[i] == '<' && str[i + 1] == '<' && str[i + 2] != '<')
-			return (ft_give_fixed(str, &i, temp));
-		else
-		{
-			temp[j] = str[i];
-			i++;
-			j++;
-		}
-	}
-	temp[j] = '\0';
-	return (temp);
-}
-*/
