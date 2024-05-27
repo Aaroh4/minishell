@@ -1,19 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isspace.c                                       :+:      :+:    :+:   */
+/*   quote_check.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/20 15:19:06 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/27 10:51:09 by ahamalai         ###   ########.fr       */
+/*   Created: 2024/05/27 11:17:33 by ahamalai          #+#    #+#             */
+/*   Updated: 2024/05/27 11:17:38 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int	ft_isspace(int i)
+#include "libft.h"
+
+int	quote_check(int i, const char *str, char q)
 {
-	if (i == ' ' || i == '\n' || i == '\r'
-		|| i == '\v' || i == '\f' || i == '\t')
-		return (1);
-	return (0);
+	int	orig;
+
+	orig = i;
+	while (str[i] != '\0' && str[i - 1] != '\\')
+	{
+		if (str[i] == q)
+			return (i);
+		i++;
+	}
+	return (orig);
 }

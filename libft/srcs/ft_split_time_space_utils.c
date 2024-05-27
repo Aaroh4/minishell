@@ -6,11 +6,27 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/11 12:41:47 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/23 16:17:01 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/27 10:52:53 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+
+void	ft_wording(char *dest, int *i, int *j, char const *s)
+{
+	dest[*i] = s[*i];
+	(*i)++;
+	*j = *i;
+	while (s[*i] != '|' && s[*i] != '\0')
+		(*i)++;
+	dest[*i] = '\0';
+	(*i)--;
+	while (*i >= *j)
+	{
+		dest[*i] = s[*i];
+		(*i)--;
+	}
+}
 
 int	ft_check(int i, const char *str)
 {

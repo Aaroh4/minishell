@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 11:22:20 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/20 07:53:44 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/27 11:16:58 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,7 @@ int		ft_check(int i, const char *str);
 int		freemem(char **arr, int size);
 int		ft_checker(char const *s, int i, int check);
 int		ft_incrj(int i, char const *s, int check, char c);
-
+void	ft_wording(char *dest, int *i, int *j, char const *s);
+int		quote_check(int i, const char *str, char q);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/27 10:31:25 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/27 10:50:24 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 # include <readline/history.h>
 # include <termios.h>
 
-#define INITIAL_SIZE 10
+# define INITIAL_SIZE 10
 
 typedef enum s_bool
 {
