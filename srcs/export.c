@@ -12,34 +12,6 @@
 
 #include "minishell.h"
 
-/*
-void	export_quote_expand_env(char *val, t_cmdn *node, t_shell *sh)
-{
-	int		i;
-	char	c;
-	int		qulvl;
-
-	i = 0;
-	c = 0;
-	qulvl = 0;
-	while (val[i] != '\0')
-	{
-		if (val[i] == '\"' || val[i] == '\'')
-		{
-			c = val[i];
-			if (test_quote_level(&val[i]))
-			{
-				if (c == '\"')
-				{
-					
-				}
-			}
-		}
-		i++;
-	}
-}
-*/
-
 int export_check_envname(int j, t_cmdn *node, t_shell *sh)
 {
 	int i;
@@ -51,8 +23,6 @@ int export_check_envname(int j, t_cmdn *node, t_shell *sh)
 			i++;
 		if (node->cargs[j][i] == '=')
 		{
-			// export_quote_expand_env(&node->cargs[j][i + 1], node, sh);
-			// remove_quote_level(&node->cargs[j][i + 1], sh); 
 			ft_putstr_fd(node->cargs[j], sh->efd[1]);
 			ft_putstr_fd("\n", sh->efd[1]);
 			return (i);

@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/03 12:03:00 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/26 22:28:59 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/24 15:22:06 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,6 +140,7 @@ int	wordcount(char const *s, char c)
 		i++;
 	}
 	// dprintf(2, "count was %d\n", count);
+
 	return (count);
 }
 

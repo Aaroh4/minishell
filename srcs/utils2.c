@@ -187,6 +187,7 @@ void	print_char_array(char **arr)
 		dprintf(2, "[%d] ", i);
 		dprintf(2, "%s\n", arr[i++]);
 	}
+
 }
 
 char	test_quote_level(char *str)
@@ -210,5 +211,5 @@ char	test_quote_level(char *str)
 		}
 		i++;
 	}
-	return (-1);	
+	return (-1);
 }

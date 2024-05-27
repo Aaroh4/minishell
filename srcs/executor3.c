@@ -98,3 +98,31 @@ void	modify_env(t_shell *sh, int a, char *cwd)
 		env_modify_loop(sh, a, cwd, str);
 	close(sh->efd[0]);
 }
+
+void	make_child(t_cmdn *node, t_shell *sh, t_intvec *commands, char *cwd)
+{
+	int		pid;
+
+	pid = 0;
+	populate_env_vars(node, sh);
+	pid = fork();
+	if (pid == -1)
+	{
+		sh->status = wait_for(commands);
+		free_intvec(commands);
+		errexit("Error:", "fork failure", NULL, sh);
+	}
+	else if (pid == 0)
+	{
+		if (pipe(sh->hfd) == -1)
+			errexit("error :", "pipe initialization", NULL, sh);
+		free_intvec(commands);
+		exec_cmd(node, sh, cwd);
+	}
+	else
+	{
+		check_builtin(node, sh, cwd);
+		if (commands != NULL)
+			add_to_intvec(commands, pid, sh);
+	}
+}

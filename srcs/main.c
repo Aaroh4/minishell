@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:43 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/21 21:49:14 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/24 15:43:07 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,8 @@ void	ft_handler(int signum)
 
 // Implementing the bash -c flag to run one command without
 // entering the prompt loop. For use with tester for example.
-static int	check_inline_param(int argc, char **argv, t_shell *sh, struct termios oterm)
+static int	check_inline_param(int argc, char **argv,
+	t_shell *sh, struct termios oterm)
 {
 	int	i;
 
