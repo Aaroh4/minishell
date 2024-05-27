@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirect.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 16:20:12 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/27 10:35:27 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/27 15:47:09 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,18 +79,18 @@ void	get_redirects(t_shell *sh)
 	while (sh->cmd[++i] != NULL)
 	{
 		j = -1;
-		while (sh->cmd[i][++j] != '\0')
+		while (sh->cmd[i][++j] != '\0' && (sh->cmd[i][j] == '>' || sh->cmd[i][j] == '<'))
 		{
 			if ((j == 0 || sh->cmd[i][j - 1] != '<') && sh->cmd[i][j] == '<' &&
 					sh->cmd[i][j + 1] != '<')
 				sh->redirs[i] = 1;
 			else if ((j == 0 || sh->cmd[i][j - 1] != '>') &&
-					sh->cmd[i][j] == '>' && sh->cmd[i][j + 1] != '>')
-				sh->redirs[i] = 2;
-			else if ((j == 0 || sh->cmd[i][j - 1] != '>') &&
 					sh->cmd[i][j] == '>' && sh->cmd[i][j + 1] == '>' &&
 					sh->cmd[i][j + 2] != '>')
 				sh->redirs[i] = 3;
+			else if ((j == 0 || sh->cmd[i][j - 1] != '>') &&
+					sh->cmd[i][j] == '>' && sh->cmd[i][j + 1] != '>')
+				sh->redirs[i] = 2;
 		}
 	}
 }
