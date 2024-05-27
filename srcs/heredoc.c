@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 12:09:30 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/22 14:33:14 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/27 10:49:39 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	ft_handler_heredoc(int signum)
 
 int	heredoc_loop(char **astr, char *breakchar, int j, int hdocs)
 {
-	char			*buf;
+	char	*buf;
 
 	buf = NULL;
 	signal(SIGINT, ft_handler_heredoc);

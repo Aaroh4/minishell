@@ -24,8 +24,8 @@ int	count_array(char **arr)
 
 int	find_amount(char *str, char c)
 {
-	int		i;
-	int		count;
+	int	i;
+	int	count;
 
 	i = 0;
 	count = 0;
@@ -56,7 +56,7 @@ char	**remove_array(t_shell *sh, char **temp_ms)
 	char	*tempstr;
 	char	**temp;
 
-	close (sh->efd[1]);
+	close(sh->efd[1]);
 	if (sh->cmdcount == 1)
 	{
 		tempstr = get_next_line(sh->efd[0]);

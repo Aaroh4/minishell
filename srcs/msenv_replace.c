@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   msenv_replace.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 13:16:33 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/27 10:33:34 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/27 14:44:08 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,14 @@ static void	init_env_struct(t_env_tdata *envd)
 	envd->total_len = 0;
 }
 
+void print_env_struct(t_env_tdata *envd)
+{
+	dprintf(2, "envd->start = %s\n", envd->start);
+	dprintf(2, "envd->end =  %s\n", envd->end);
+	dprintf(2, "envd->env_val =  %s\n", envd->env_val);
+	dprintf(2, "envd->temp =  %s\n", envd->temp);
+	dprintf(2, "envd->total_len = %d\n", envd->total_len);
+}
 static void	determine_env(t_shell *sh, t_env_tdata *envd)
 {
 	int	i;
@@ -59,6 +67,7 @@ char	*alloc_new_arr(char *input, t_shell *sh, t_env_tdata *envd)
 	return (new_arr);
 }
 
+// IT'S HERE SOMEWHERE!!!!
 void	write_new_arr(char *new_arr, t_env_tdata *envd)
 {
 	int	i;
@@ -84,6 +93,7 @@ void	write_new_arr(char *new_arr, t_env_tdata *envd)
 		envd->end++;
 	}
 	new_arr[ft_strlen(new_arr)] = '\0';
+	dprintf(2, "NEW ARR: %s\n", new_arr);
 }
 
 char	*replace_envp_tags(char *input, t_shell *sh)
@@ -102,6 +112,7 @@ char	*replace_envp_tags(char *input, t_shell *sh)
 		free(input);
 		input = new_arr;
 		envd.start = ft_strchr((envd.start + 1), 36);
+		print_env_struct(&envd);
 	}
 	return (input);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 16:07:48 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/23 14:43:41 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/27 10:47:52 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,6 @@ int	wait_for(t_intvec *commands)
 	int	nc;
 
 	nc = 0;
-
 	while (commands->array[nc + 1])
 	{
 		waitpid(commands->array[nc], &status, 0);

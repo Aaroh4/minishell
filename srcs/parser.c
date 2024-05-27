@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/27 12:58:27 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/27 13:38:05 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ static void	get_heredocs(t_shell *sh)
 		j = 0;
 		while (sh->cmd[i][j] != '\0')
 		{
-			if (sh->cmd[i][j] == '<' && sh->cmd[i][j + 1] == '<'
-				&& sh->cmd[i][j + 2] != '<' && sh->cmd[i][j + 2] != '\0')
+			if (sh->cmd[i][j] == '<' && sh->cmd[i][j + 1] == '<' && sh->cmd[i][j
+				+ 2] != '<' && sh->cmd[i][j + 2] != '\0')
 			{
 				sh->hdocs[i]++;
 				temp = ft_heredoc(sh->cmd[i], sh->hdocs[i]);
@@ -40,20 +40,17 @@ static void	get_heredocs(t_shell *sh)
 
 static void	trim_quote_alloc_hdoc_rdir(t_shell *sh)
 {
-	int		i;
+	int	i;
 
 	i = 0;
 	i = 0;
-	dprintf(2, "1hello\n");
-	//while (sh->cmd[i] != NULL)
-	//{
-		//sh->cmd[i] = trim_string(sh->cmd[i]);
-	//	dprintf(2, "2hello\n");
-		//sh->cmd[i] = remove_quote_level(sh->cmd[i], sh);
-	//	dprintf(2, "3hello\n");
-	//	i++;
-	//}
-	dprintf(2, "4hello\n");
+	while (sh->cmd[i] != NULL)
+	{
+		// dprintf(2, "[%d]: %s\n", i, sh->cmd[i]);
+		sh->cmd[i] = trim_string(sh->cmd[i]);
+		sh->cmd[i] = remove_quote_level(sh->cmd[i], sh);
+		i++;
+	}
 	sh->hdocs = ft_calloc((i + 1), sizeof(int));
 	dprintf(2, "5hello\n");
 	sh->redirs = ft_calloc((i + 1), sizeof(int));
@@ -77,7 +74,10 @@ static t_cmdn	*create_node(t_cmdn *current, t_shell *sh, int index)
 	while (sh->cmdarr[len] != NULL)
 		len++;
 	sh->cmdarr[index] = trim_rdirspace(sh->cmdarr[index]);
+	sh->cmdarr[index] = trim_string(sh->cmdarr[index]);
 	sh->cmd = ft_split_time_space(sh->cmdarr[index], ' ');
+	// dprintf(2, "After split:\n");
+	// print_char_array(sh->cmd);
 	if (!(sh->cmd))
 		errexit("error: ", "root malloc", NULL, sh);
 	trim_quote_alloc_hdoc_rdir(sh);
