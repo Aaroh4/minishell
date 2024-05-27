@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/27 15:58:56 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/27 18:17:20 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,6 +163,8 @@ void		disable_raw_mode(struct termios oterm);
 void		enable_raw_mode(void);
 
 // Parser
+char		**split_pipes(char *str, char *charset);
+int			skip_quotes(char *str, int i);
 void		first_redir(t_shell *sh, t_cmdn *node, int i, int *inrdrs);
 int			second_redir(t_shell *sh, t_cmdn *node, int i, int *outrdrs);
 int			third_redir(t_shell *sh, t_cmdn *node, int i, int *outrdrs);
@@ -170,6 +172,5 @@ void		redirects_more_command(t_shell *sh, t_cmdn *node,
 				int inrdrs, int outrdrs);
 void		trim_space(char *c);
 void		trim_outputs(char *c);
-char		*trim_rdirspace(char *cmd);
 
 #endif

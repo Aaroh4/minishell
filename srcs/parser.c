@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/27 10:33:59 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/27 20:03:02 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ static void	get_heredocs(t_shell *sh)
 		j = 0;
 		while (sh->cmd[i][j] != '\0')
 		{
+			if (sh->cmd[i][j] == '\'' || sh->cmd[i][j] == '\"')
+				break ;
 			if (sh->cmd[i][j] == '<' && sh->cmd[i][j + 1] == '<'
 				&& sh->cmd[i][j + 2] != '<' && sh->cmd[i][j + 2] != '\0')
 			{
@@ -42,7 +44,6 @@ static void	trim_quote_alloc_hdoc_rdir(t_shell *sh)
 {
 	int		i;
 
-	i = 0;
 	i = 0;
 	while (sh->cmd[i] != NULL)
 	{
@@ -69,7 +70,8 @@ static t_cmdn	*create_node(t_cmdn *current, t_shell *sh, int index)
 	while (sh->cmdarr[len] != NULL)
 		len++;
 	sh->cmdarr[index] = trim_rdirspace(sh->cmdarr[index]);
-	sh->cmd = ft_split_time_space(sh->cmdarr[index], ' ');
+	// sh->cmd = ft_split_time_space(sh->cmdarr[index], ' ');
+	sh->cmd = split_pipes(sh->cmdarr[index], " ");
 	if (!(sh->cmd))
 		errexit("error: ", "root malloc", NULL, sh);
 	trim_quote_alloc_hdoc_rdir(sh);
@@ -114,7 +116,7 @@ void	parse_input(t_shell *sh)
 	sh->root = init_cmd_node(PIPELINE, sh, FALSE, FALSE);
 	if (!(sh->root))
 		errexit("error: ", "root malloc", NULL, sh);
-	sh->cmdarr = ft_split(sh->input, "|");
+	sh->cmdarr = split_pipes(sh->input, "|");
 	if (!(sh->cmdarr))
 		errexit("error: ", "cmdarr malloc", NULL, sh);
 	free(sh->input);

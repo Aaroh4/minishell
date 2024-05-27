@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirect3.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 12:16:14 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/27 12:17:50 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/27 19:41:02 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,14 +58,15 @@ void	trim_inputs(char *c)
 
 char	*trim_rdirspace(char *cmd)
 {
-	char	*c;
+	int	i;
 
-	c = cmd;
-	while (*c)
+	i = 0;
+	while (cmd[i] != '\0')
 	{
-		trim_outputs(c);
-		trim_inputs(c);
-		c++;
+		i = skip_quotes(cmd, i);
+		trim_outputs(&cmd[i]);
+		trim_inputs(&cmd[i]);
+		i++;
 	}
 	return (cmd);
 }

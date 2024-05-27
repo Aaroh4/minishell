@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 17:08:31 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/27 17:25:55 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/27 19:23:39 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ void	print_char_array(char **arr)
 	int	i;
 
 	i = 0;
-	while (arr[i])
+	while (arr[i] != NULL)
 	{
 		dprintf(2, "[%d] ", i);
 		dprintf(2, "%s\n", arr[i++]);
@@ -96,4 +96,21 @@ char	test_quote_level(char *str)
 		i++;
 	}
 	return (-1);
+}
+
+int	skip_quotes(char *str, int i)
+{
+	int q;
+
+	if (str[i] == '\"' || str[i] == '\'')
+	{
+		q = i + 1;
+		while (str[q] != '\0')
+		{
+			if (str[q] == str[i])
+				return (q);
+			q++;
+		}
+	}
+	return (i);
 }

@@ -1,17 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_split.c                                         :+:      :+:    :+:   */
+/*   split_pipes.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/19 12:04:33 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/27 18:04:38 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/27 19:27:21 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
-#include <unistd.h>
+#include "minishell.h"
 
 static int	is_separator(char c, char *charset)
 {
@@ -38,25 +37,13 @@ static int	word_count(char *str, char *charset)
 	count = 0;
 	while (str[i] != '\0')
 	{
+		i = skip_quotes(str, i);
 		if (is_separator(str[i], charset) == 0
 			&& is_separator(str[i + 1], charset) == 1)
 			count++;
 		i++;
 	}
 	return (count);
-}
-
-static void	do_word(char *dest, char *str, char *charset)
-{
-	int	i;
-
-	i = 0;
-	while (is_separator(str[i], charset) == 0)
-	{
-		dest[i] = str[i];
-		i++;
-	}
-	dest[i] = '\0';
 }
 
 static void	do_split(char **arr, char *str, char *charset)
@@ -75,16 +62,22 @@ static void	do_split(char **arr, char *str, char *charset)
 		{
 			j = 0;
 			while (is_separator(str[i + j], charset) == 0)
+			{
+				j = skip_quotes(str, i + j) - i;
+				//if (str[i + j] == '\0')
+				//	break ;
 				j++;
+			}
+			dprintf(2, "j was %d\n", j);
 			arr[word] = (char *)malloc(sizeof(char) * (j + 1));
-			do_word(arr[word], str + i, charset);
+			ft_memcpy(arr[word], &str[i], j);
 			i += j;
 			word++;
 		}
 	}
 }
 
-char	**ft_split(char *str, char *charset)
+char	**split_pipes(char *str, char *charset)
 {
 	int		count;	
 	char	**arr;
@@ -98,8 +91,10 @@ char	**ft_split(char *str, char *charset)
 		return (arr);
 	}
 	count = word_count(str, charset);
+	dprintf(2, "Count was: %d\n", count);
 	arr = (char **)malloc(sizeof(char *) * (count + 1));
 	arr[count] = NULL;
 	do_split(arr, str, charset);
+	print_char_array(arr);
 	return (arr);
 }
