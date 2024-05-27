@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   msenv_replace.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 13:16:33 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/23 05:31:19 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/26 16:36:18 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

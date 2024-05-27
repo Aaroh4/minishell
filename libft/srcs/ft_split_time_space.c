@@ -139,7 +139,8 @@ int	wordcount(char const *s, char c)
 			count++;
 		i++;
 	}
-	dprintf(2, "count was %d\n", count);
+	// dprintf(2, "count was %d\n", count);
+
 	return (count);
 }
 
@@ -156,8 +157,8 @@ char	**ft_split_time_space(char const *s, char c)
 	arr = (char **)malloc(sizeof(char *) * (count + 1));
 	if (!arr)
 		return (NULL);
-	arr[count] = NULL;
 	if (do_split(arr, s, c, i) == -1)
 		return (NULL);
+	arr[count] = NULL;
 	return (arr);
 }

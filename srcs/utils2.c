@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 13:50:59 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/24 13:28:55 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/26 22:29:54 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,43 +36,113 @@ void	print_cmdn(t_cmdn *node)
 	print_cmdn(node->right);
 }
 
-// Breaks export, we need to handle export ABC="a b c"
-// So that env: ABC=a b c 
-char	**remove_quotes_ex_export(char **cmd)
+void	remove_quotepair(char *strret[2], int i, int j, t_shell *sh)
+{
+	char *temp;
+	char *temp2;
+
+	temp = ft_substr(strret[0], i + 1, j - (i + 1));
+	// dprintf(2, "Substr: %s quote: %c\n", temp, strret[0][i]);
+	if (!strret[1])
+		strret[1] = ft_strdup("");
+	if (strret[0][i] == '\"')
+		temp = replace_envp_tags(temp, sh);
+	temp2 = ft_strjoin(strret[1], temp);
+	free(temp);
+	free(strret[1]);
+	strret[1] = temp2;
+	// dprintf(2, "Ret: %s\n", strret[1]);
+}
+
+// Strret[0] is the source, strret[1] the final array
+// Need to handle areas between quotes, in the beginning and end that are not inside quotes
+char	*remove_quote_level(char *str, t_shell *sh)
+{
+	int		i;
+	int		j;
+	int		lj;
+	int		k;
+	char	*s[2];
+	char	*tmp[2];
+
+	if (test_quote_level(str) == -1)
+		return (str);
+	i = 0;
+	j = 0;
+	lj = 0;
+	k = 0;
+	s[0] = str;
+	s[1] = NULL;
+	tmp[0] = NULL;
+	tmp[1] = NULL;
+	// dprintf(2, "String handled: %s\n", str);
+	while (s[0][i] != '\0')
+	{
+		if (s[0][i] == '\"' || s[0][i] == '\'')
+		{
+			if (j > 0)
+				k = 1;
+			tmp[0] = replace_envp_tags(ft_substr(s[0], j + k, i - (j + k)), sh);
+			// dprintf(2, "Tmp is: %s\n", tmp[0]);
+			if (!s[1])
+				s[1] = ft_strdup("");
+			tmp[1] = ft_strjoin(s[1], tmp[0]);
+			free(s[1]);
+			free(tmp[0]);
+			s[1] = tmp[1];
+			j = i + 1;
+			while (j != '\0')
+			{
+				if (s[0][j] == s[0][i])
+				{
+					remove_quotepair(s, i, j, sh);
+					//dprintf(2, "s[1] is: %s\n", s[1]);
+					i = j;
+					lj = j;
+					break ;
+				}
+				j++;
+			}
+		}
+		i++;
+	}
+	//dprintf(2, "Ret wo tail: %s\n", s[1]);
+	//dprintf(2, "lj is: %d len: %d\n", lj, ft_strlen(s[0]));
+	//dprintf(2, "char at lj: %d c: %c\n", lj, s[0][lj]);
+	//dprintf(2, "Whole string: %s\n", s[0]);
+	tmp[0] = ft_substr(s[0], lj + 1, ft_strlen(s[0]) - lj);
+	//dprintf(2, "Tmp almost final is: %s\n", tmp[0]);
+	tmp[0] = replace_envp_tags(tmp[0], sh);
+	//dprintf(2, "Tmp final is: %s\n", tmp[0]);
+	tmp[1] = ft_strjoin(s[1], tmp[0]);
+	free(tmp[0]);
+	free(s[1]);
+	free(str);
+	s[1] = tmp[1];
+	//dprintf(2, "Ret with tail: %s\n", s[1]);
+	return (s[1]);
+}
+
+/*
+char	**remove_quotes_ex_export(char **cmd, t_shell *sh)
 {
 	t_bool	export_flag;
 	int		i;
-	int		j;
 
 	export_flag = FALSE;
 	i = -1;
 	while (cmd[++i] != NULL)
 	{
-		j = 0;
 		if (!ft_strncmp(cmd[i], "export", ft_strlen(cmd[i])))
 			export_flag = TRUE;
 		if (export_flag && (cmd[i][0] == '<' || cmd[i][0] == '>'))
 			export_flag = FALSE;
 		if (!export_flag)
-		{
-			while (cmd[i][j] != '\0')
-			{
-				if (cmd[i][j] == '\"' || cmd[i][j] == '\'')
-				{
-					while (cmd[i][j] != '\0')
-					{
-						cmd[i][j] = cmd[i][j + 1];
-						j++;
-					}
-					j = 0;
-				}
-				else
-					j++;
-			}
-		}
+			remove_quote_level(cmd[i], sh);
 	}
 	return (cmd);
 }
+*/
 
 // At the moment accounts only for space characters,
 //	are other characters necessary?
@@ -117,4 +187,29 @@ void	print_char_array(char **arr)
 		dprintf(2, "[%d] ", i);
 		dprintf(2, "%s\n", arr[i++]);
 	}
+
+}
+
+char	test_quote_level(char *str)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (str[i] != '\0')
+	{
+		if (str[i] == '\"' || str[i] == '\'')
+		{
+			j = ft_strlen(str) - 1;
+			while (j > i)
+			{
+				if (str[j] == str[i])
+					return (str[i]);
+				j--;
+			}
+		}
+		i++;
+	}
+	return (-1);
 }

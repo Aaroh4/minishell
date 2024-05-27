@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/24 15:47:59 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/26 11:46:39 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,33 @@ void	check_builtin(t_cmdn *node, t_shell *sh, char *cwd)
 		exit_in_main(node, sh);
 	if (sh->cmdcount > 1)
 		switch_pipe_fds(sh);
+}
+
+void	make_child(t_cmdn *node, t_shell *sh, t_intvec *commands, char *cwd)
+{
+	int		pid;
+
+	pid = 0;
+	pid = fork();
+	if (pid == -1)
+	{
+		sh->status = wait_for(commands);
+		free_intvec(commands);
+		errexit("Error:", "fork failure", NULL, sh);
+	}
+	else if (pid == 0)
+	{
+		if (pipe(sh->hfd) == -1)
+			errexit("error :", "pipe initialization", NULL, sh);
+		free_intvec(commands);
+		exec_cmd(node, sh, cwd);
+	}
+	else
+	{
+		check_builtin(node, sh, cwd);
+		if (commands != NULL)
+			add_to_intvec(commands, pid, sh);
+	}
 }
 
 static int	exec_node(t_cmdn *node, t_shell *sh, t_intvec *commands)
