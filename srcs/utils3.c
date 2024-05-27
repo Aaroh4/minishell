@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 14:32:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/27 10:27:14 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/27 16:19:44 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,29 @@ void	exit_function(void)
 	exit (0);
 }
 
+void	unset_loop(int *j, char *str, char **temp, char **temp_ms)
+{
+	int	k;
+
+	k = 0;
+	while (temp_ms[*j] != 0)
+	{
+		if (ft_strncmp(str, temp_ms[*j], ft_strlen(str)))
+		{
+			temp[k] = temp_ms[*j];
+			k++;
+		}
+		else
+			free(temp_ms[*j]);
+		*j += 1;
+	}
+}
 
 char	**unset_remove_from_array(t_shell *sh, char **temp_ms)
 {
 	int		j;
 	char	*str;
 	char	*tempstr;
-	int		k;
 	char	**temp;
 
 	close (sh->efd[1]);
@@ -47,15 +63,7 @@ char	**unset_remove_from_array(t_shell *sh, char **temp_ms)
 		j = count_array(temp_ms);
 		temp = malloc(sizeof(char *) * (j + 1));
 		j = 0;
-		k = 0;
-		while (temp_ms[j] != 0)
-		{
-			if (ft_strncmp(str, temp_ms[j], ft_strlen(str)))
-				temp[k++] = temp_ms[j];
-			else
-				free(temp_ms[j]);
-			j++;
-		}
+		unset_loop(&j, str, temp, temp_ms);
 		temp[j] = NULL;
 		temp = unset_remove_from_array(sh, temp);
 		free(temp_ms);
