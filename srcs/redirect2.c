@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirect2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 11:26:43 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/27 12:33:03 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/27 22:21:29 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	first_redir(t_shell *sh, t_cmdn *node, int i, int *inrdrs)
 	in_fd = open(&node->cargs[i][1], O_RDONLY);
 	if (in_fd == -1)
 		errexit(&node->cargs[i][1],
-			"No such file or directory", NULL, sh);
+			": No such file or directory", NULL, sh);
 	else if (dup2(in_fd, STDIN_FILENO) == -1)
 		errexit("error:", "dup2 stdin", NULL, sh);
 	close(in_fd);

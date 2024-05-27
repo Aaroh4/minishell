@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/19 12:04:33 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/27 19:27:21 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/27 22:10:44 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ static void	do_split(char **arr, char *str, char *charset)
 				//	break ;
 				j++;
 			}
-			dprintf(2, "j was %d\n", j);
+			// dprintf(2, "j was %d\n", j);
 			arr[word] = (char *)malloc(sizeof(char) * (j + 1));
 			ft_memcpy(arr[word], &str[i], j);
 			i += j;
@@ -91,10 +91,10 @@ char	**split_pipes(char *str, char *charset)
 		return (arr);
 	}
 	count = word_count(str, charset);
-	dprintf(2, "Count was: %d\n", count);
+	// dprintf(2, "Count was: %d\n", count);
 	arr = (char **)malloc(sizeof(char *) * (count + 1));
 	arr[count] = NULL;
 	do_split(arr, str, charset);
-	print_char_array(arr);
+	// print_char_array(arr);
 	return (arr);
 }

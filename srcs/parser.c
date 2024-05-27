@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/27 21:44:54 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/27 22:10:14 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static void	trim_quote_alloc_hdoc_rdir(t_shell *sh)
 		sh->cmd[i] = trim_string(sh->cmd[i]);
 		i++;
 	}
-	print_char_array(sh->cmd);
+	// print_char_array(sh->cmd);
 	sh->hdocs = ft_calloc((i + 1), sizeof(int));
 	sh->redirs = ft_calloc((i + 1), sizeof(int));
 	if (sh->hdocs == NULL || sh->redirs == NULL)
@@ -64,7 +64,7 @@ static void	trim_quote_alloc_hdoc_rdir(t_shell *sh)
 		sh->cmd[i] = remove_quote_level(sh->cmd[i], sh);
 		i++;
 	}
-	print_char_array(sh->cmd);
+	// print_char_array(sh->cmd);
 }
 
 static t_cmdn	*create_node(t_cmdn *current, t_shell *sh, int index)
