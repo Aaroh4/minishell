@@ -6,14 +6,13 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/23 13:47:55 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/27 10:32:17 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-
-static void	exec_cmd(t_cmdn *node, t_shell *sh, char *cwd)
+void	exec_cmd(t_cmdn *node, t_shell *sh, char *cwd)
 {
 	char	**path_array;
 	char	*cmdp;
@@ -43,10 +42,11 @@ static void	exec_cmd(t_cmdn *node, t_shell *sh, char *cwd)
 
 void	check_builtin(t_cmdn *node, t_shell *sh, char *cwd)
 {
+	clean_cargs_hdrd(node);
 	if (!ft_strncmp("export", node->cargs[0], ft_strlen(node->cargs[0])))
 		modify_env(sh, 0, cwd);
 	else if (!ft_strncmp("unset", node->cargs[0], ft_strlen(node->cargs[0])))
-		sh->ms_envp = remove_array(sh, sh->ms_envp);
+		sh->ms_envp = unset_remove_from_array(sh, sh->ms_envp);
 	else if (!ft_strncmp("cd", node->cargs[0], ft_strlen(node->cargs[0])))
 		modify_env(sh, 1, cwd);
 	else if (!ft_strncmp("exit", node->cargs[0], ft_strlen(node->cargs[0])))
@@ -55,44 +55,17 @@ void	check_builtin(t_cmdn *node, t_shell *sh, char *cwd)
 		switch_pipe_fds(sh);
 }
 
-void	make_child(t_cmdn *node, t_shell *sh, t_intvec *commands, char *cwd)
-{
-	int		pid;
-
-	pid = 0;
-	populate_env_vars(node, sh);
-	pid = fork();
-	if (pid == -1)
-	{
-		sh->status = wait_for(commands);
-		free_intvec(commands);
-		errexit("Error:", "fork failure", NULL, sh);
-	}
-	else if (pid == 0)
-	{
-		if (pipe(sh->hfd) == -1)
-			errexit("error :", "pipe initialization", NULL, sh);
-		free_intvec(commands);
-		exec_cmd(node, sh, cwd);
-	}
-	else
-	{
-		check_builtin(node, sh, cwd);
-		if (commands != NULL)
-			add_to_intvec(commands, pid, sh);
-	}
-}
-
 static int	exec_node(t_cmdn *node, t_shell *sh, t_intvec *commands)
 {
 	char	buffer[1024];
 	char	*cwd;
 
+	if (node == NULL)
+		return (0);
+	cwd = NULL;
 	cwd = getcwd(buffer, sizeof(buffer));
 	if (cwd == NULL)
 		errexit("error:", "getcwd", NULL, sh);
-	if (node == NULL)
-		return (0);
 	if (node->left != NULL)
 		exec_node(node->left, sh, commands);
 	if (node->ntype == COMMAND)

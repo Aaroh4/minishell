@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/23 14:33:00 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/27 12:18:02 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 # include <readline/history.h>
 # include <termios.h>
 
-#define INITIAL_SIZE 10
+# define INITIAL_SIZE 10
 
 typedef enum s_bool
 {
@@ -56,26 +56,25 @@ typedef struct s_cmdn
 
 typedef struct s_intvec
 {
-    int		*array;
-    size_t	size;
-    size_t	capacity;
-} t_intvec;
+	int		*array;
+	size_t	size;
+	size_t	capacity;
+}	t_intvec;
 
 typedef struct s_shell
 {
-	char	**ms_envp; // Our copy of envp, can be modified by builtins
-	char	*input;	// User input line
-	t_cmdn	*root; // Root node of command tree, for freeing
-	char	**cmdarr; // Array of commands, for easy freeing
-	int		pfd[2][2]; // Pipes for the external pipes
-	int		efd[2]; // Pipe for env export returns
-	int		hfd[2]; // Pipe for the heredocs
-	// int		sfd[2]; // Pipe for status code returns
-	char	**cmd; // Most recent expanded cmdarr member
-	int		*hdocs;	// Heredoc array for above most recent cmd
-	int		*redirs; // Redirect array for all redirects of most recent cmd
-	int 	status; // Exit code of the most recent pipe, implement!
-	int		cmdcount;
+	char			**ms_envp;
+	char			*input;
+	t_cmdn			*root;
+	char			**cmdarr;
+	int				pfd[2][2];
+	int				efd[2];
+	int				hfd[2];
+	char			**cmd;
+	int				*hdocs;
+	int				*redirs;
+	int				status;
+	int				cmdcount;
 	struct termios	oterm;
 }	t_shell;
 
@@ -93,19 +92,26 @@ int			check_hdocs(t_cmdn *node);
 char		*get_msenv(char *name, t_shell *sh);
 char		**remove_from_array(char **str, int i, t_cmdn *node);
 int			exec_builtin(t_cmdn *node, t_shell *sh, char *cwd);
+void		make_child(t_cmdn *node, t_shell *sh,
+				t_intvec *commands, char *cwd);
+void		clean_cargs_hdrd(t_cmdn *node);
+void		exec_cmd(t_cmdn *node, t_shell *sh, char *cwd);
+void		check_builtin(t_cmdn *node, t_shell *sh, char *cwd);
 // Dynamic Integer Array:
 t_intvec*	create_intvec(t_shell *sh);
 void		expand_intvec(t_intvec *dynarr, t_shell *sh);
 int			add_to_intvec(t_intvec *dynarr, int value, t_shell *sh);
 void		free_intvec(t_intvec *intvec);
 // Utilities:
-char		**ft_remove_quotes(char **cmd);
+char		**remove_quotes_ex_export(char **cmd, t_shell *sh);
+char		test_quote_level(char *str);
+char		*remove_quote_level(char *str, t_shell *sh);
 char		*get_exec_path(char **path, char *cmd, t_shell *sh);
 int			wait_for(t_intvec *children);
 void		print_cmdn(t_cmdn *root);
 char		*trim_string(char *str);
 void		create_pipes(t_shell *sh);
-void		print_array(char **arr);
+void		print_char_array(char **arr);
 void		exit_function(void);
 void		input_start(t_shell *sh, struct termios oterm);
 // Buildins:
@@ -116,17 +122,16 @@ int			echo_builtin(char **arg);
 int			env_builtin(t_shell *sh, t_bool export);
 int			export_builtin(t_cmdn *node, t_shell *sh);
 int			unset_builtin(t_cmdn *node, t_shell *sh);
-char		**remove_array(t_shell *sh, char **temp_ms);
 int			get_cargs_count(t_cmdn *node);
 char		*check_for_home(t_shell *sh);
 int			find_amount(char *str, char c);
 int			count_array(char **arr);
-char		**remove_array(t_shell *sh, char **temp_ms);
+char		**unset_remove_from_array(t_shell *sh, char **temp_ms);
 char		**removing_loop(char *tempstr, char **temp_ms, int *j);
 
 // Environment variables:
 void		increase_shell_level(t_shell *sh);
-char 		*replace_envp(char* input, t_shell *sh);
+char		*replace_envp_tags(char* input, t_shell *sh);
 char		**copy_envp(char **envp, t_shell *sh);
 char		*move_ucase(char *start);
 void		populate_env_vars(t_cmdn *node, t_shell *sh);
@@ -136,7 +141,7 @@ void		modify_env(t_shell *sh, int a, char *cwd);
 // Heredoc:
 char		*ft_heredoc(char *breakchar, int hdocs);
 // Redirects:
-char 		*trim_rdirspace(char *cmd);
+char		*trim_rdirspace(char *cmd);
 void		get_redirects(t_shell *sh);
 int			open_redirects(t_cmdn *node, t_shell *sh);
 // Error handling:
@@ -144,9 +149,10 @@ void		errexit(char *msg1, char *msg2, char *msg3, t_shell *sh);
 void		errexitcode(char *msg1, char *msg2, int status, t_shell *sh);
 // Initialization
 void		init_shell_struct(t_shell *sh);
-t_cmdn		*init_cmd_node(t_ntype type, t_shell *sh, t_bool last, t_bool first);
+t_cmdn		*init_cmd_node(t_ntype type,
+				t_shell *sh, t_bool last, t_bool first);
 // Freeing
-void 		free(void* p);
+void		free(void* p);
 void		free_args(char **args);
 void		free_cmdn(t_cmdn *node);
 void		free_child(t_shell *sh);
@@ -156,4 +162,14 @@ void		close_ext_pipes(t_shell *sh);
 void		disable_raw_mode(struct termios oterm);
 void		enable_raw_mode(void);
 
+// Redirects
+void		first_redir(t_shell *sh, t_cmdn *node, int i, int *inrdrs);
+int			second_redir(t_shell *sh, t_cmdn *node, int i, int *outrdrs);
+int			third_redir(t_shell *sh, t_cmdn *node, int i, int *outrdrs);
+void		redirects_more_command(t_shell *sh, t_cmdn *node,
+				int inrdrs, int outrdrs);
+void		trim_space(char *c);
+void		trim_outputs(char *c);
+void		trim_inputs(char *c);
+char		*trim_rdirspace(char *cmd);
 #endif

@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 13:50:59 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/23 14:31:33 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/27 10:36:47 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,35 +36,78 @@ void	print_cmdn(t_cmdn *node)
 	print_cmdn(node->right);
 }
 
-char	**ft_remove_quotes(char **cmd)
+void	remove_quotepair(char *strret[2], int i, int j, t_shell *sh)
 {
-	int	i;
-	int	j;
+	char	*temp;
+	char	*temp2;
 
-	i = -1;
-	while (cmd[++i] != NULL)
-	{
-		j = 0;
-		while (cmd[i][j] != '\0')
-		{
-			if (cmd[i][j] == '\"')
-			{
-				while (cmd[i][j] != '\0')
-				{
-					cmd[i][j] = cmd[i][j + 1];
-					j++;
-				}
-				j = 0;
-			}
-			else
-				j++;
-		}
-	}
-	return (cmd);
+	temp = ft_substr(strret[0], i + 1, j - (i + 1));
+	if (!strret[1])
+		strret[1] = ft_strdup("");
+	if (strret[0][i] == '\"')
+		temp = replace_envp_tags(temp, sh);
+	temp2 = ft_strjoin(strret[1], temp);
+	free(temp);
+	free(strret[1]);
+	strret[1] = temp2;
 }
 
-// At the moment accounts only for space characters,
-//	are other characters necessary?
+char	*remove_quote_level(char *str, t_shell *sh)
+{
+	int		i;
+	int		j;
+	int		lj;
+	int		k;
+	char	*s[2];
+	char	*tmp[2];
+
+	if (test_quote_level(str) == -1)
+		return (str);
+	i = 0;
+	j = 0;
+	lj = 0;
+	k = 0;
+	s[0] = str;
+	s[1] = NULL;
+	tmp[0] = NULL;
+	tmp[1] = NULL;
+	while (s[0][i] != '\0')
+	{
+		if (s[0][i] == '\"' || s[0][i] == '\'')
+		{
+			if (j > 0)
+				k = 1;
+			tmp[0] = replace_envp_tags(ft_substr(s[0], j + k, i - (j + k)), sh);
+			if (!s[1])
+				s[1] = ft_strdup("");
+			tmp[1] = ft_strjoin(s[1], tmp[0]);
+			free(s[1]);
+			free(tmp[0]);
+			s[1] = tmp[1];
+			j = i + 1;
+			while (j != '\0')
+			{
+				if (s[0][j] == s[0][i])
+				{
+					remove_quotepair(s, i, j, sh);
+					i = j;
+					lj = j;
+					break ;
+				}
+				j++;
+			}
+		}
+		i++;
+	}
+	tmp[0] = ft_substr(s[0], lj + 1, ft_strlen(s[0]) - lj);
+	tmp[0] = replace_envp_tags(tmp[0], sh);
+	tmp[1] = ft_strjoin(s[1], tmp[0]);
+	free(tmp[0]);
+	free(s[1]);
+	free(str);
+	s[1] = tmp[1];
+	return (s[1]);
+}
 
 char	*trim_string(char *str)
 {
@@ -96,11 +139,38 @@ char	*trim_string(char *str)
 	return (str);
 }
 
-void	print_array(char **arr)
+void	print_char_array(char **arr)
 {
 	int	i;
 
 	i = 0;
 	while (arr[i])
+	{
+		dprintf(2, "[%d] ", i);
 		dprintf(2, "%s\n", arr[i++]);
+	}
+}
+
+char	test_quote_level(char *str)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (str[i] != '\0')
+	{
+		if (str[i] == '\"' || str[i] == '\'')
+		{
+			j = ft_strlen(str) - 1;
+			while (j > i)
+			{
+				if (str[j] == str[i])
+					return (str[i]);
+				j--;
+			}
+		}
+		i++;
+	}
+	return (-1);
 }

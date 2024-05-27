@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 08:34:10 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/21 17:36:22 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/24 15:43:47 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ void	init_shell_struct(t_shell *sh)
 	sh->redirs = NULL;
 	sh->status = 99;
 }
-
 
 t_cmdn	*init_cmd_node(t_ntype type, t_shell *sh, t_bool last, t_bool first)
 {

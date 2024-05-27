@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/23 13:54:36 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/27 12:58:27 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,20 +44,28 @@ static void	trim_quote_alloc_hdoc_rdir(t_shell *sh)
 
 	i = 0;
 	i = 0;
-	while (sh->cmd[i] != NULL)
-	{
-		sh->cmd[i] = trim_string(sh->cmd[i]);
-		i++;
-	}
-	sh->cmd = ft_remove_quotes(sh->cmd);
+	dprintf(2, "1hello\n");
+	//while (sh->cmd[i] != NULL)
+	//{
+		//sh->cmd[i] = trim_string(sh->cmd[i]);
+	//	dprintf(2, "2hello\n");
+		//sh->cmd[i] = remove_quote_level(sh->cmd[i], sh);
+	//	dprintf(2, "3hello\n");
+	//	i++;
+	//}
+	dprintf(2, "4hello\n");
 	sh->hdocs = ft_calloc((i + 1), sizeof(int));
+	dprintf(2, "5hello\n");
 	sh->redirs = ft_calloc((i + 1), sizeof(int));
+	dprintf(2, "6hello\n");
 	if (sh->hdocs == NULL || sh->redirs == NULL)
 		errexit("hdocs or redirs malloc error", NULL, NULL, sh);
 	sh->hdocs[i] = -1;
 	sh->redirs[i] = -1;
 	get_heredocs(sh);
+		dprintf(2, "7hello\n");
 	get_redirects(sh);
+		dprintf(2, "8hello\n");
 }
 
 static t_cmdn	*create_node(t_cmdn *current, t_shell *sh, int index)
@@ -73,6 +81,12 @@ static t_cmdn	*create_node(t_cmdn *current, t_shell *sh, int index)
 	if (!(sh->cmd))
 		errexit("error: ", "root malloc", NULL, sh);
 	trim_quote_alloc_hdoc_rdir(sh);
+	int	i = 0;
+	while(sh->cmd[i])
+	{
+		dprintf(2, "%s\n", sh->cmd[i]);
+		i++;
+	}
 	first = FALSE;
 	if (index == 0)
 		first = TRUE;
@@ -117,7 +131,6 @@ void	parse_input(t_shell *sh)
 	sh->cmdarr = ft_split(sh->input, "|");
 	if (!(sh->cmdarr))
 		errexit("error: ", "cmdarr malloc", NULL, sh);
-	create_pipes(sh);
 	free(sh->input);
 	sh->input = NULL;
 	current = sh->root;
