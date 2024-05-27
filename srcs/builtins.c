@@ -101,8 +101,7 @@ int	count_j(t_cmdn *n, t_shell *sh, int i, int k)
 	int	j;
 
 	j = 0;
-	while (sh->ms_envp[i][j] == n->cargs[k][j]
-			&& sh->ms_envp[i][j] != '=')
+	while (sh->ms_envp[i][j] == n->cargs[k][j] && sh->ms_envp[i][j] != '=')
 		j++;
 	return (j);
 }

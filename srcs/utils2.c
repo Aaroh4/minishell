@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 13:50:59 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/27 10:36:47 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/27 14:48:14 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,14 @@ void	remove_quotepair(char *strret[2], int i, int j, t_shell *sh)
 	char	*temp2;
 
 	temp = ft_substr(strret[0], i + 1, j - (i + 1));
+	dprintf(2, "RQP temp: %s\n", temp);
 	if (!strret[1])
 		strret[1] = ft_strdup("");
 	if (strret[0][i] == '\"')
 		temp = replace_envp_tags(temp, sh);
+	dprintf(2, "RQP temp after tags: %s\n", temp);
 	temp2 = ft_strjoin(strret[1], temp);
+	dprintf(2, "RQP temp2: %s\n", temp);
 	free(temp);
 	free(strret[1]);
 	strret[1] = temp2;
@@ -75,12 +78,18 @@ char	*remove_quote_level(char *str, t_shell *sh)
 	{
 		if (s[0][i] == '\"' || s[0][i] == '\'')
 		{
+			dprintf(2, "######################\n");
 			if (j > 0)
 				k = 1;
-			tmp[0] = replace_envp_tags(ft_substr(s[0], j + k, i - (j + k)), sh);
+			// dprintf(2, "j: %d k: %d i: %d\n", j, k, i);
+			tmp[0] = ft_substr(s[0], j + k, i - (j + k));
+			// dprintf(2, "tmp[0] before envtags: #%s#\n", tmp[0]);
+			tmp[0] = replace_envp_tags(tmp[0], sh);
+			// dprintf(2, "tmp[0] before quotes: #%s#\n", tmp[0]);
 			if (!s[1])
 				s[1] = ft_strdup("");
 			tmp[1] = ft_strjoin(s[1], tmp[0]);
+			// dprintf(2, "tmp[1] before quotes: #%s#\n", tmp[1]);
 			free(s[1]);
 			free(tmp[0]);
 			s[1] = tmp[1];
@@ -96,15 +105,21 @@ char	*remove_quote_level(char *str, t_shell *sh)
 				}
 				j++;
 			}
+			dprintf(2, "######################\n");
 		}
 		i++;
 	}
 	tmp[0] = ft_substr(s[0], lj + 1, ft_strlen(s[0]) - lj);
+	dprintf(2, "tmp[0] after quotes: #%s#\n", tmp[0]);
 	tmp[0] = replace_envp_tags(tmp[0], sh);
 	tmp[1] = ft_strjoin(s[1], tmp[0]);
+	dprintf(2, "tmp[1] after quotes: #%s#\n", tmp[1]);
 	free(tmp[0]);
+	tmp[0] = NULL;
 	free(s[1]);
+	s[1] = NULL;
 	free(str);
+	str = NULL;
 	s[1] = tmp[1];
 	return (s[1]);
 }

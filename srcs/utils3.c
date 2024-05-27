@@ -24,9 +24,8 @@ void	input_start(t_shell *sh, struct termios oterm)
 void	exit_function(void)
 {
 	write(1, "exit\n", 5);
-	exit (0);
+	exit(0);
 }
-
 
 char	**unset_remove_from_array(t_shell *sh, char **temp_ms)
 {
@@ -36,7 +35,7 @@ char	**unset_remove_from_array(t_shell *sh, char **temp_ms)
 	int		k;
 	char	**temp;
 
-	close (sh->efd[1]);
+	close(sh->efd[1]);
 	if (sh->cmdcount == 1)
 	{
 		tempstr = get_next_line(sh->efd[0]);

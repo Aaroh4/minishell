@@ -28,8 +28,8 @@ int	export_check_envname(int j, t_cmdn *node, t_shell *sh)
 			return (i);
 		}
 		else if (node->cargs[j][i] != '\0')
-			errexit("export: \'",
-				node->cargs[j], "\': not a valid identifier", sh);
+			errexit("export: \'", node->cargs[j], "\': not a valid identifier",
+				sh);
 	}
 	else
 		errexit("export: \'", node->cargs[j], "\': not a valid identifier", sh);
@@ -38,7 +38,7 @@ int	export_check_envname(int j, t_cmdn *node, t_shell *sh)
 
 int	export_builtin(t_cmdn *node, t_shell *sh)
 {
-	int		i;
+	int	i;
 
 	if (node->cargs[1] == 0)
 	{

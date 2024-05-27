@@ -35,7 +35,7 @@ void	put_cwd_fd(char *cwd, t_cmdn *node, t_shell *sh)
 		ft_putstr_fd(node->cargs[1], sh->efd[1]);
 }
 
-int	cd_builtin(t_cmdn *node, t_shell *sh, char	*cwd)
+int	cd_builtin(t_cmdn *node, t_shell *sh, char *cwd)
 {
 	char	*home;
 

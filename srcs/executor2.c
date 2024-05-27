@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 15:29:16 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/24 13:31:33 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/27 13:40:17 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	handle_heredocs(t_cmdn *node, t_shell *sh)
 		i--;
 	if (node->hdocs[i] > 0)
 	{
-		node->cargs[i] = replace_envp_tags(node->cargs[i], sh);
+		// node->cargs[i] = replace_envp_tags(node->cargs[i], sh);
 		ft_putstr_fd(node->cargs[i], sh->hfd[1]);
 	}
 	i = 0;
@@ -121,7 +121,7 @@ int	exec_builtin(t_cmdn *node, t_shell *sh, char *cwd)
 		return (unset_builtin(node, sh));
 	else if (node->cargs[0] && !ft_strncmp(node->cargs[0], "env", 4))
 		return (env_builtin(sh, FALSE));
-	close (sh->efd[0]);
-	close (sh->efd[1]);
+	close(sh->efd[0]);
+	close(sh->efd[1]);
 	return (0);
 }

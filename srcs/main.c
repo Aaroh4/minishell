@@ -40,8 +40,8 @@ void	ft_handler(int signum)
 	rl_redisplay();
 }
 
-static int	check_inline_param(int argc, char **argv,
-	t_shell *sh, struct termios oterm)
+static int	check_inline_param(int argc, char **argv, t_shell *sh,
+		struct termios oterm)
 {
 	int	i;
 

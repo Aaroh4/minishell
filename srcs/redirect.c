@@ -81,15 +81,15 @@ void	get_redirects(t_shell *sh)
 		j = -1;
 		while (sh->cmd[i][++j] != '\0')
 		{
-			if ((j == 0 || sh->cmd[i][j - 1] != '<') && sh->cmd[i][j] == '<' &&
-					sh->cmd[i][j + 1] != '<')
+			if ((j == 0 || sh->cmd[i][j - 1] != '<') && sh->cmd[i][j] == '<'
+				&& sh->cmd[i][j + 1] != '<')
 				sh->redirs[i] = 1;
-			else if ((j == 0 || sh->cmd[i][j - 1] != '>') &&
-					sh->cmd[i][j] == '>' && sh->cmd[i][j + 1] != '>')
+			else if ((j == 0 || sh->cmd[i][j - 1] != '>')
+				&& sh->cmd[i][j] == '>' && sh->cmd[i][j + 1] != '>')
 				sh->redirs[i] = 2;
-			else if ((j == 0 || sh->cmd[i][j - 1] != '>') &&
-					sh->cmd[i][j] == '>' && sh->cmd[i][j + 1] == '>' &&
-					sh->cmd[i][j + 2] != '>')
+			else if ((j == 0 || sh->cmd[i][j - 1] != '>')
+				&& sh->cmd[i][j] == '>' && sh->cmd[i][j + 1] == '>'
+				&& sh->cmd[i][j + 2] != '>')
 				sh->redirs[i] = 3;
 		}
 	}
@@ -142,8 +142,8 @@ int	open_redirects(t_cmdn *node, t_shell *sh)
 			inrdrs++;
 			in_fd = open(&node->cargs[i][1], O_RDONLY);
 			if (in_fd == -1)
-				errexit(&node->cargs[i][1],
-					"No such file or directory", NULL, sh);
+				errexit(&node->cargs[i][1], "No such file or directory", NULL,
+					sh);
 			else if (dup2(in_fd, STDIN_FILENO) == -1)
 				errexit("error:", "dup2 stdin", NULL, sh);
 			close(in_fd);

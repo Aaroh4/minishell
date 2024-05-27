@@ -14,14 +14,14 @@
 
 void	close_input_pipes(t_shell *sh)
 {
-	close (sh->hfd[0]);
+	close(sh->hfd[0]);
 	close(sh->pfd[0][0]);
 	close(sh->pfd[1][0]);
 }
 
 void	close_output_pipes(t_shell *sh)
 {
-	close (sh->hfd[1]);
+	close(sh->hfd[1]);
 	close(sh->pfd[0][1]);
 	close(sh->pfd[1][1]);
 }

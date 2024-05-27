@@ -28,8 +28,8 @@ void	exec_cmd(t_cmdn *node, t_shell *sh, char *cwd)
 	cmdp = NULL;
 	if (!(exec_builtin(node, sh, cwd)))
 	{
-		close (sh->efd[0]);
-		close (sh->efd[1]);
+		close(sh->efd[0]);
+		close(sh->efd[1]);
 		path_array = ft_split(get_msenv("PATH", sh), ":");
 		cmdp = get_exec_path(path_array, node->cargs[0], sh);
 		free_args(path_array);
