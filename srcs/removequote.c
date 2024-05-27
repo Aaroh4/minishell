@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 13:50:59 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/27 17:25:40 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/27 17:31:08 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static void	remove_quotepair(char *strret[2], int i, int j, t_shell *sh)
 
 static void	loop_remove_quotes(char *s[2], int i[3], t_shell *sh)
 {
-	while (i[1] != '\0')
+	while (s[0][i[1]] != '\0')
 	{
 		if (s[0][i[1]] == s[0][i[0]])
 		{
