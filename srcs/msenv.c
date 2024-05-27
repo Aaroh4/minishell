@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   msenv.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 16:54:02 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/23 12:39:00 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/15 13:08:39 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,15 @@ char	**copy_env_vals(int len, char **envp, char **ms_envp, t_shell *sh)
 		ms_envp[i] = (char *)malloc((slen + 1) * sizeof(char));
 		if (ms_envp[i] == NULL)
 			errexit("minishell: ", "envp malloc 2 error", NULL, sh);
-		ft_memcpy(ms_envp[i], envp[i], (slen + 1) * sizeof(char));
+		ft_memcpy(ms_envp[i], envp[i], slen * sizeof(char));
 		ms_envp[i][slen] = '\0';
 		i++;
 	}
 	ms_envp[len] = NULL;
 	return (ms_envp);
 }
+
+
 
 char	**copy_envp(char **envp, t_shell *sh)
 {
@@ -58,6 +60,7 @@ char	**copy_envp(char **envp, t_shell *sh)
 	return (ms_envp);
 }
 
+// Change all env variable names $ENV from input to their values
 void	populate_env_vars(t_cmdn *node, t_shell *sh)
 {
 	int	i;
@@ -65,7 +68,7 @@ void	populate_env_vars(t_cmdn *node, t_shell *sh)
 	i = 0;
 	while (node->cargs[i] != NULL)
 	{
-		node->cargs[i] = replace_envp_tags(node->cargs[i], sh);
+		node->cargs[i] = replace_envp(node->cargs[i], sh);
 		i++;
 	}
 	return ;

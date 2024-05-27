@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 11:06:04 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/22 10:04:59 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/16 13:58:16 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,25 +39,37 @@ void	free_cmdn(t_cmdn *node)
 		free_cmdn(node->right);
 	if (node->cargs)
 		free_args(node->cargs);
-	free(node->hdocs);
+	if (node->hdocs)
+		free(node->hdocs);
+	if (node->redirs)
+		free(node->redirs);
+	node->left = NULL;
+	node->right = NULL;
 	node->cargs = NULL;
 	node->hdocs = NULL;
 	node->redirs = NULL;
-	node->left = NULL;
-	node->right = NULL;
 	free(node);
 	node = NULL;
 }
 
 void	free_new_prompt(t_shell *sh)
 {
+	int len;
+	
 	free_cmdn(sh->root);
-	if (sh->cmdcount > 1)
-		close_ext_pipes(sh);
+	len = 0;
+	while (sh->cmdarr[len])
+		len++;
+	if (len > 1)
+		close_all_pipes(sh);
 	free_args(sh->cmdarr);
 	free_args(sh->cmd);
-	free(sh->hdocs);
-	free(sh->redirs);
+	/*
+	if (sh->hdocs)
+		free(sh->hdocs);
+	if (sh->redirs)
+		free(sh->redirs);
+	*/
 	sh->input = NULL;
 	sh->root = NULL;
 	sh->cmdarr = NULL;
@@ -65,12 +77,10 @@ void	free_new_prompt(t_shell *sh)
 	sh->hdocs = NULL;
 }
 
-void	close_ext_pipes(t_shell *sh)
+void	close_all_pipes(t_shell *sh)
 {
-	close(sh->pfd[0][0]);
-	close(sh->pfd[0][1]);
-	close(sh->pfd[1][0]);
-	close(sh->pfd[1][1]);
+	close(sh->pfd[0]);
+	close(sh->pfd[1]);
 	close(sh->efd[0]);
 	close(sh->efd[1]);
 }
@@ -81,7 +91,7 @@ void	free_child(t_shell *sh)
 	free_args(sh->cmdarr);
 	free_args(sh->ms_envp);
 	if (sh->cmdcount > 1)
-		close_ext_pipes(sh);
+		close_all_pipes(sh);
 	free_args(sh->cmd);
 	free(sh->hdocs);
 	sh->root = NULL;

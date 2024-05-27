@@ -1,8 +1,0 @@
-BASH:
-
-echo 'moi oon $LESS '"$LESS"				moi oon $LESS -R
-echo 'moi oon $LESS "$LESS"'				moi oon $LESS "$LESS"
-echo 'moi oon $LESS "'$LESS'"'				moi oon $LESS "-R"
-echo 'moi oon $LESS "'"$LESS"'"'			moi oon $LESS "-R"
-echo "moi oon $LESS '"' $LESS '"'"'$LESS'	moi oon -R ' $LESS '$LESS
-echo 'moi oon "$LESS"'

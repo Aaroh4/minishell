@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 16:20:12 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/23 06:53:15 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/15 13:06:57 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,14 +77,14 @@ void	get_redirects(t_shell *sh)
 	int	i;
 	int j;
 
-	i = -1;
+	i = 0;
 	while (sh->cmd[++i] != NULL)
 	{
 		j = -1;
 		while (sh->cmd[i][++j] != '\0')
 		{
 			if ((j == 0 || sh->cmd[i][j - 1] != '<') && sh->cmd[i][j] == '<' &&
-					sh->cmd[i][j + 1] != '<')
+					sh->cmd[i][j + 1] != '<') 
 				sh->redirs[i] = 1;
 			else if ((j == 0 || sh->cmd[i][j - 1] != '>') && 
 					sh->cmd[i][j] == '>' && sh->cmd[i][j + 1] != '>')
@@ -97,20 +97,6 @@ void	get_redirects(t_shell *sh)
 	}
 }
 
-/*
-void 	ay_redirs(t_cmdn *node)
-{
-	int	i;
-
-	i = 0;
-	while (node->cargs[i])
-	{
-		dprintf(2, "%d : %s\n", node->redirs[i], node->cargs[i]);
-		i++;
-	}
-	return ;
-}
-*/
 // Reconstruct cargs omitting redirs
 static void	omit_redirs_from_param(t_cmdn *node)
 {
@@ -199,26 +185,24 @@ int	open_redirects(t_cmdn *node, t_shell *sh)
 		}
 		i++;
 	}
-
-	// Strategy: call pipe between each command, close previous pipe
 	if (sh->cmdcount > 1)
 	{
-		if (inrdrs == 0 && sh->cmdcount > 1 && node->first == FALSE)
+		if (inrdrs == 0 && sh->cmdcount > 1)
 		{
-			if (dup2(sh->pfd[0][0], STDIN_FILENO) == -1)
+			if (dup2(sh->pfd[0], STDIN_FILENO) == -1)
 				errexit("error:", "dup2 stdin", NULL, sh);
 		}
-		else 
-			close(sh->pfd[0][0]);
+		// close(sh->pfd[0]);
+		// close(sh->efd[0]);
 		if (outrdrs == 0 && sh->cmdcount > 1 && node->last == FALSE)
 		{
-			if (dup2(sh->pfd[1][1], STDOUT_FILENO) == -1)
+			if (dup2(sh->pfd[1], STDOUT_FILENO) == -1)
 				errexit("error:", "dup2 stdout", NULL, sh);
 		}
-		else
-			close(sh->pfd[0][1]);
 	}
 	if (inrdrs > 0 || outrdrs > 0)
+	{
 		omit_redirs_from_param(node);
+	}
 	return (0);
 }
