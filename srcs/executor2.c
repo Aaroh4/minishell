@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 15:29:16 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/24 13:31:33 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/27 16:58:59 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,7 @@ void	handle_heredocs(t_cmdn *node, t_shell *sh)
 	while (node->hdocs[i] == 0 && i > 0)
 		i--;
 	if (node->hdocs[i] > 0)
-	{
-		node->cargs[i] = replace_envp_tags(node->cargs[i], sh);
 		ft_putstr_fd(node->cargs[i], sh->hfd[1]);
-	}
 	i = 0;
 	while (node->cargs[i] != 0)
 	{

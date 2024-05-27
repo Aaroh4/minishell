@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   msenv_replace.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 13:16:33 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/27 10:33:34 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/27 16:57:47 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ void	write_new_arr(char *new_arr, t_env_tdata *envd)
 		i++;
 		envd->end++;
 	}
-	new_arr[ft_strlen(new_arr)] = '\0';
+	new_arr[i] = '\0';
 }
 
 char	*replace_envp_tags(char *input, t_shell *sh)
