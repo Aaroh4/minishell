@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 03:59:37 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/26 22:27:30 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/27 10:32:57 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int export_check_envname(int j, t_cmdn *node, t_shell *sh)
+int	export_check_envname(int j, t_cmdn *node, t_shell *sh)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if ((ft_isalpha(node->cargs[j][0])) || (node->cargs[j][0] == '_'))
@@ -28,7 +28,8 @@ int export_check_envname(int j, t_cmdn *node, t_shell *sh)
 			return (i);
 		}
 		else if (node->cargs[j][i] != '\0')
-			errexit("export: \'", node->cargs[j], "\': not a valid identifier", sh);
+			errexit("export: \'",
+				node->cargs[j], "\': not a valid identifier", sh);
 	}
 	else
 		errexit("export: \'", node->cargs[j], "\': not a valid identifier", sh);
@@ -39,7 +40,6 @@ int	export_builtin(t_cmdn *node, t_shell *sh)
 {
 	int		i;
 
-	// print_char_array(node->cargs);
 	if (node->cargs[1] == 0)
 	{
 		env_builtin(sh, TRUE);

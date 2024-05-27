@@ -6,13 +6,12 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 16:54:02 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/23 12:39:00 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/27 10:33:41 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// Still missing check for heredoc and single/double quotes
 char	*move_ucase(char *start)
 {
 	char	*ptr;

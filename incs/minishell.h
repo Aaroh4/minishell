@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/26 14:19:58 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/27 10:31:25 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,26 +56,25 @@ typedef struct s_cmdn
 
 typedef struct s_intvec
 {
-    int		*array;
-    size_t	size;
-    size_t	capacity;
-} t_intvec;
+	int		*array;
+	size_t	size;
+	size_t	capacity;
+}	t_intvec;
 
 typedef struct s_shell
 {
-	char	**ms_envp; // Our copy of envp, can be modified by builtins
-	char	*input;	// User input line
-	t_cmdn	*root; // Root node of command tree, for freeing
-	char	**cmdarr; // Array of commands, for easy freeing
-	int		pfd[2][2]; // Pipes for the external pipes
-	int		efd[2]; // Pipe for env export returns
-	int		hfd[2]; // Pipe for the heredocs
-	// int		sfd[2]; // Pipe for status code returns
-	char	**cmd; // Most recent expanded cmdarr member
-	int		*hdocs;	// Heredoc array for above most recent cmd
-	int		*redirs; // Redirect array for all redirects of most recent cmd
-	int 	status; // Exit code of the most recent pipe, implement!
-	int		cmdcount;
+	char			**ms_envp;
+	char			*input;
+	t_cmdn			*root;
+	char			**cmdarr;
+	int				pfd[2][2];
+	int				efd[2];
+	int				hfd[2];
+	char			**cmd;
+	int				*hdocs;
+	int				*redirs;
+	int				status;
+	int				cmdcount;
 	struct termios	oterm;
 }	t_shell;
 
@@ -95,6 +94,7 @@ char		**remove_from_array(char **str, int i, t_cmdn *node);
 int			exec_builtin(t_cmdn *node, t_shell *sh, char *cwd);
 void		make_child(t_cmdn *node, t_shell *sh,
 				t_intvec *commands, char *cwd);
+void		clean_cargs_hdrd(t_cmdn *node);
 void		exec_cmd(t_cmdn *node, t_shell *sh, char *cwd);
 void		check_builtin(t_cmdn *node, t_shell *sh, char *cwd);
 // Dynamic Integer Array:
@@ -131,7 +131,7 @@ char		**removing_loop(char *tempstr, char **temp_ms, int *j);
 
 // Environment variables:
 void		increase_shell_level(t_shell *sh);
-char 		*replace_envp_tags(char* input, t_shell *sh);
+char		*replace_envp_tags(char* input, t_shell *sh);
 char		**copy_envp(char **envp, t_shell *sh);
 char		*move_ucase(char *start);
 void		populate_env_vars(t_cmdn *node, t_shell *sh);
@@ -141,7 +141,7 @@ void		modify_env(t_shell *sh, int a, char *cwd);
 // Heredoc:
 char		*ft_heredoc(char *breakchar, int hdocs);
 // Redirects:
-char 		*trim_rdirspace(char *cmd);
+char		*trim_rdirspace(char *cmd);
 void		get_redirects(t_shell *sh);
 int			open_redirects(t_cmdn *node, t_shell *sh);
 // Error handling:
@@ -149,9 +149,10 @@ void		errexit(char *msg1, char *msg2, char *msg3, t_shell *sh);
 void		errexitcode(char *msg1, char *msg2, int status, t_shell *sh);
 // Initialization
 void		init_shell_struct(t_shell *sh);
-t_cmdn		*init_cmd_node(t_ntype type, t_shell *sh, t_bool last, t_bool first);
+t_cmdn		*init_cmd_node(t_ntype type,
+				t_shell *sh, t_bool last, t_bool first);
 // Freeing
-void 		free(void* p);
+void		free(void* p);
 void		free_args(char **args);
 void		free_cmdn(t_cmdn *node);
 void		free_child(t_shell *sh);

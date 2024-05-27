@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 13:50:59 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/26 22:29:54 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/27 10:36:47 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,11 +38,10 @@ void	print_cmdn(t_cmdn *node)
 
 void	remove_quotepair(char *strret[2], int i, int j, t_shell *sh)
 {
-	char *temp;
-	char *temp2;
+	char	*temp;
+	char	*temp2;
 
 	temp = ft_substr(strret[0], i + 1, j - (i + 1));
-	// dprintf(2, "Substr: %s quote: %c\n", temp, strret[0][i]);
 	if (!strret[1])
 		strret[1] = ft_strdup("");
 	if (strret[0][i] == '\"')
@@ -51,11 +50,8 @@ void	remove_quotepair(char *strret[2], int i, int j, t_shell *sh)
 	free(temp);
 	free(strret[1]);
 	strret[1] = temp2;
-	// dprintf(2, "Ret: %s\n", strret[1]);
 }
 
-// Strret[0] is the source, strret[1] the final array
-// Need to handle areas between quotes, in the beginning and end that are not inside quotes
 char	*remove_quote_level(char *str, t_shell *sh)
 {
 	int		i;
@@ -75,7 +71,6 @@ char	*remove_quote_level(char *str, t_shell *sh)
 	s[1] = NULL;
 	tmp[0] = NULL;
 	tmp[1] = NULL;
-	// dprintf(2, "String handled: %s\n", str);
 	while (s[0][i] != '\0')
 	{
 		if (s[0][i] == '\"' || s[0][i] == '\'')
@@ -83,7 +78,6 @@ char	*remove_quote_level(char *str, t_shell *sh)
 			if (j > 0)
 				k = 1;
 			tmp[0] = replace_envp_tags(ft_substr(s[0], j + k, i - (j + k)), sh);
-			// dprintf(2, "Tmp is: %s\n", tmp[0]);
 			if (!s[1])
 				s[1] = ft_strdup("");
 			tmp[1] = ft_strjoin(s[1], tmp[0]);
@@ -96,7 +90,6 @@ char	*remove_quote_level(char *str, t_shell *sh)
 				if (s[0][j] == s[0][i])
 				{
 					remove_quotepair(s, i, j, sh);
-					//dprintf(2, "s[1] is: %s\n", s[1]);
 					i = j;
 					lj = j;
 					break ;
@@ -106,46 +99,15 @@ char	*remove_quote_level(char *str, t_shell *sh)
 		}
 		i++;
 	}
-	//dprintf(2, "Ret wo tail: %s\n", s[1]);
-	//dprintf(2, "lj is: %d len: %d\n", lj, ft_strlen(s[0]));
-	//dprintf(2, "char at lj: %d c: %c\n", lj, s[0][lj]);
-	//dprintf(2, "Whole string: %s\n", s[0]);
 	tmp[0] = ft_substr(s[0], lj + 1, ft_strlen(s[0]) - lj);
-	//dprintf(2, "Tmp almost final is: %s\n", tmp[0]);
 	tmp[0] = replace_envp_tags(tmp[0], sh);
-	//dprintf(2, "Tmp final is: %s\n", tmp[0]);
 	tmp[1] = ft_strjoin(s[1], tmp[0]);
 	free(tmp[0]);
 	free(s[1]);
 	free(str);
 	s[1] = tmp[1];
-	//dprintf(2, "Ret with tail: %s\n", s[1]);
 	return (s[1]);
 }
-
-/*
-char	**remove_quotes_ex_export(char **cmd, t_shell *sh)
-{
-	t_bool	export_flag;
-	int		i;
-
-	export_flag = FALSE;
-	i = -1;
-	while (cmd[++i] != NULL)
-	{
-		if (!ft_strncmp(cmd[i], "export", ft_strlen(cmd[i])))
-			export_flag = TRUE;
-		if (export_flag && (cmd[i][0] == '<' || cmd[i][0] == '>'))
-			export_flag = FALSE;
-		if (!export_flag)
-			remove_quote_level(cmd[i], sh);
-	}
-	return (cmd);
-}
-*/
-
-// At the moment accounts only for space characters,
-//	are other characters necessary?
 
 char	*trim_string(char *str)
 {
@@ -187,7 +149,6 @@ void	print_char_array(char **arr)
 		dprintf(2, "[%d] ", i);
 		dprintf(2, "%s\n", arr[i++]);
 	}
-
 }
 
 char	test_quote_level(char *str)

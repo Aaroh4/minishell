@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:42:56 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/21 21:49:29 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/27 10:33:21 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ void	increase_shell_level(t_shell *sh)
 	free(val);
 }
 
-// Doesn't check for validity of name (should exist) or value
 void	modify_env_internal(char *name, char *value, t_shell *sh)
 {
 	int		i;
