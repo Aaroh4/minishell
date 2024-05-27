@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   msenv_replace.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 13:16:33 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/15 13:17:39 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/27 10:33:34 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,9 @@ static void	init_env_struct(t_env_tdata *envd)
 	envd->end = NULL;
 	envd->env_val = NULL;
 	envd->temp = NULL;
-	envd->total_len = 0;	
+	envd->total_len = 0;
 }
 
-// If question mark, ignore caps after, else check from ms_envp for the value
 static void	determine_env(t_shell *sh, t_env_tdata *envd)
 {
 	int	i;
@@ -87,7 +86,7 @@ void	write_new_arr(char *new_arr, t_env_tdata *envd)
 	new_arr[ft_strlen(new_arr)] = '\0';
 }
 
-char	*replace_envp(char *input, t_shell *sh)
+char	*replace_envp_tags(char *input, t_shell *sh)
 {
 	t_env_tdata	envd;
 	char		*new_arr;

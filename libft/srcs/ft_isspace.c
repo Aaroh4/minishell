@@ -1,27 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strcpos.c                                       :+:      :+:    :+:   */
+/*   ft_isspace.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/18 14:53:52 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/24 15:48:38 by ahamalai         ###   ########.fr       */
+/*   Created: 2024/05/20 15:19:06 by mburakow          #+#    #+#             */
+/*   Updated: 2024/05/20 15:23:45 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-
-size_t	ft_strcpos(const char *s, char c)
+int	ft_isspace(int i)
 {
-	size_t	i;
-
-	i = 0;
-	while (s[i] != '\0')
-	{
-		if (s[i] == c)
-			return (i);
-		i++;
-	}
-	return (-1);
+	if (i == ' ' || i == '\n' || i == '\r'
+		|| i == '\v' || i == '\f' || i == '\t')
+		return (1);
+	return (0); 
 }

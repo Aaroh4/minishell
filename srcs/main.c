@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:43 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/15 13:00:14 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/27 10:33:15 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,8 @@ void	ft_handler(int signum)
 	rl_redisplay();
 }
 
-// Implementing the bash -c flag to run one command without
-// entering the prompt loop. For use with tester for example.
-static int	check_inline_param(int argc, char **argv, t_shell *sh, struct termios oterm)
+static int	check_inline_param(int argc, char **argv,
+	t_shell *sh, struct termios oterm)
 {
 	int	i;
 
@@ -70,16 +69,18 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_shell			sh;
 	struct termios	oterm;
-	int				shlvl;
 
 	init_shell_struct(&sh);
 	if (tcgetattr(STDIN_FILENO, &oterm) == -1)
-		perror("tcgetattr");
+	{
+		perror("tcgetattr failed");
+		return (1);
+	}
+	sh.oterm = oterm;
 	signal(SIGQUIT, SIG_IGN);
 	rl_clear_history();
 	sh.ms_envp = copy_envp(envp, &sh);
-	shlvl = ft_atoi(get_env_val_by_name("SHLVL", &sh)) + 1;
-	modify_env_internal("SHLVL", ft_itoa(shlvl), &sh);
+	increase_shell_level(&sh);
 	check_inline_param(argc, argv, &sh, oterm);
 	while (1)
 	{
@@ -87,14 +88,7 @@ int	main(int argc, char **argv, char **envp)
 		enable_raw_mode();
 		sh.input = readline("minishell > ");
 		if (sh.input == NULL)
-		{
-			write(1, "exit\n", 5);
-			exit (0);
-		}
-		add_history(sh.input);
-		parse_input(&sh);
-		run_cmds(&sh);
-		free_new_prompt(&sh);
-		disable_raw_mode(oterm);
+			exit_function();
+		input_start(&sh, oterm);
 	}
 }
