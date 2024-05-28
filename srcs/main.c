@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:43 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/28 15:13:53 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/28 16:15:17 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ int	main(int argc, char **argv, char **envp)
 		signal(SIGINT, ft_handler);
 		enable_raw_mode(0);
 		sh.input = readline("minishell > ");
+		enable_raw_mode(1);
 		if (sh.input == NULL)
 			exit_function();
 		input_start(&sh);

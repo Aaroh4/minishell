@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 13:47:02 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/28 13:33:09 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/28 16:26:52 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,8 @@ void	make_child(t_cmdn *node, t_shell *sh, t_intvec *commands, char *cwd)
 	int		pid;
 
 	pid = 0;
+	signal(SIGQUIT, ft_handler_child2);
+	signal(SIGINT, ft_handler_child);
 	pid = fork();
 	if (pid == -1)
 	{
