@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 17:08:31 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/27 22:10:50 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/28 10:54:51 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ char	test_quote_level(char *str)
 
 int	skip_quotes(char *str, int i)
 {
-	int q;
+	int	q;
 
 	if (str[i] == '\"' || str[i] == '\'')
 	{

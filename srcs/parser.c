@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/28 09:53:39 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/28 10:53:11 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,11 @@ static void	get_heredocs(t_shell *sh)
 	i = 0;
 	while (sh->cmd[i] != NULL)
 	{
-		// dprintf(2, "cmd[i] 1: %s\n", sh->cmd[i]);
 		j = 0;
-		// dprintf(2, "cmd[i] 2: %s\n", sh->cmd[i]);
 		while (sh->cmd[i][j] != '\0')
 		{
 			j = skip_quotes(sh->cmd[i], j);
-			if (sh->cmd[i][j] == '\0' || sh->cmd[i][j + 1] == '\0' ||
-				sh->cmd[i][j + 2] == '\0')
+			if (sh->cmd[i][j + 1] == '\0' || sh->cmd[i][j + 2] == '\0')
 				break ;
 			if (sh->cmd[i][j] == '<' && sh->cmd[i][j + 1] == '<'
 				&& sh->cmd[i][j + 2] != '<' && sh->cmd[i][j + 2] != '\0')
@@ -54,7 +51,6 @@ static void	trim_quote_alloc_hdoc_rdir(t_shell *sh)
 		sh->cmd[i] = trim_string(sh->cmd[i]);
 		i++;
 	}
-	print_char_array(sh->cmd);
 	sh->hdocs = ft_calloc((i + 1), sizeof(int));
 	sh->redirs = ft_calloc((i + 1), sizeof(int));
 	if (sh->hdocs == NULL || sh->redirs == NULL)
@@ -69,7 +65,6 @@ static void	trim_quote_alloc_hdoc_rdir(t_shell *sh)
 		sh->cmd[i] = remove_quote_level(sh->cmd[i], sh);
 		i++;
 	}
-	print_char_array(sh->cmd);
 }
 
 static t_cmdn	*create_node(t_cmdn *current, t_shell *sh, int index)

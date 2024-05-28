@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:43 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/27 22:59:42 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/28 10:11:12 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,12 +51,9 @@ static void	check_inline_param(int argc, char **argv, t_shell *sh)
 {
 	if (argc == 3 && !ft_strncmp(argv[1], "-c", 3))
 	{
-		// signal(SIGINT, ft_handler);
-		// enable_raw_mode();
 		sh->input = ft_strdup(argv[2]);
 		parse_input(sh);
 		run_cmds(sh);
-		// disable_raw_mode(*oterm);
 		free_new_prompt(sh);
 		free(sh->input);
 		free_args(sh->ms_envp);
