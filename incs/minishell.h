@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/27 18:17:20 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/28 12:26:45 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,7 @@ char		**removing_loop(char *tempstr, char **temp_ms, int *j);
 void		increase_shell_level(t_shell *sh);
 char		*replace_envp_tags(char *input, t_shell *sh);
 char		**copy_envp(char **envp, t_shell *sh);
-char		*move_ucase(char *start);
+char		*move_to_env_end(char *start);
 void		populate_env_vars(t_cmdn *node, t_shell *sh);
 void		modify_env_internal(char *name, char *value, t_shell *sh);
 char		*get_env_val_by_name(char *name, t_shell *sh);
