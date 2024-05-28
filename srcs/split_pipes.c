@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/19 12:04:33 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/27 22:10:44 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/28 10:03:26 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,13 +64,14 @@ static void	do_split(char **arr, char *str, char *charset)
 			while (is_separator(str[i + j], charset) == 0)
 			{
 				j = skip_quotes(str, i + j) - i;
-				//if (str[i + j] == '\0')
-				//	break ;
+				if (str[i + j] == '\0')
+					break ;
 				j++;
 			}
-			// dprintf(2, "j was %d\n", j);
+			dprintf(2, "j was %d\n", j);
 			arr[word] = (char *)malloc(sizeof(char) * (j + 1));
 			ft_memcpy(arr[word], &str[i], j);
+			arr[word][j] = '\0';
 			i += j;
 			word++;
 		}
@@ -91,10 +92,10 @@ char	**split_pipes(char *str, char *charset)
 		return (arr);
 	}
 	count = word_count(str, charset);
-	// dprintf(2, "Count was: %d\n", count);
+	dprintf(2, "Count was: %d\n", count);
 	arr = (char **)malloc(sizeof(char *) * (count + 1));
 	arr[count] = NULL;
 	do_split(arr, str, charset);
-	// print_char_array(arr);
+	print_char_array(arr);
 	return (arr);
 }
