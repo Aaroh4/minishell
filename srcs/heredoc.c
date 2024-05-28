@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 12:09:30 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/22 14:33:14 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/28 15:35:10 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,9 @@ char	*make_breakchar(char *breakchar, int *i, int *j, int hdocs)
 
 void	ft_handler_heredoc(int signum)
 {
-	signum = 1;
-	while (signum)
-		signum--;
-	write(1, "\n> ", 3);
+	signum = 0;
+	write(1, "\n", 1);
+	exit(0);
 }
 
 int	heredoc_loop(char **astr, char *breakchar, int j, int hdocs)
@@ -68,26 +67,50 @@ int	heredoc_loop(char **astr, char *breakchar, int j, int hdocs)
 	return (1);
 }
 
-char	*ft_heredoc(char *breakchar, int hdocs)
+void	*ft_heredoc(char *breakchar, int hdocs)
 {
 	char	*astr;
 	int		i;
 	int		j;
 	char	*temp;
+	int		pid;
+	int		pipefd[2];
 
-	astr = malloc(1);
-	astr = "\0";
-	i = 0;
-	j = 0;
-	temp = make_breakchar(breakchar, &i, &j, hdocs);
-	free(breakchar);
-	if (heredoc_loop(&astr, temp, j, hdocs) == 0)
+	pipe(pipefd);
+	pid = fork();
+	if (pid == 0)
 	{
-		return (NULL);
+		close(pipefd[0]);
+		ft_bzero(&astr, sizeof(char));
+		i = 0;
+		j = 0;
+		temp = make_breakchar(breakchar, &i, &j, hdocs);
+		free(breakchar);
+		if (heredoc_loop(&astr, temp, j, hdocs) == 0)
+		{
+			free(temp);
+			exit (0);
+		}
 		free(temp);
+		if (astr[0] == '\0')
+			ft_strjoin(astr, "\0");
+		ft_putstr_fd(astr, pipefd[1]);
+		close(pipefd[1]);
+		exit (0);
 	}
-	free(temp);
-	if (astr[0] == '\0')
-		return (ft_strjoin(astr, "\0"));
+	signal(SIGINT, SIG_IGN);
+	waitpid(pid, NULL, 0);
+	free(breakchar);
+	close (pipefd[1]);
+	while (1)
+	{
+		temp = get_next_line(pipefd[0]);
+		if (temp == NULL)
+			break ;
+		astr = ft_strjoin(astr, temp);
+		free (temp);
+	}
+	free (temp);
+	close (pipefd[0]);
 	return (astr);
 }

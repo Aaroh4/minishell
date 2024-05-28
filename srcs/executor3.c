@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor3.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 13:47:02 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/27 16:59:04 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/28 13:33:09 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ char	**make_temp(t_shell *sh, char *str)
 		i++;
 	}
 	free(sh->ms_envp);
-	temp[i] = ft_subbstr(str, 0, ft_strlen(str) - 1);
+	temp[i] = ft_substr(str, 0, ft_strlen(str) - 1);
 	temp[i + 1] = NULL;
 	return (temp);
 }
@@ -51,7 +51,7 @@ char	*getting_multiple_param(t_shell *sh, char *str)
 	if (str[j] == '=')
 	{
 		free (sh->ms_envp[i]);
-		sh->ms_envp[i] = ft_subbstr(str, 0, ft_strlen(str));
+		sh->ms_envp[i] = ft_substr(str, 0, ft_strlen(str));
 	}
 	else
 		sh->ms_envp = make_temp(sh, str);
