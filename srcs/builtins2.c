@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 12:10:13 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/23 12:50:47 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/28 11:41:23 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,4 +72,19 @@ int	pwd_builtin(t_shell *sh)
 	else
 		errexit("pwd:", "getcwd error", NULL, sh);
 	return (1);
+}
+
+void	check_builtin(t_cmdn *node, t_shell *sh, char *cwd)
+{
+	clean_cargs_hdrd(node);
+	if (!ft_strncmp("export", node->cargs[0], ft_strlen(node->cargs[0])))
+		modify_env(sh, 0, cwd);
+	else if (!ft_strncmp("unset", node->cargs[0], ft_strlen(node->cargs[0])))
+		sh->ms_envp = unset_remove_from_array(sh, sh->ms_envp);
+	else if (!ft_strncmp("cd", node->cargs[0], ft_strlen(node->cargs[0])))
+		modify_env(sh, 1, cwd);
+	else if (!ft_strncmp("exit", node->cargs[0], ft_strlen(node->cargs[0])))
+		exit_in_main(node, sh);
+	if (sh->cmdcount > 1)
+		switch_pipe_fds(sh);
 }

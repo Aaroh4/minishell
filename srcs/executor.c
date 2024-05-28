@@ -3,14 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:23:00 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/27 10:32:17 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/28 11:43:01 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static void	close_envp_pipes(t_shell *sh)
+{
+	close (sh->efd[0]);
+	close (sh->efd[1]);
+}
 
 void	exec_cmd(t_cmdn *node, t_shell *sh, char *cwd)
 {
@@ -28,8 +34,9 @@ void	exec_cmd(t_cmdn *node, t_shell *sh, char *cwd)
 	cmdp = NULL;
 	if (!(exec_builtin(node, sh, cwd)))
 	{
-		close (sh->efd[0]);
-		close (sh->efd[1]);
+		close_envp_pipes(sh);
+		if (node->cargs[0][0] == '\0')
+			exit(EXIT_SUCCESS);
 		path_array = ft_split(get_msenv("PATH", sh), ":");
 		cmdp = get_exec_path(path_array, node->cargs[0], sh);
 		free_args(path_array);
@@ -38,21 +45,6 @@ void	exec_cmd(t_cmdn *node, t_shell *sh, char *cwd)
 			errexitcode(node->cargs[0], ": command not found", 127, sh);
 	}
 	exit(EXIT_SUCCESS);
-}
-
-void	check_builtin(t_cmdn *node, t_shell *sh, char *cwd)
-{
-	clean_cargs_hdrd(node);
-	if (!ft_strncmp("export", node->cargs[0], ft_strlen(node->cargs[0])))
-		modify_env(sh, 0, cwd);
-	else if (!ft_strncmp("unset", node->cargs[0], ft_strlen(node->cargs[0])))
-		sh->ms_envp = unset_remove_from_array(sh, sh->ms_envp);
-	else if (!ft_strncmp("cd", node->cargs[0], ft_strlen(node->cargs[0])))
-		modify_env(sh, 1, cwd);
-	else if (!ft_strncmp("exit", node->cargs[0], ft_strlen(node->cargs[0])))
-		exit_in_main(node, sh);
-	if (sh->cmdcount > 1)
-		switch_pipe_fds(sh);
 }
 
 static int	exec_node(t_cmdn *node, t_shell *sh, t_intvec *commands)
