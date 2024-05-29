@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 17:08:31 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/28 10:54:51 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/29 10:31:42 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,13 +64,18 @@ char	*trim_string(char *str)
 
 void	print_char_array(char **arr)
 {
-	int	i;
+	int		i;
+	char	*index;
 
 	i = 0;
 	while (arr[i] != NULL)
 	{
-		dprintf(2, "[%d] ", i);
-		dprintf(2, "%s\n", arr[i++]);
+		ft_putstr_fd("[", 2);
+		index = ft_itoa(i);
+		ft_putstr_fd(index, 2);
+		free (index);
+		ft_putstr_fd("]: ", 2);
+		ft_putendl_fd(arr[i++], 2);
 	}
 }
 

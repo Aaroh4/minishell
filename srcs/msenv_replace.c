@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 13:16:33 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/28 13:32:35 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/29 10:45:13 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static void	determine_env(t_shell *sh, t_env_tdata *envd)
 	{
 		envd->env_val = ft_strdup("");
 		envd->end = ft_strdup(envd->start + 2);
-		return;
+		return ;
 	}
 	while (sh->ms_envp[i] != NULL)
 	{
@@ -102,7 +102,6 @@ char	*replace_envp_tags(char *input, t_shell *sh)
 	while (envd.start != NULL)
 	{
 		envd.end = move_to_env_end(envd.start + 1);
-		// envd.env_val = "";
 		new_arr = alloc_new_arr(input, sh, &envd);
 		write_new_arr(new_arr, &envd);
 		free(input);
