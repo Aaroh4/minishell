@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 16:54:02 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/29 10:44:53 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/29 11:37:01 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ char	**copy_envp(char **envp, t_shell *sh)
 	return (ms_envp);
 }
 
+/*
 void	populate_env_vars(t_cmdn *node, t_shell *sh)
 {
 	int	i;
@@ -69,3 +70,4 @@ void	populate_env_vars(t_cmdn *node, t_shell *sh)
 	}
 	return ;
 }
+*/

@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/29 10:46:35 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/29 11:37:07 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,12 +135,12 @@ void		increase_shell_level(t_shell *sh);
 char		*replace_envp_tags(char *input, t_shell *sh);
 char		**copy_envp(char **envp, t_shell *sh);
 char		*move_to_env_end(char *start);
-void		populate_env_vars(t_cmdn *node, t_shell *sh);
+// void		populate_env_vars(t_cmdn *node, t_shell *sh);
 void		modify_env_internal(char *name, char *value, t_shell *sh);
 char		*get_env_val_by_name(char *name, t_shell *sh);
 void		modify_env(t_shell *sh, int a, char *cwd);
 // Heredoc:
-void		*ft_heredoc(char *breakchar, int hdocs);
+void		*ft_heredoc(char *breakchar, int hdocs, t_shell *sh);
 // Redirects:
 char		*trim_rdirspace(char *cmd);
 void		get_redirects(t_shell *sh);

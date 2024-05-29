@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/29 10:44:34 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/29 11:41:35 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static void	get_heredocs(t_shell *sh)
 				&& sh->cmd[i][j + 2] != '<' && sh->cmd[i][j + 2] != '\0')
 			{
 				sh->hdocs[i]++;
-				temp = ft_heredoc(sh->cmd[i], sh->hdocs[i]);
+				temp = ft_heredoc(sh->cmd[i], sh->hdocs[i], sh);
 			}
 			j++;
 		}
@@ -64,8 +64,8 @@ static void	trim_quote_alloc_hdoc_rdir(t_shell *sh)
 	{
 		if (sh->hdocs[i] == 0)
 			sh->cmd[i] = remove_quote_level(sh->cmd[i], sh);
-		else
-			sh->cmd[i] = replace_envp_tags(sh->cmd[i], sh);
+		//else
+		//	sh->cmd[i] = replace_envp_tags(sh->cmd[i], sh);
 		i++;
 	}
 }
