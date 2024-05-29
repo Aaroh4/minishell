@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split_time_space.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/03 12:03:00 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/27 22:10:35 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/29 11:47:56 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,6 @@ char	**ft_split_time_space(char const *s, char c)
 
 	i = 0;
 	count = wordcount(s, c);
-	// dprintf(2, "Count lvl 2 was: %d\n", count);
 	if (count == -1)
 		return (NULL);
 	arr = (char **)malloc(sizeof(char *) * (count + 1));

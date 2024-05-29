@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   msenv.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 16:54:02 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/28 12:30:42 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/29 11:48:16 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ char	*move_to_env_end(char *start)
 
 	ptr = start;
 	while (ft_isalnum(*ptr) || *ptr == 95 || *ptr == 63)
-	// while ((*ptr >= 65 && *ptr <= 90) || *ptr == 95 || *ptr == 63)
 		ptr++;
 	return (ptr);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   removequote.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 13:50:59 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/28 13:41:42 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/29 11:54:50 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,5 @@ char	*remove_quote_level(char *str, t_shell *sh)
 	}
 	finish_and_free(s, tmp, i, sh);
 	free(str);
-	dprintf(2, "s[1]: %s\n", s[1]);
 	return (s[1]);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils3.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 17:08:31 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/28 10:54:51 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/29 11:55:30 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,18 +60,6 @@ char	*trim_string(char *str)
 		end--;
 	end[1] = '\0';
 	return (str);
-}
-
-void	print_char_array(char **arr)
-{
-	int	i;
-
-	i = 0;
-	while (arr[i] != NULL)
-	{
-		dprintf(2, "[%d] ", i);
-		dprintf(2, "%s\n", arr[i++]);
-	}
 }
 
 char	test_quote_level(char *str)

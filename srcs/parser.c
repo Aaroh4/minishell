@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/28 15:29:45 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/29 11:48:34 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,14 +31,12 @@ static void	get_heredocs(t_shell *sh)
 				&& sh->cmd[i][j + 2] != '<' && sh->cmd[i][j + 2] != '\0')
 			{
 				sh->hdocs[i]++;
-				temp = ft_heredoc(sh->cmd[i], sh->hdocs[i]);
+				temp = ft_heredoc(sh->cmd[i], sh->hdocs[i], sh);
 			}
 			j++;
 		}
 		if (sh->hdocs[i] > 0)
-		{
 			sh->cmd[i] = temp;
-		}
 		i++;
 	}
 }
