@@ -62,10 +62,10 @@ int	main(int argc, char **argv, char **envp)
 		return (1);
 	}
 	sh.oterm = oterm;
-	signal(SIGQUIT, SIG_IGN);
 	rl_clear_history();
 	while (1)
 	{
+		signal(SIGQUIT, SIG_IGN);
 		signal(SIGINT, ft_handler);
 		enable_raw_mode(0);
 		sh.input = readline("minishell > ");
