@@ -3,21 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   msenv.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 16:54:02 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/27 10:33:41 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/28 12:30:42 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*move_ucase(char *start)
+char	*move_to_env_end(char *start)
 {
 	char	*ptr;
 
 	ptr = start;
-	while ((*ptr >= 65 && *ptr <= 90) || *ptr == 95 || *ptr == 63)
+	while (ft_isalnum(*ptr) || *ptr == 95 || *ptr == 63)
+	// while ((*ptr >= 65 && *ptr <= 90) || *ptr == 95 || *ptr == 63)
 		ptr++;
 	return (ptr);
 }

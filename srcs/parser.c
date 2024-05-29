@@ -64,7 +64,10 @@ static void	trim_quote_alloc_hdoc_rdir(t_shell *sh)
 	i = 0;
 	while (sh->cmd[i] != NULL)
 	{
-		sh->cmd[i] = remove_quote_level(sh->cmd[i], sh);
+		if (sh->hdocs[i] == 0)
+			sh->cmd[i] = remove_quote_level(sh->cmd[i], sh);
+		else
+			sh->cmd[i] = replace_envp_tags(sh->cmd[i], sh);
 		i++;
 	}
 }
