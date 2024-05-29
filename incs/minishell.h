@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
 /*   Updated: 2024/05/28 12:26:45 by mburakow         ###   ########.fr       */
@@ -97,6 +97,8 @@ void		make_child(t_cmdn *node, t_shell *sh,
 void		clean_cargs_hdrd(t_cmdn *node);
 void		exec_cmd(t_cmdn *node, t_shell *sh, char *cwd);
 void		check_builtin(t_cmdn *node, t_shell *sh, char *cwd);
+void		ft_handler_child2(int signum);
+void		ft_handler_child(int signum);
 // Dynamic Integer Array:
 t_intvec	*create_intvec(t_shell *sh);
 void		expand_intvec(t_intvec *dynarr, t_shell *sh);
@@ -113,7 +115,7 @@ char		*trim_string(char *str);
 void		create_pipes(t_shell *sh);
 void		print_char_array(char **arr);
 void		exit_function(void);
-void		input_start(t_shell *sh, struct termios oterm);
+void		input_start(t_shell *sh);
 // Buildins:
 int			pwd_builtin(t_shell *sh);
 int			cd_builtin(t_cmdn *node, t_shell *sh, char	*cwd);
@@ -139,7 +141,7 @@ void		modify_env_internal(char *name, char *value, t_shell *sh);
 char		*get_env_val_by_name(char *name, t_shell *sh);
 void		modify_env(t_shell *sh, int a, char *cwd);
 // Heredoc:
-char		*ft_heredoc(char *breakchar, int hdocs);
+void		*ft_heredoc(char *breakchar, int hdocs);
 // Redirects:
 char		*trim_rdirspace(char *cmd);
 void		get_redirects(t_shell *sh);
@@ -159,8 +161,7 @@ void		free_child(t_shell *sh);
 void		free_new_prompt(t_shell *sh);
 void		close_ext_pipes(t_shell *sh);
 // Signals
-void		disable_raw_mode(struct termios oterm);
-void		enable_raw_mode(void);
+void		enable_raw_mode(int is_on);
 
 // Parser
 char		**split_pipes(char *str, char *charset);

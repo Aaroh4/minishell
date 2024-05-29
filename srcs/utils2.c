@@ -3,22 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 14:32:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/27 17:52:51 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/28 15:56:06 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	input_start(t_shell *sh, struct termios oterm)
+void	input_start(t_shell *sh)
 {
+	signal(SIGINT, SIG_IGN);
 	add_history(sh->input);
 	parse_input(sh);
 	run_cmds(sh);
 	free_new_prompt(sh);
-	disable_raw_mode(oterm);
 }
 
 void	exit_function(void)

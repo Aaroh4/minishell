@@ -3,47 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:43 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/28 10:11:12 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/28 16:15:17 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	enable_raw_mode(void)
+void	enable_raw_mode(int is_on)
 {
-	struct termios	term;
+	struct termios	new_attr;
 
-	if (tcgetattr(STDIN_FILENO, &term) == -1)
-	{
-		perror("tcgetattr");
-		exit(EXIT_FAILURE);
-	}
-	term.c_lflag &= ~(ECHOCTL);
-	if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &term) == -1)
-	{
-		perror("tcsetattr");
-		exit(EXIT_FAILURE);
-	}
-}
-
-void	disable_raw_mode(struct termios oterm)
-{
-	if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &oterm) == -1)
-	{
-		perror("tcsetattr");
-		exit(EXIT_FAILURE);
-	}
+	tcgetattr(STDIN_FILENO, &new_attr);
+	if (!is_on)
+		new_attr.c_lflag &= ~ECHOCTL;
+	else
+		new_attr.c_lflag |= ECHOCTL;
+	tcsetattr(STDIN_FILENO, TCSANOW, &new_attr);
 }
 
 void	ft_handler(int signum)
 {
 	(void)signum;
-	rl_replace_line("", 0);
 	write(1, "\n", 1);
 	rl_on_new_line();
+	rl_replace_line("", 0);
 	rl_redisplay();
 }
 
@@ -81,10 +67,11 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		signal(SIGINT, ft_handler);
-		enable_raw_mode();
+		enable_raw_mode(0);
 		sh.input = readline("minishell > ");
+		enable_raw_mode(1);
 		if (sh.input == NULL)
 			exit_function();
-		input_start(&sh, oterm);
+		input_start(&sh);
 	}
 }
