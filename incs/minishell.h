@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/29 11:37:07 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/29 12:46:18 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,6 +141,8 @@ void		modify_env(t_shell *sh, int a, char *cwd);
 // Heredoc:
 void		*ft_heredoc(char *breakchar, int hdocs, t_shell *sh);
 void		ft_handler_heredoc(int signum);
+void		free_breakchar_temp(char *breakchar, char *temp);
+void		remove_breakchar_quotes(char *str);
 // Redirects:
 char		*trim_rdirspace(char *cmd);
 void		get_redirects(t_shell *sh);

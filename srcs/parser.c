@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/29 11:41:35 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/29 12:36:37 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,6 @@ static void	trim_quote_alloc_hdoc_rdir(t_shell *sh)
 	{
 		if (sh->hdocs[i] == 0)
 			sh->cmd[i] = remove_quote_level(sh->cmd[i], sh);
-		//else
-		//	sh->cmd[i] = replace_envp_tags(sh->cmd[i], sh);
 		i++;
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 12:09:30 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/29 11:45:25 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/29 12:46:04 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,23 +62,30 @@ int	heredoc_loop(char **astr, char *breakchar, int j, int hdocs)
 	return (1);
 }
 
-void	heredoc_child(int pipefd[2], char *breakchar, int j, int hdocs)
+void	heredoc_child(int pipefd[2], char *breakchar, t_shell *sh, int hdocs)
 {
 	char	*astr;
 	char	*temp;
+	int		bkquote;
+	int		j;
 
+	j = 0;
 	astr = ft_strdup("");
 	close(pipefd[0]);
 	temp = make_breakchar(breakchar, &j, hdocs);
-	free(breakchar);
+	bkquote = test_quote_level(temp);
+	if (bkquote != -1)
+		remove_breakchar_quotes(temp);
 	if (heredoc_loop(&astr, temp, j, hdocs) == 0)
 	{
 		free(temp);
 		exit (0);
 	}
-	free(temp);
+	free_breakchar_temp(breakchar, temp);
 	if (astr[0] == '\0')
 		ft_strjoin(astr, "\0");
+	if (bkquote == -1)
+		astr = replace_envp_tags(astr, sh);
 	ft_putstr_fd(astr, pipefd[1]);
 	close(pipefd[1]);
 	exit (0);
@@ -88,6 +95,7 @@ char	*heredoc_main(char *breakchar, int pipefd[2])
 {
 	char	*astr;
 	char	*temp;
+	char	*temp2;
 
 	astr = ft_strdup("");
 	free(breakchar);
@@ -97,7 +105,9 @@ char	*heredoc_main(char *breakchar, int pipefd[2])
 		temp = get_next_line(pipefd[0]);
 		if (temp == NULL)
 			break ;
-		astr = ft_strjoin(astr, temp);
+		temp2 = astr;
+		astr = ft_strjoin(temp2, temp);
+		free (temp2);
 		free (temp);
 	}
 	free (temp);
@@ -107,18 +117,16 @@ char	*heredoc_main(char *breakchar, int pipefd[2])
 
 void	*ft_heredoc(char *breakchar, int hdocs, t_shell *sh)
 {
-	int		j;
 	int		pid;
 	int		pipefd[2];
 
-	j = 0;
 	if (pipe(pipefd) == -1)
 		errexit("error :", "pipe initialization", NULL, sh);
 	pid = fork();
 	if (pid == -1)
 		errexit("Error:", "fork failure", NULL, sh);
 	if (pid == 0)
-		heredoc_child(pipefd, breakchar, j, hdocs);
+		heredoc_child(pipefd, breakchar, sh, hdocs);
 	else
 	{
 		signal(SIGINT, SIG_IGN);
