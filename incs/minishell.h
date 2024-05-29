@@ -112,7 +112,6 @@ int			wait_for(t_intvec *children);
 void		print_cmdn(t_cmdn *root);
 char		*trim_string(char *str);
 void		create_pipes(t_shell *sh);
-void		print_char_array(char **arr);
 void		exit_function(void);
 void		input_start(t_shell *sh);
 // Buildins:
@@ -141,6 +140,7 @@ char		*get_env_val_by_name(char *name, t_shell *sh);
 void		modify_env(t_shell *sh, int a, char *cwd);
 // Heredoc:
 void		*ft_heredoc(char *breakchar, int hdocs, t_shell *sh);
+void		ft_handler_heredoc(int signum);
 // Redirects:
 char		*trim_rdirspace(char *cmd);
 void		get_redirects(t_shell *sh);

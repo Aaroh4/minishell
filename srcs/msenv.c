@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   msenv.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 16:54:02 by mburakow          #+#    #+#             */
 /*   Updated: 2024/05/29 11:37:01 by mburakow         ###   ########.fr       */
@@ -56,18 +56,3 @@ char	**copy_envp(char **envp, t_shell *sh)
 	copy_env_vals(len, envp, ms_envp, sh);
 	return (ms_envp);
 }
-
-/*
-void	populate_env_vars(t_cmdn *node, t_shell *sh)
-{
-	int	i;
-
-	i = 0;
-	while (node->cargs[i] != NULL)
-	{
-		node->cargs[i] = replace_envp_tags(node->cargs[i], sh);
-		i++;
-	}
-	return ;
-}
-*/

@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   utils3.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 17:08:31 by mburakow          #+#    #+#             */
 /*   Updated: 2024/05/29 10:31:42 by mburakow         ###   ########.fr       */
@@ -60,23 +60,6 @@ char	*trim_string(char *str)
 		end--;
 	end[1] = '\0';
 	return (str);
-}
-
-void	print_char_array(char **arr)
-{
-	int		i;
-	char	*index;
-
-	i = 0;
-	while (arr[i] != NULL)
-	{
-		ft_putstr_fd("[", 2);
-		index = ft_itoa(i);
-		ft_putstr_fd(index, 2);
-		free (index);
-		ft_putstr_fd("]: ", 2);
-		ft_putendl_fd(arr[i++], 2);
-	}
 }
 
 char	test_quote_level(char *str)

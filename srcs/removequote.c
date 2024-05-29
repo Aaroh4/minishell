@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   removequote.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 13:50:59 by ahamalai          #+#    #+#             */
 /*   Updated: 2024/05/29 10:27:29 by mburakow         ###   ########.fr       */
