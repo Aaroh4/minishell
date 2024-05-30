@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   msenv_replace.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 13:16:33 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/29 10:45:13 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/30 11:01:42 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static void	determine_env(t_shell *sh, t_env_tdata *envd)
 		if (!ft_strncmp(sh->ms_envp[i], envd->start + 1,
 				ft_strcpos(sh->ms_envp[i], 61)))
 		{
-			envd->env_val = ft_strchr(sh->ms_envp[i], 61) + 1;
+			envd->env_val = ft_strdup(ft_strchr(sh->ms_envp[i], 61) + 1);
 			envd->end = envd->start + ft_strcpos(sh->ms_envp[i], 61) + 1;
 			break ;
 		}
@@ -68,19 +68,20 @@ char	*alloc_new_arr(char *input, t_shell *sh, t_env_tdata *envd)
 void	write_new_arr(char *new_arr, t_env_tdata *envd)
 {
 	int	i;
+	int	j;
 
 	i = 0;
+	j = 0;
 	while (envd->temp != envd->start)
 	{
-		new_arr[i] = *envd->temp;
-		envd->temp++;
+		new_arr[i] = envd->temp[i];
 		i++;
 	}
-	while (*envd->env_val != '\0')
+	while (envd->env_val[j] != '\0')
 	{
-		new_arr[i] = *envd->env_val;
+		new_arr[i] = envd->env_val[j];
 		i++;
-		envd->env_val++;
+		j++;
 	}
 	envd->start = new_arr + i;
 	while (*envd->end != '\0')
@@ -104,6 +105,7 @@ char	*replace_envp_tags(char *input, t_shell *sh)
 		envd.end = move_to_env_end(envd.start + 1);
 		new_arr = alloc_new_arr(input, sh, &envd);
 		write_new_arr(new_arr, &envd);
+		free(envd.env_val);
 		free(input);
 		input = new_arr;
 		envd.start = ft_strchr((envd.start + 1), 36);
