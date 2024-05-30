@@ -6,10 +6,9 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/28 12:26:45 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/29 12:46:18 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
@@ -113,7 +112,6 @@ int			wait_for(t_intvec *children);
 void		print_cmdn(t_cmdn *root);
 char		*trim_string(char *str);
 void		create_pipes(t_shell *sh);
-void		print_char_array(char **arr);
 void		exit_function(void);
 void		input_start(t_shell *sh);
 // Buildins:
@@ -136,12 +134,15 @@ void		increase_shell_level(t_shell *sh);
 char		*replace_envp_tags(char *input, t_shell *sh);
 char		**copy_envp(char **envp, t_shell *sh);
 char		*move_to_env_end(char *start);
-void		populate_env_vars(t_cmdn *node, t_shell *sh);
+// void		populate_env_vars(t_cmdn *node, t_shell *sh);
 void		modify_env_internal(char *name, char *value, t_shell *sh);
 char		*get_env_val_by_name(char *name, t_shell *sh);
 void		modify_env(t_shell *sh, int a, char *cwd);
 // Heredoc:
-void		*ft_heredoc(char *breakchar, int hdocs);
+void		*ft_heredoc(char *breakchar, int hdocs, t_shell *sh);
+void		ft_handler_heredoc(int signum);
+void		free_breakchar_temp(char *breakchar, char *temp);
+void		remove_breakchar_quotes(char *str);
 // Redirects:
 char		*trim_rdirspace(char *cmd);
 void		get_redirects(t_shell *sh);
