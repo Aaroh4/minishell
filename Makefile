@@ -6,7 +6,7 @@
 #    By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/22 12:36:32 by ahamalai          #+#    #+#              #
-#    Updated: 2024/05/30 16:17:09 by ahamalai         ###   ########.fr        #
+#    Updated: 2024/05/31 15:18:05 by ahamalai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,7 @@ SRCS 			=	main.c builtins.c parser.c executor.c utils.c intvec.c \
 					free.c redirect.c init.c builtins2.c builtinshelpers.c \
 					executor2.c executor3.c executorhelpers.c utils2.c utils3.c \
 					export.c redirect2.c redirect3.c removequote.c split_pipes.c \
-					executor4.c heredoc2.c builtinshelpers2.c
+					executor4.c heredoc2.c builtinshelpers2.c utils4.c
 
 OBJ_DIR			=	./objs
 OBJS			=	$(SRCS:%.c=$(OBJ_DIR)/%.o)

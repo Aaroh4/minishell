@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/30 16:17:31 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/31 15:12:02 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,8 @@ char		*trim_string(char *str);
 void		create_pipes(t_shell *sh);
 void		exit_function(void);
 void		input_start(t_shell *sh);
+int			check_inside_quote(t_shell *sh, int i, char quote);
+int			quote_count(t_shell *sh);
 // Buildins:
 int			pwd_builtin(t_shell *sh);
 int			cd_builtin(t_cmdn *node, t_shell *sh, char	*cwd);
@@ -161,6 +163,7 @@ void		free_cmdn(t_cmdn *node);
 void		free_child(t_shell *sh);
 void		free_new_prompt(t_shell *sh);
 void		close_ext_pipes(t_shell *sh);
+void		errprompt(char *msg1, char *msg2, char *msg3, t_shell *sh);
 // Signals
 void		enable_raw_mode(int is_on);
 
