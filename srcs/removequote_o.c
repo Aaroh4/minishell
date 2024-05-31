@@ -1,27 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strcpos.c                                       :+:      :+:    :+:   */
+/*   removequote.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/18 14:53:52 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/31 14:01:05 by mburakow         ###   ########.fr       */
+/*   Created: 2024/05/31 13:21:59 by mburakow          #+#    #+#             */
+/*   Updated: 2024/05/31 13:54:17 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-int	ft_strcpos(const char *s, char c)
+
+
+char	*remove_quote_level(char *str, t_shell *sh)
 {
-	int	i;
+	int		i;
+	char	*cursor;
+	char	*res;
 
-	i = 0;
-	while (s[i] != '\0')
+	i = 1;
+	cursor = str;
+	while (cursor != '\0')
 	{
-		if (s[i] == c)
-			return (i);
-		i++;
+		if (cursor == '\"' || cursor == '\'') 
+		{
+			if (ft_strcpos(*cursor, cursor + 1))
+			{
+				dprintf(2, "Found\n");
+			}
+
+		}
+		cursor++;
 	}
-	return (-1);
+	dprintf(2, "sh->ntype: %s\n");
+	return (str);
 }

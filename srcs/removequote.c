@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   removequote.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 13:50:59 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/29 10:27:29 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/31 14:05:04 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,12 @@ static void	remove_and_replace(char *s[2], char *tmp[2], int i[3], t_shell *sh)
 
 static void	finish_and_free(char *s[2], char *tmp[2], int i[3], t_shell *sh)
 {
+	//if (ft_strcpos(&s[0][i[2]], '\'') != -1 || ft_strcpos(&s[0][i[2]], '\"') != -1)
+	//	errexit("EXTRA QUOTE YOU DUMB FUCK!!!", NULL, NULL, sh);
 	tmp[0] = ft_substr(s[0], i[2], (ft_strlen(s[0]) - i[2] - 1));
+	dprintf(2, "tmp[0]: %s\n", tmp[0]);
 	tmp[0] = replace_envp_tags(tmp[0], sh);
+	dprintf(2, "tmp[0]r: %s\n", tmp[0]);
 	tmp[1] = ft_strjoin(s[1], tmp[0]);
 	free(tmp[0]);
 	free(s[1]);
