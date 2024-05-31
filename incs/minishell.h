@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/30 11:31:52 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/30 16:17:31 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,6 @@ void		exec_cmd(t_cmdn *node, t_shell *sh, char *cwd);
 void		check_builtin(t_cmdn *node, t_shell *sh, char *cwd);
 void		ft_handler_child2(int signum);
 void		ft_handler_child(int signum);
-int			count_exit(t_cmdn *node, int i, int j);
 // Dynamic Integer Array:
 t_intvec	*create_intvec(t_shell *sh);
 void		expand_intvec(t_intvec *dynarr, t_shell *sh);
@@ -129,7 +128,7 @@ int			find_amount(char *str, char c);
 int			count_array(char **arr);
 char		**unset_remove_from_array(t_shell *sh, char **temp_ms);
 char		**removing_loop(char *tempstr, char **temp_ms, int *j);
-
+int			count_exit(t_cmdn *node, int i, int j);
 // Environment variables:
 void		increase_shell_level(t_shell *sh);
 char		*replace_envp_tags(char *input, t_shell *sh);

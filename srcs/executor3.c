@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 13:47:02 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/30 11:26:50 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/28 16:26:52 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ char	*getting_multiple_param(t_shell *sh, char *str)
 	if (str[j] == '=')
 	{
 		free (sh->ms_envp[i]);
-		sh->ms_envp[i] = ft_substr(str, 0, ft_strlen(str) - 1);
+		sh->ms_envp[i] = ft_substr(str, 0, ft_strlen(str));
 	}
 	else
 		sh->ms_envp = make_temp(sh, str);

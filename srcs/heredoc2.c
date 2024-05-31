@@ -3,29 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 11:44:35 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/29 12:51:25 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/30 09:42:03 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+// Assignment does not silence compiler warnings, cast does.
 void	ft_handler_heredoc(int signum)
 {
-	signum = 0;
+	(void)signum;
 	write(1, "\n", 1);
 	exit(0);
 }
 
-void	if_loop(int i, char quote, char *str, t_bool in_quotes)
+static void	skip_quote_loop(int i, char *str)
 {
-	int	j;
+	int		j;
+	char	quote;
 
 	j = i;
 	quote = str[i];
-	in_quotes = TRUE;
 	while (str[j] != '\0')
 	{
 		str[j] = str[j + 1];
@@ -42,22 +43,17 @@ void	if_loop(int i, char quote, char *str, t_bool in_quotes)
 			j++;
 		}
 	}
-	in_quotes = FALSE;
 }
 
 void	remove_breakchar_quotes(char *str)
 {
 	int		i;
-	char	quote;
-	t_bool	in_quotes;
 
 	i = 0;
-	in_quotes = FALSE;
-	quote = '\0';
 	while (str[i] != '\0')
 	{
 		if (str[i] == '\'' || str[i] == '\"')
-			if_loop(i, quote, str, in_quotes);
+			skip_quote_loop(i, str);
 		else
 			i++;
 	}

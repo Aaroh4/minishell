@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 11:06:04 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/30 16:13:27 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/31 12:23:46 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,10 @@ void	free_cmdn(t_cmdn *node)
 	if (node->cargs)
 		free_args(node->cargs);
 	free(node->hdocs);
-//	free(node->redirs);
+	free(node->redirs);
 	node->cargs = NULL;
 	node->hdocs = NULL;
-//	node->redirs = NULL;
+	node->redirs = NULL;
 	node->left = NULL;
 	node->right = NULL;
 	free(node);
