@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:15:11 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/24 13:29:27 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/30 16:16:39 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,16 +24,7 @@ void	exit_in_main(t_cmdn *node, t_shell *sh)
 		if (sh->cmdarr[1] == NULL)
 			write(1, "exit\n", 5);
 		if (node->cargs[1] != NULL && node->hdocs[1] == 0)
-		{
-			while (node->cargs[1][i] != '\0')
-				i++;
-			while (ft_isdigit(node->cargs[1][j]) && node->cargs[1][j] != '\0')
-				j++;
-			if (j == i)
-				j = ft_atoi(node->cargs[1]);
-			else
-				printf("exit: %s: numeric argument required\n", node->cargs[1]);
-		}
+			j = count_exit(node, i, j);
 		free_new_prompt(sh);
 		free_args(sh->ms_envp);
 		exit(j);

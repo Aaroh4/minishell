@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/29 12:46:18 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/30 16:17:31 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,7 @@ int			find_amount(char *str, char c);
 int			count_array(char **arr);
 char		**unset_remove_from_array(t_shell *sh, char **temp_ms);
 char		**removing_loop(char *tempstr, char **temp_ms, int *j);
-
+int			count_exit(t_cmdn *node, int i, int j);
 // Environment variables:
 void		increase_shell_level(t_shell *sh);
 char		*replace_envp_tags(char *input, t_shell *sh);
