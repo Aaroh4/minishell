@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_pipes.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/19 12:04:33 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/29 10:36:56 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/05/30 14:08:24 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,10 +82,10 @@ char	**split_pipes(char *str, char *charset)
 
 	if (str == NULL || str[0] == '\0')
 	{
+		arr = NULL;
 		arr = (char **)malloc(sizeof(char *) * 2);
 		arr[0] = (char *)malloc(sizeof(char));
 		arr[0][0] = '\0';
-		arr[1] = NULL;
 		return (arr);
 	}
 	count = word_count(str, charset);

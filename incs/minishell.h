@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/29 12:46:18 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/05/30 11:31:52 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,7 @@ void		exec_cmd(t_cmdn *node, t_shell *sh, char *cwd);
 void		check_builtin(t_cmdn *node, t_shell *sh, char *cwd);
 void		ft_handler_child2(int signum);
 void		ft_handler_child(int signum);
+int			count_exit(t_cmdn *node, int i, int j);
 // Dynamic Integer Array:
 t_intvec	*create_intvec(t_shell *sh);
 void		expand_intvec(t_intvec *dynarr, t_shell *sh);
