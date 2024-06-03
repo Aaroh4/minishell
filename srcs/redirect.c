@@ -3,16 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   redirect.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 16:20:12 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/27 15:56:00 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/06/03 13:00:54 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	get_redirects(t_shell *sh)
+int	check_ambiguous_redirect2(int i, int j, t_shell *sh)
+{
+	while (sh->cmd[i][j] != '\0')
+	{
+		if (!ft_isalnum(sh->cmd[i][j]))
+		{
+			errprompt("Ambiguous redirect", NULL, NULL, sh);
+			return (1);
+		}
+		j++;
+	}
+	return (0);
+}
+
+int	get_redirects(t_shell *sh)
 {
 	int	i;
 	int	j;
@@ -26,16 +40,29 @@ void	get_redirects(t_shell *sh)
 		{
 			if ((j == 0 || sh->cmd[i][j - 1] != '<') && sh->cmd[i][j] == '<' &&
 					sh->cmd[i][j + 1] != '<')
+			{
+				if (check_ambiguous_redirect2(i, j + 1, sh))
+					return (1);
 				sh->redirs[i] = 1;
+			}
 			else if ((j == 0 || sh->cmd[i][j - 1] != '>') &&
 					sh->cmd[i][j] == '>' && sh->cmd[i][j + 1] != '>')
+			{
+				if (check_ambiguous_redirect2(i, j + 1, sh))
+					return (1);
 				sh->redirs[i] = 2;
+			}
 			else if ((j == 0 || sh->cmd[i][j - 1] != '>') &&
 					sh->cmd[i][j] == '>' && sh->cmd[i][j + 1] == '>' &&
 					sh->cmd[i][j + 2] != '>')
+			{
+				if (check_ambiguous_redirect2(i, j + 2, sh))
+					return (1);
 				sh->redirs[i] = 3;
+			}
 		}
 	}
+	return (0);
 }
 
 static void	omit_redirs_from_param(t_cmdn *node)
@@ -79,14 +106,14 @@ int	open_redirects(t_cmdn *node, t_shell *sh)
 	while (node->redirs[++i] != -1)
 	{
 		if (node->redirs[i] == 1)
-			first_redir(sh, node, i, &inrdrs);
+			redir_infile(sh, node, i, &inrdrs);
 		else if (node->redirs[i] == 2)
 		{
-			if (second_redir(sh, node, i, &outrdrs) == 1)
+			if (redir_outfile_replace(sh, node, i, &outrdrs) == 1)
 				return (1);
 		}
 		else if (node->redirs[i] == 3)
-			if (third_redir(sh, node, i, &outrdrs) == 1)
+			if (redir_outfile_append(sh, node, i, &outrdrs) == 1)
 				return (1);
 	}
 	if (sh->cmdcount > 1)

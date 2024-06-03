@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 14:32:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/31 15:15:23 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/06/03 13:17:02 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ void	input_start(t_shell *sh)
 	if (quote_count(sh) == 0)
 	{
 		add_history(sh->input);
-		parse_input(sh);
+		if (parse_input(sh))
+			return ;
 		run_cmds(sh);
 		free_new_prompt(sh);
 	}

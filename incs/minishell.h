@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/31 15:12:02 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/06/03 13:16:21 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ typedef struct s_shell
 }	t_shell;
 
 // Parser:
-void		parse_input(t_shell *sh);
+int		parse_input(t_shell *sh);
 // Executor:
 int			run_cmds(t_shell *sh);
 void		modify_status(t_shell *sh);
@@ -147,7 +147,8 @@ void		free_breakchar_temp(char *breakchar, char *temp);
 void		remove_breakchar_quotes(char *str);
 // Redirects:
 char		*trim_rdirspace(char *cmd);
-void		get_redirects(t_shell *sh);
+int			get_redirects(t_shell *sh);
+void		check_ambiguous_redirect(int i, int j, t_cmdn *node, t_shell *sh);
 int			open_redirects(t_cmdn *node, t_shell *sh);
 // Error handling:
 void		errexit(char *msg1, char *msg2, char *msg3, t_shell *sh);
@@ -170,9 +171,9 @@ void		enable_raw_mode(int is_on);
 // Parser
 char		**split_pipes(char *str, char *charset);
 int			skip_quotes(char *str, int i);
-void		first_redir(t_shell *sh, t_cmdn *node, int i, int *inrdrs);
-int			second_redir(t_shell *sh, t_cmdn *node, int i, int *outrdrs);
-int			third_redir(t_shell *sh, t_cmdn *node, int i, int *outrdrs);
+void		redir_infile(t_shell *sh, t_cmdn *node, int i, int *inrdrs);
+int			redir_outfile_replace(t_shell *sh, t_cmdn *node, int i, int *outrdrs);
+int			redir_outfile_append(t_shell *sh, t_cmdn *node, int i, int *outrdrs);
 void		redirects_more_command(t_shell *sh, t_cmdn *node,
 				int inrdrs, int outrdrs);
 void		trim_space(char *c);

@@ -6,7 +6,7 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/31 12:58:22 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/06/03 13:15:51 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static void	get_heredocs(t_shell *sh)
 	}
 }
 
-static void	trim_quote_alloc_hdoc_rdir(t_shell *sh)
+static int	trim_quote_alloc_hdoc_rdir(t_shell *sh)
 {
 	int		i;
 
@@ -58,7 +58,8 @@ static void	trim_quote_alloc_hdoc_rdir(t_shell *sh)
 	sh->hdocs[i] = -1;
 	sh->redirs[i] = -1;
 	get_heredocs(sh);
-	get_redirects(sh);
+	if (get_redirects(sh))
+		return (1);
 	i = 0;
 	while (sh->cmd[i] != NULL)
 	{
@@ -66,6 +67,7 @@ static void	trim_quote_alloc_hdoc_rdir(t_shell *sh)
 			sh->cmd[i] = remove_quote_level(sh->cmd[i], sh);
 		i++;
 	}
+	return (0);
 }
 
 static t_cmdn	*create_node(t_cmdn *current, t_shell *sh, int index)
@@ -80,7 +82,8 @@ static t_cmdn	*create_node(t_cmdn *current, t_shell *sh, int index)
 	sh->cmd = split_pipes(sh->cmdarr[index], " ");
 	if (!(sh->cmd))
 		errexit("error: ", "root malloc", NULL, sh);
-	trim_quote_alloc_hdoc_rdir(sh);
+	if (trim_quote_alloc_hdoc_rdir(sh))
+		return (NULL);
 	first = FALSE;
 	if (index == 0)
 		first = TRUE;
@@ -114,7 +117,7 @@ void	create_pipes(t_shell *sh)
 		errexit("error :", "pipe initialization", NULL, sh);
 }
 
-void	parse_input(t_shell *sh)
+int	parse_input(t_shell *sh)
 {
 	t_cmdn	*current;
 	int		i;
@@ -132,6 +135,9 @@ void	parse_input(t_shell *sh)
 	while (sh->cmdarr[i] != NULL)
 	{
 		current = create_node(current, sh, i);
+		if (current == NULL)
+			return (1);
 		i++;
 	}
+	return (0);
 }

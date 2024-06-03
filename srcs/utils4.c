@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils4.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:09:11 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/31 15:15:31 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/06/03 11:08:57 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,12 @@ int	check_inside_quote(t_shell *sh, int i, char quote)
 int	quote_count(t_shell *sh)
 {
 	int	i;
-	int	quotecount;
-	int	squotecount;
+	// int	quotecount;
+	// int	squotecount;
 
 	i = 0;
-	quotecount = 0;
-	squotecount = 0;
+	// quotecount = 0;
+	// squotecount = 0;
 	while (sh->input[i] != '\0')
 	{
 		if (sh->input[i] == '\'')

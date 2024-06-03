@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 17:27:19 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/31 15:26:08 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/06/03 12:36:35 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,10 @@ void	errprompt(char *msg1, char *msg2, char *msg3, t_shell *sh)
 {
 	enable_raw_mode(1);
 	ft_putstr_fd("minishell: ", 2);
-	ft_putstr_fd(msg1, 2);
-	ft_putstr_fd(msg2, 2);
+	if (msg1)
+		ft_putstr_fd(msg1, 2);
+	if (msg2)
+		ft_putstr_fd(msg2, 2);
 	if (msg3)
 		ft_putendl_fd(msg3, 2);
 	else

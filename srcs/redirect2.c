@@ -6,16 +6,30 @@
 /*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 11:26:43 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/05/27 22:21:29 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/06/03 12:20:27 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	first_redir(t_shell *sh, t_cmdn *node, int i, int *inrdrs)
+void	check_ambiguous_redirect(int i, int j, t_cmdn *node, t_shell *sh)
+{
+	dprintf(2, "Got here.");
+	while (node->cargs[i][j] != '\0')
+	{
+		if (!ft_isalnum(node->cargs[i][j]))
+		{
+			errexit("Ambiguous redirect", NULL, NULL, sh);
+			j++;
+		}
+	}
+}
+
+void	redir_infile(t_shell *sh, t_cmdn *node, int i, int *inrdrs)
 {
 	int	in_fd;
 
+	check_ambiguous_redirect(i, 1, node, sh);
 	(*inrdrs)++;
 	in_fd = open(&node->cargs[i][1], O_RDONLY);
 	if (in_fd == -1)
@@ -26,10 +40,11 @@ void	first_redir(t_shell *sh, t_cmdn *node, int i, int *inrdrs)
 	close(in_fd);
 }
 
-int	second_redir(t_shell *sh, t_cmdn *node, int i, int *outrdrs)
+int	redir_outfile_replace(t_shell *sh, t_cmdn *node, int i, int *outrdrs)
 {
 	int	out_fd;
 
+	check_ambiguous_redirect(i, 1, node, sh);
 	(*outrdrs)++;
 	out_fd = open(&node->cargs[i][1], O_WRONLY | O_CREAT | O_TRUNC,
 			0644);
@@ -45,10 +60,11 @@ int	second_redir(t_shell *sh, t_cmdn *node, int i, int *outrdrs)
 	return (0);
 }
 
-int	third_redir(t_shell *sh, t_cmdn *node, int i, int *outrdrs)
+int	redir_outfile_append(t_shell *sh, t_cmdn *node, int i, int *outrdrs)
 {
 	int	out_fd;
 
+	check_ambiguous_redirect(i, 2, node, sh);
 	(*outrdrs)++;
 	out_fd = open(&node->cargs[i][2], O_WRONLY | O_APPEND | O_CREAT,
 			0644);
