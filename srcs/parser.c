@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:20:14 by mburakow          #+#    #+#             */
-/*   Updated: 2024/06/03 13:15:51 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/06/04 10:16:26 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,12 +70,10 @@ static int	trim_quote_alloc_hdoc_rdir(t_shell *sh)
 	return (0);
 }
 
-static t_cmdn	*create_node(t_cmdn *current, t_shell *sh, int index)
+static t_cmdn	*create_node(t_cmdn *current, t_shell *sh, int index, int len)
 {
-	int		len;
 	t_bool	first;
 
-	len = 0;
 	while (sh->cmdarr[len] != NULL)
 		len++;
 	sh->cmdarr[index] = trim_rdirspace(sh->cmdarr[index]);
@@ -121,7 +119,9 @@ int	parse_input(t_shell *sh)
 {
 	t_cmdn	*current;
 	int		i;
+	int		len;
 
+	len = 0;
 	sh->root = init_cmd_node(PIPELINE, sh, FALSE, FALSE);
 	if (!(sh->root))
 		errexit("error: ", "root malloc", NULL, sh);
@@ -134,7 +134,7 @@ int	parse_input(t_shell *sh)
 	i = 0;
 	while (sh->cmdarr[i] != NULL)
 	{
-		current = create_node(current, sh, i);
+		current = create_node(current, sh, i, len);
 		if (current == NULL)
 			return (1);
 		i++;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/06/03 13:16:21 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/06/04 10:11:41 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ typedef struct s_shell
 }	t_shell;
 
 // Parser:
-int		parse_input(t_shell *sh);
+int			parse_input(t_shell *sh);
 // Executor:
 int			run_cmds(t_shell *sh);
 void		modify_status(t_shell *sh);
@@ -172,8 +172,10 @@ void		enable_raw_mode(int is_on);
 char		**split_pipes(char *str, char *charset);
 int			skip_quotes(char *str, int i);
 void		redir_infile(t_shell *sh, t_cmdn *node, int i, int *inrdrs);
-int			redir_outfile_replace(t_shell *sh, t_cmdn *node, int i, int *outrdrs);
-int			redir_outfile_append(t_shell *sh, t_cmdn *node, int i, int *outrdrs);
+int			redir_outfile_replace(t_shell *sh,
+				t_cmdn *node, int i, int *outrdrs);
+int			redir_outfile_append(t_shell *sh,
+				t_cmdn *node, int i, int *outrdrs);
 void		redirects_more_command(t_shell *sh, t_cmdn *node,
 				int inrdrs, int outrdrs);
 void		trim_space(char *c);

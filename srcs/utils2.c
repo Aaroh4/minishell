@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 14:32:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/06/03 13:17:02 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/06/04 10:12:21 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 void	input_start(t_shell *sh)
 {
-
 	signal(SIGINT, SIG_IGN);
 	if (quote_count(sh) == 0)
 	{

@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 08:34:10 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/31 15:21:33 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/06/04 10:14:30 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,12 @@ void	init_shell_struct(t_shell *sh)
 	sh->status = 0;
 }
 
+void	init_nulls(t_shell *sh)
+{
+	sh->cmd = NULL;
+	sh->hdocs = NULL;
+	sh->redirs = NULL;
+}
 
 t_cmdn	*init_cmd_node(t_ntype type, t_shell *sh, t_bool last, t_bool first)
 {
@@ -46,9 +52,7 @@ t_cmdn	*init_cmd_node(t_ntype type, t_shell *sh, t_bool last, t_bool first)
 		}
 		new_cmdn->last = last;
 		new_cmdn->first = first;
-		sh->cmd = NULL;
-		sh->hdocs = NULL;
-		sh->redirs = NULL;
+		init_nulls(sh);
 	}
 	else
 		errexit("error: ", "cmd node malloc", NULL, sh);
