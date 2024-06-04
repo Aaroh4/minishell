@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 14:32:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/06/04 12:48:22 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/06/04 15:13:52 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	unset_loop(int *j, char *str, char **temp, char **temp_ms)
 	int	k;
 
 	k = 0;
-	while (temp_ms[*j] != '\0')
+	while (temp_ms[*j] != NULL)
 	{
 		if (ft_strncmp(str, temp_ms[*j], ft_strlen(str)))
 		{

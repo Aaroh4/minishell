@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   msenv.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 16:54:02 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/29 11:37:01 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/06/04 15:39:13 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,9 @@ char	**copy_env_vals(int len, char **envp, char **ms_envp, t_shell *sh)
 			errexit("minishell: ", "envp malloc 2 error", NULL, sh);
 		ft_memcpy(ms_envp[i], envp[i], (slen + 1) * sizeof(char));
 		ms_envp[i][slen] = '\0';
+		if (ms_envp[i][0] == '_')
+			ms_envp[i][ft_strcpos(ms_envp[i], '.')] = '\0';
+		dprintf(2, "[%d] %s\n", i, ms_envp[i]);
 		i++;
 	}
 	ms_envp[len] = NULL;
