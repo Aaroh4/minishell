@@ -3,35 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   redirect2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 11:26:43 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/06/04 11:44:58 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/06/04 14:54:02 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*
-void	check_ambiguous_redirect(int i, int j, t_cmdn *node, t_shell *sh)
-{
-	dprintf(2, "Got here.");
-	while (node->cargs[i][j] != '\0')
-	{
-		if (!ft_isalnum(node->cargs[i][j]))
-		{
-			errexit("Ambiguous redirect", NULL, NULL, sh);
-			j++;
-		}
-	}
-}
-*/
-
 void	redir_infile(t_shell *sh, t_cmdn *node, int i, int *inrdrs)
 {
 	int	in_fd;
 
-	//check_ambiguous_redirect(i, 1, node, sh);
 	(*inrdrs)++;
 	in_fd = open(&node->cargs[i][1], O_RDONLY);
 	if (in_fd == -1)
@@ -46,7 +30,6 @@ int	redir_outfile_replace(t_shell *sh, t_cmdn *node, int i, int *outrdrs)
 {
 	int	out_fd;
 
-	//check_ambiguous_redirect(i, 1, node, sh);
 	(*outrdrs)++;
 	out_fd = open(&node->cargs[i][1], O_WRONLY | O_CREAT | O_TRUNC,
 			0644);
@@ -66,7 +49,6 @@ int	redir_outfile_append(t_shell *sh, t_cmdn *node, int i, int *outrdrs)
 {
 	int	out_fd;
 
-	//check_ambiguous_redirect(i, 2, node, sh);
 	(*outrdrs)++;
 	out_fd = open(&node->cargs[i][2], O_WRONLY | O_APPEND | O_CREAT,
 			0644);

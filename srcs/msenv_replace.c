@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   msenv_replace.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 13:16:33 by mburakow          #+#    #+#             */
-/*   Updated: 2024/05/30 11:01:42 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/06/04 15:06:28 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,8 @@ static void	init_env_struct(t_env_tdata *envd)
 	envd->total_len = 0;
 }
 
-static void	determine_env(t_shell *sh, t_env_tdata *envd)
+static void	determine_env(t_shell *sh, t_env_tdata *envd, int i)
 {
-	int	i;
-
-	i = 0;
 	if (*(envd->start + 1) == 63)
 	{
 		envd->env_val = ft_itoa(sh->status);
@@ -49,13 +46,17 @@ static void	determine_env(t_shell *sh, t_env_tdata *envd)
 		}
 		i++;
 	}
+	if (envd->env_val == NULL)
+		envd->env_val = ft_strdup("");
 }
 
 char	*alloc_new_arr(char *input, t_shell *sh, t_env_tdata *envd)
 {
 	char	*new_arr;
+	int		i;
 
-	determine_env(sh, envd);
+	i = 0;
+	determine_env(sh, envd, i);
 	envd->total_len = ft_strlen(input) - ft_strlen(envd->start)
 		+ ft_strlen(envd->env_val) + ft_strlen(envd->end);
 	new_arr = (char *)malloc((envd->total_len + 1) * sizeof(char));
@@ -72,7 +73,7 @@ void	write_new_arr(char *new_arr, t_env_tdata *envd)
 
 	i = 0;
 	j = 0;
-	while (envd->temp != envd->start)
+	while (i < ft_strcpos(envd->temp, 36))
 	{
 		new_arr[i] = envd->temp[i];
 		i++;
@@ -100,6 +101,8 @@ char	*replace_envp_tags(char *input, t_shell *sh)
 
 	init_env_struct(&envd);
 	envd.start = ft_strchr(input, 36);
+	if (envd.start != NULL && !ft_isalnum(*(envd.start + 1)))
+		return (input);
 	while (envd.start != NULL)
 	{
 		envd.end = move_to_env_end(envd.start + 1);

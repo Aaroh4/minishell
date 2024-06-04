@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirect.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 16:20:12 by mburakow          #+#    #+#             */
-/*   Updated: 2024/06/04 11:46:02 by mburakow         ###   ########.fr       */
+/*   Updated: 2024/06/04 15:03:19 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,33 @@ int	check_ambiguous_redirect(int i, int j, t_shell *sh)
 	return (0);
 }
 
+int	redirect_loop(int *i, int *j, t_shell *sh)
+{
+	if ((j == 0 || sh->cmd[*i][*j - 1] != '<') && sh->cmd[*i][*j] == '<' &&
+		sh->cmd[*i][*j + 1] != '<')
+	{
+		if (check_ambiguous_redirect(*i, *j + 1, sh))
+			return (1);
+		sh->redirs[*i] = 1;
+	}
+	else if ((j == 0 || sh->cmd[*i][*j - 1] != '>') &&
+		sh->cmd[*i][*j] == '>' && sh->cmd[*i][*j + 1] != '>')
+	{
+		if (check_ambiguous_redirect(*i, *j + 1, sh))
+			return (1);
+		sh->redirs[*i] = 2;
+	}
+	else if ((j == 0 || sh->cmd[*i][*j - 1] != '>') &&
+		sh->cmd[*i][*j] == '>' && sh->cmd[*i][*j + 1] == '>' &&
+		sh->cmd[*i][*j + 2] != '>')
+	{
+		if (check_ambiguous_redirect(*i, *j + 2, sh))
+			return (1);
+		sh->redirs[*i] = 3;
+	}
+	return (0);
+}
+
 int	get_redirects(t_shell *sh)
 {
 	int	i;
@@ -45,28 +72,8 @@ int	get_redirects(t_shell *sh)
 		while (sh->cmd[i][++j] != '\0' && (sh->cmd[i][j] == '>'
 				|| sh->cmd[i][j] == '<'))
 		{
-			if ((j == 0 || sh->cmd[i][j - 1] != '<') && sh->cmd[i][j] == '<' &&
-					sh->cmd[i][j + 1] != '<')
-			{
-				if (check_ambiguous_redirect(i, j + 1, sh))
-					return (1);
-				sh->redirs[i] = 1;
-			}
-			else if ((j == 0 || sh->cmd[i][j - 1] != '>') &&
-					sh->cmd[i][j] == '>' && sh->cmd[i][j + 1] != '>')
-			{
-				if (check_ambiguous_redirect(i, j + 1, sh))
-					return (1);
-				sh->redirs[i] = 2;
-			}
-			else if ((j == 0 || sh->cmd[i][j - 1] != '>') &&
-					sh->cmd[i][j] == '>' && sh->cmd[i][j + 1] == '>' &&
-					sh->cmd[i][j + 2] != '>')
-			{
-				if (check_ambiguous_redirect(i, j + 2, sh))
-					return (1);
-				sh->redirs[i] = 3;
-			}
+			if (redirect_loop(&i, &j, sh) == 1)
+				return (1);
 		}
 	}
 	return (0);
