@@ -6,7 +6,7 @@
 /*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 14:32:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/06/04 10:12:21 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/06/04 12:48:22 by ahamalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	unset_loop(int *j, char *str, char **temp, char **temp_ms)
 	int	k;
 
 	k = 0;
-	while (temp_ms[*j] != 0)
+	while (temp_ms[*j] != '\0')
 	{
 		if (ft_strncmp(str, temp_ms[*j], ft_strlen(str)))
 		{
@@ -68,7 +68,7 @@ char	**unset_remove_from_array(t_shell *sh, char **temp_ms)
 		temp = malloc(sizeof(char *) * (j + 1));
 		j = 0;
 		unset_loop(&j, str, temp, temp_ms);
-		temp[j] = NULL;
+		temp[j - 1] = NULL;
 		temp = unset_remove_from_array(sh, temp);
 		free(temp_ms);
 		free(str);
