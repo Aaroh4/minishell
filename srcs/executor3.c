@@ -51,7 +51,7 @@ char	*getting_multiple_param(t_shell *sh, char *str)
 	if (str[j] == '=')
 	{
 		free (sh->ms_envp[i]);
-		sh->ms_envp[i] = ft_substr(str, 0, ft_strlen(str));
+		sh->ms_envp[i] = ft_substr(str, 0, ft_strlen(str) - 1);
 	}
 	else
 		sh->ms_envp = make_temp(sh, str);
