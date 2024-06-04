@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:05:01 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/06/04 10:11:41 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/06/04 11:42:12 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,7 +148,7 @@ void		remove_breakchar_quotes(char *str);
 // Redirects:
 char		*trim_rdirspace(char *cmd);
 int			get_redirects(t_shell *sh);
-void		check_ambiguous_redirect(int i, int j, t_cmdn *node, t_shell *sh);
+int			check_ambiguous_redirect(int i, int j, t_shell *sh);
 int			open_redirects(t_cmdn *node, t_shell *sh);
 // Error handling:
 void		errexit(char *msg1, char *msg2, char *msg3, t_shell *sh);

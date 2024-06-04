@@ -3,25 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   redirect.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 16:20:12 by mburakow          #+#    #+#             */
-/*   Updated: 2024/06/04 10:24:53 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/06/04 11:46:02 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	check_ambiguous_redirect2(int i, int j, t_shell *sh)
+int	check_ambiguous_redirect(int i, int j, t_shell *sh)
 {
-	while (sh->cmd[i][j] != '\0')
+	char	*testparameter;
+
+	testparameter = get_env_val_by_name(&sh->cmd[i][j + 1], sh);
+	if (testparameter)
 	{
-		if (!ft_isalnum(sh->cmd[i][j]))
+		j = 0;
+		while (testparameter[j] != '\0')
 		{
-			errprompt("Ambiguous redirect", NULL, NULL, sh);
-			return (1);
+			if (ft_isspace(testparameter[j]))
+			{
+				errprompt("Ambiguous redirect", NULL, NULL, sh);
+				return (1);
+			}
+			j++;
 		}
-		j++;
 	}
 	return (0);
 }
@@ -41,14 +48,14 @@ int	get_redirects(t_shell *sh)
 			if ((j == 0 || sh->cmd[i][j - 1] != '<') && sh->cmd[i][j] == '<' &&
 					sh->cmd[i][j + 1] != '<')
 			{
-				if (check_ambiguous_redirect2(i, j + 1, sh))
+				if (check_ambiguous_redirect(i, j + 1, sh))
 					return (1);
 				sh->redirs[i] = 1;
 			}
 			else if ((j == 0 || sh->cmd[i][j - 1] != '>') &&
 					sh->cmd[i][j] == '>' && sh->cmd[i][j + 1] != '>')
 			{
-				if (check_ambiguous_redirect2(i, j + 1, sh))
+				if (check_ambiguous_redirect(i, j + 1, sh))
 					return (1);
 				sh->redirs[i] = 2;
 			}
@@ -56,7 +63,7 @@ int	get_redirects(t_shell *sh)
 					sh->cmd[i][j] == '>' && sh->cmd[i][j + 1] == '>' &&
 					sh->cmd[i][j + 2] != '>')
 			{
-				if (check_ambiguous_redirect2(i, j + 2, sh))
+				if (check_ambiguous_redirect(i, j + 2, sh))
 					return (1);
 				sh->redirs[i] = 3;
 			}
