@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor3.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 13:47:02 by ahamalai          #+#    #+#             */
-/*   Updated: 2024/06/04 14:54:14 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/06/05 10:40:14 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,8 @@ void	env_modify_loop(t_shell *sh, int a, char *cwd, char *str)
 		{
 			if (chdir(str) == -1)
 			{
-				printf("cd: %s: No such file or directory\n", str);
+				printf("minishell: cd: %s: No such file or directory\n", str);
+				sh->status = 1;
 				free(str);
 				return ;
 			}

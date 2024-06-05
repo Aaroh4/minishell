@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   msenv_replace.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahamalai <ahamalai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mburakow <mburakow@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 13:16:33 by mburakow          #+#    #+#             */
-/*   Updated: 2024/06/04 15:06:28 by ahamalai         ###   ########.fr       */
+/*   Updated: 2024/06/05 10:59:25 by mburakow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,8 @@ char	*replace_envp_tags(char *input, t_shell *sh)
 
 	init_env_struct(&envd);
 	envd.start = ft_strchr(input, 36);
-	if (envd.start != NULL && !ft_isalnum(*(envd.start + 1)))
+	if (envd.start != NULL && (!ft_isalnum(*(envd.start + 1)) &&
+		*(envd.start + 1) != '?'))
 		return (input);
 	while (envd.start != NULL)
 	{
